@@ -97,4 +97,4 @@ if __name__ == "__main__":
 
     from src.main import run_data_logger
 
-    run_data_logger()
+    run_data_logger(True)
