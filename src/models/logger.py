@@ -87,7 +87,7 @@ if __name__ == "__main__":
             os.remove(AppData.APP_LOG_FILE)
 
     def _generate_error():
-        a = 1 / 0
+        _ = 1 / 0
 
     _remove_log_file()
 
@@ -104,8 +104,8 @@ if __name__ == "__main__":
 
     log.shut_down()
 
-    with open(AppData.APP_LOG_FILE, "r") as fp:
-        content = fp.read()
+    with open(AppData.APP_LOG_FILE, "r", encoding="utf-8") as log_fp:
+        content = log_fp.read()
     print("\nLog file content:")
     print(content)
 

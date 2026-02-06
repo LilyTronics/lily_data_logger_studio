@@ -85,33 +85,33 @@ if __name__ == "__main__":
     s = ApplicationSettings()
 
     print("Main window size")
-    value = s.get_main_window_size()
-    print("Current window size:", value)
-    assert value == (-1, -1)
+    test_value = s.get_main_window_size()
+    print("Current window size:", test_value)
+    assert test_value == (-1, -1)
     new_value = (1000, 650)
     s.store_main_window_size(*new_value)
-    value = s.get_main_window_size()
-    print("New main window size:", value)
-    assert value == new_value
+    test_value = s.get_main_window_size()
+    print("New main window size:", test_value)
+    assert test_value == new_value
 
     print("\nMain window position")
-    value = s.get_main_window_position()
-    print("Current window position:", value)
-    assert value == (-1, -1)
+    test_value = s.get_main_window_position()
+    print("Current window position:", test_value)
+    assert test_value == (-1, -1)
     new_value = (50, 50)
     s.store_main_window_position(*new_value)
-    value = s.get_main_window_position()
-    print("New main window position:", value)
-    assert value == new_value
+    test_value = s.get_main_window_position()
+    print("New main window position:", test_value)
+    assert test_value == new_value
 
     print("\nMain window maximized")
-    value = s.get_main_window_maximized()
-    print("Current window maximized:", value)
-    assert not value
-    new_value = not value
+    test_value = s.get_main_window_maximized()
+    print("Current window maximized:", test_value)
+    assert not test_value
+    new_value = not test_value
     s.store_main_window_maximized(new_value)
-    value = s.get_main_window_maximized()
-    print("New main window position:", value)
-    assert value
+    test_value = s.get_main_window_maximized()
+    print("New main window position:", test_value)
+    assert test_value
 
     _remove_settings_file()

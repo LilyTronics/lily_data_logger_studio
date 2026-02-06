@@ -35,7 +35,8 @@ class MainView(wx.MDIParentFrame):
         tb.Realize()
 
     def _create_layout(self):
-        self.left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT, style=wx.NO_BORDER|wx.adv.SW_3D)
+        self.left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
+                                                 style=wx.NO_BORDER|wx.adv.SW_3D)
         self.left_win.SetDefaultSize((self._LEFT_WINDOW_WIDTH, -1))
         self.left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         self.left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
@@ -45,7 +46,8 @@ class MainView(wx.MDIParentFrame):
     def _create_status_bar(self):
         sb = self.CreateStatusBar()
         sb.SetFieldsCount(5)
-        sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE, self._STATUS_SIZE, self._STATUS_SIZE,-1])
+        sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE,
+                            self._STATUS_SIZE, self._STATUS_SIZE,-1])
         sb.SetStatusText("Sample time: -", 0)
         sb.SetStatusText("End time: -", 1)
         sb.SetStatusText("Total samples: -", 2)
@@ -56,7 +58,7 @@ class MainView(wx.MDIParentFrame):
     # Event handlers #
     ##################
 
-    def _on_size(self, event):
+    def _on_size(self, _):
         # We need to check if the frame still exists, because this event
         # can be triggered during the destruction of the frame.
         if self:
@@ -67,9 +69,7 @@ class MainView(wx.MDIParentFrame):
             return
 
         if event.GetId() == self._ID_WINDOW_LEFT:
-            new_width = event.GetDragRect().width
-            if new_width < self._LEFT_WINDOW_MIN_WIDTH:
-                new_width = self._LEFT_WINDOW_MIN_WIDTH
+            new_width = max(event.GetDragRect().width, self._LEFT_WINDOW_MIN_WIDTH)
             self.left_win.SetDefaultSize((new_width, -1))
 
         wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
