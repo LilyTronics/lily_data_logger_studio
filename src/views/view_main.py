@@ -7,16 +7,6 @@ import wx.adv
 
 class MainView(wx.MDIParentFrame):
 
-    ID_TOOL_NEW_CONFIG = wx.NewIdRef()
-    ID_TOOL_LOAD_CONFIG = wx.NewIdRef()
-    ID_TOOL_SAVE_CONFIG = wx.NewIdRef()
-    ID_TOOL_ADD_DEVICE = wx.NewIdRef()
-    ID_TOOL_REMOVE_DEVICE = wx.NewIdRef()
-    ID_TOOL_ADD_GRAPH = wx.NewIdRef()
-    ID_TOOL_REMOVE_GRAPH = wx.NewIdRef()
-    ID_TOOL_START_LOGGING = wx.NewIdRef()
-    ID_TOOL_STOP_LOGGING = wx.NewIdRef()
-
     _MIN_WINDOW_SIZE = (900, 600)
     _ID_WINDOW_LEFT = wx.NewIdRef()
     _LEFT_WINDOW_MIN_WIDTH = 50
@@ -24,9 +14,8 @@ class MainView(wx.MDIParentFrame):
     _STATUS_SIZE = 170
 
     def __init__(self, title):
-        super().__init__(None, title=title)
+        super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE | wx.FRAME_NO_WINDOW_MENU)
 
-        self._create_menu()
         self._create_toolbar()
         self._create_layout()
         self._create_status_bar()
@@ -40,13 +29,6 @@ class MainView(wx.MDIParentFrame):
     ###########
     # Private #
     ###########
-
-    def _create_menu(self):
-        menu = wx.Menu()
-        menu.Append(wx.ID_ANY, "Exit")
-        menu_bar = wx.MenuBar()
-        menu_bar.Append(menu, "File")
-        self.SetMenuBar(menu_bar)
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
