@@ -14,8 +14,9 @@ class MainView(wx.MDIParentFrame):
     _STATUS_SIZE = 170
 
     def __init__(self, title):
-        super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE | wx.FRAME_NO_WINDOW_MENU)
+        super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
 
+        self._create_menu()
         self._create_toolbar()
         self._create_layout()
         self._create_status_bar()
@@ -29,6 +30,10 @@ class MainView(wx.MDIParentFrame):
     ###########
     # Private #
     ###########
+
+    def _create_menu(self):
+        menu_bar = wx.MenuBar()
+        self.SetMenuBar(menu_bar)
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
