@@ -4,11 +4,20 @@ View for the data table.
 
 import wx.grid
 
+import src.models.images as Images
+
 
 class ViewDataTable(wx.MDIChildFrame):
 
     def __init__(self, parent):
         super().__init__(parent)
+
+
+        # bmp = wx.Bitmap("myicon.png")
+        icon = wx.Icon()
+        icon.CopyFromBitmap(Images.data_table_24.GetBitmap())
+        self.SetIcon(icon)
+
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self._create_data_table(), 1, wx.EXPAND | wx.ALL, 1)
