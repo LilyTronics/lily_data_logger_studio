@@ -78,5 +78,8 @@ class MainView(wx.MDIParentFrame):
 if __name__ == "__main__":
 
     from src.main import run_data_logger
+    from src.models.test_options import TestOptions
 
-    run_data_logger(True)
+    TestOptions.log_to_stdout = True
+
+    run_data_logger(TestOptions)

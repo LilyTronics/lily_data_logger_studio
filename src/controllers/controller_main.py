@@ -4,12 +4,15 @@ Main controller.
 
 import wx
 
-from src.views.view_main import MainView
 from src.models.application_settings import ApplicationSettings
+from src.models.test_options import TestOptions
+from src.views.view_data_table import ViewDataTable
+from src.views.view_main import MainView
+
 
 class MainController:
 
-    def __init__(self, title, logger):
+    def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
@@ -27,6 +30,12 @@ class MainController:
         self._view.Show()
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
+
+        # Test options
+        if test_options.show_view_data_table:
+            self._logger.debug("Test option: show view data table")
+            cw = ViewDataTable(self._view)
+            cw.Show()
 
     ##################
     # Event handlers #
@@ -46,4 +55,6 @@ if __name__ == "__main__":
 
     from src.main import run_data_logger
 
-    run_data_logger(True)
+    TestOptions.log_to_stdout = True
+
+    run_data_logger(TestOptions)

@@ -6,10 +6,11 @@ import src.app_data as AppData
 
 from src.controllers.controller_main import MainController
 from src.models.logger import Logger
+from src.models.test_options import TestOptions
 
 
-def run_data_logger(test_mode=False):
-    log = Logger(log_to_stdout=test_mode)
+def run_data_logger(options=TestOptions):
+    log = Logger(options.log_to_stdout)
     log.info("Start application")
     MainController(f"{AppData.APP_NAME} V{AppData.VERSION}", log)
     AppData.wxApp.MainLoop()
