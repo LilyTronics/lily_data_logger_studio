@@ -26,6 +26,7 @@ class MainController:
         if -1 not in value:
             self._view.SetSize(value)
         self._view.Maximize(self._app_settings.get_main_window_maximized())
+        self._view.set_tree_width(self._app_settings.get_main_window_tree_width())
         self._logger.debug("Show main view")
         self._view.Show()
 
@@ -47,6 +48,7 @@ class MainController:
         if not self._view.IsMaximized():
             self._app_settings.store_main_window_position(*self._view.GetPosition())
             self._app_settings.store_main_window_size(*self._view.GetSize())
+        self._app_settings.store_main_window_tree_width(self._view.get_tree_width())
 
         event.Skip()
 

@@ -73,6 +73,12 @@ class ApplicationSettings:
     def store_main_window_maximized(self, is_maximized):
         self._store_property("main_window", "maximized", is_maximized)
 
+    def get_main_window_tree_width(self):
+        return self._get_property("main_window", "tree_width", -1)
+
+    def store_main_window_tree_width(self, width):
+        return self._store_property("main_window", "tree_width", width)
+
 
 if __name__ == "__main__":
 
@@ -113,5 +119,15 @@ if __name__ == "__main__":
     test_value = s.get_main_window_maximized()
     print("New main window position:", test_value)
     assert test_value
+
+    print("\nMain window tree width")
+    test_value = s.get_main_window_tree_width()
+    print("Current tree width:", test_value)
+    assert test_value == -1
+    new_value = 200
+    s.store_main_window_tree_width(new_value)
+    test_value = s.get_main_window_tree_width()
+    print("New tree width:", test_value)
+    assert test_value == 200
 
     _remove_settings_file()

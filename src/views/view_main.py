@@ -40,13 +40,13 @@ class MainView(wx.MDIParentFrame):
         tb.Realize()
 
     def _create_layout(self):
-        self.left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
+        self._left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
                                                  style=wx.NO_BORDER|wx.adv.SW_3D)
-        self.left_win.SetDefaultSize((self._LEFT_WINDOW_WIDTH, -1))
-        self.left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
-        self.left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
-        self.left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
-        self._tree = wx.TreeCtrl(self.left_win, style=wx.TR_HIDE_ROOT)
+        self._left_win.SetDefaultSize((self._LEFT_WINDOW_WIDTH, -1))
+        self._left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
+        self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
+        self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
+        self._tree = wx.TreeCtrl(self._left_win, style=wx.TR_HIDE_ROOT)
 
     def _create_status_bar(self):
         sb = self.CreateStatusBar()
@@ -75,9 +75,20 @@ class MainView(wx.MDIParentFrame):
 
         if event.GetId() == self._ID_WINDOW_LEFT:
             new_width = max(event.GetDragRect().width, self._LEFT_WINDOW_MIN_WIDTH)
-            self.left_win.SetDefaultSize((new_width, -1))
+            self._left_win.SetDefaultSize((new_width, -1))
 
         wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
+
+    ##########
+    # Public #
+    ##########
+
+    def get_tree_width(self):
+        return self._left_win.GetSize()[0]
+
+    def set_tree_width(self, width):
+        if width > self._LEFT_WINDOW_MIN_WIDTH:
+            self._left_win.SetDefaultSize((width, -1))
 
 
 if __name__ == "__main__":
