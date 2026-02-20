@@ -35,6 +35,7 @@ class MainController:
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
 
+        self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
         self._view.Bind(wx.EVT_TOOL, self._show_log_messages, id=IdManager.ID_SHOW_LOG)
 
         self._process_test_options(test_options)
@@ -46,25 +47,29 @@ class MainController:
     def _process_test_options(self, test_options):
         if test_options.show_view_data_table:
             self._logger.debug("Test option: show view data table")
-            cw = ViewDataTable(self._view)
-            cw.Show()
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
+            wx.PostEvent(self._view.GetEventHandler(), event)
         if test_options.show_view_log_messages:
             self._logger.debug("Test option: show view log messages")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_LOG)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-    def _get_child_window(self, childClass):
-        matches = list(filter(lambda x: isinstance(x, childClass), self._view.GetChildren()))
-        return None if len(matches) == 0 else matches[0]
-
-    def _show_log_messages(self, event):
-        cw = self._get_child_window(ViewLogMessages)
-        if cw is None:
-            cw = ViewLogMessages(self._view)
+    def _show_child_window(self, child_class):
+        matches = list(filter(lambda x: isinstance(x, child_class), self._view.GetChildren()))
+        if len(matches) == 0:
+            cw = child_class(self._view)
             cw.Show()
         else:
+            cw = matches[0]
             cw.Restore()
         cw.Activate()
+
+    def _show_data_table(self, event):
+        self._show_child_window(ViewDataTable)
+        event.Skip()
+
+    def _show_log_messages(self, event):
+        self._show_child_window(ViewLogMessages)
         event.Skip()
 
     ##################

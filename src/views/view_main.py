@@ -39,6 +39,9 @@ class MainView(wx.MDIParentFrame):
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        tb.AddTool(IdManager.ID_SHOW_DATA_TABLE, "", Images.data_table_24.GetBitmap(),
+                   "Show data table")
+        tb.AddSeparator()
         tb.AddTool(IdManager.ID_SHOW_LOG, "", Images.log_messages_24.GetBitmap(),
                    "Show log messages")
         tb.Realize()
