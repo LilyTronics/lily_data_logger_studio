@@ -14,8 +14,6 @@ import glob
 import os
 import wx
 
-import src.models.images as Images
-
 
 MAX_LINE_LENGTH = 93
 
@@ -50,6 +48,12 @@ def generate_images():
         fp.write(output.strip("\n") + "\n")
 
 def test_generated_images():
+    # We cannot put this import at the top.
+    # If the file not yet exists, the generation will fail.
+    # And to make sure we have the generated version, we need to import after generation.
+    # pylint: disable=import-outside-toplevel
+    import src.models.images as Images
+
     app = wx.App(False)
     f = wx.Frame(None, title="Images test")
     f.SetInitialSize((300, 200))
