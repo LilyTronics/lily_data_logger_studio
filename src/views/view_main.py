@@ -4,6 +4,9 @@ Main view
 
 import wx.adv
 
+import src.models.id_manager as IdManager
+import src.models.images as Images
+
 
 class MainView(wx.MDIParentFrame):
 
@@ -26,7 +29,6 @@ class MainView(wx.MDIParentFrame):
 
         self.SetInitialSize(self._MIN_WINDOW_SIZE)
 
-
     ###########
     # Private #
     ###########
@@ -37,6 +39,8 @@ class MainView(wx.MDIParentFrame):
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        tb.AddTool(IdManager.ID_SHOW_LOG, "", Images.log_messages_24.GetBitmap(),
+                   "Show log messages")
         tb.Realize()
 
     def _create_layout(self):
