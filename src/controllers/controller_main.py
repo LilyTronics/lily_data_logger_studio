@@ -4,9 +4,12 @@ Main controller.
 
 import wx
 
+import src.models.id_manager as IdManager
+
 from src.models.application_settings import ApplicationSettings
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
+from src.views.view_log_messages import ViewLogMessages
 from src.views.view_main import MainView
 
 
@@ -32,11 +35,37 @@ class MainController:
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
 
-        # Test options
+        self._view.Bind(wx.EVT_TOOL, self._show_log_messages, id=IdManager.ID_SHOW_LOG)
+
+        self._process_test_options(test_options)
+
+    ###########
+    # Private #
+    ###########
+
+    def _process_test_options(self, test_options):
         if test_options.show_view_data_table:
             self._logger.debug("Test option: show view data table")
             cw = ViewDataTable(self._view)
             cw.Show()
+        if test_options.show_view_log_messages:
+            self._logger.debug("Test option: show view log messages")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_LOG)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
+    def _get_child_window(self, childClass):
+        matches = list(filter(lambda x: isinstance(x, childClass), self._view.GetChildren()))
+        return None if len(matches) == 0 else matches[0]
+
+    def _show_log_messages(self, event):
+        cw = self._get_child_window(ViewLogMessages)
+        if cw is None:
+            cw = ViewLogMessages(self._view)
+            cw.Show()
+        else:
+            cw.Restore()
+        cw.Activate()
+        event.Skip()
 
     ##################
     # Event handlers #
