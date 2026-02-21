@@ -7,13 +7,18 @@ import wx.adv
 import src.models.id_manager as IdManager
 import src.models.images as Images
 
+from src.views.view_log_messages import ViewLogMessages
+
 
 class MainView(wx.MDIParentFrame):
 
-    _MIN_WINDOW_SIZE = (900, 600)
+    # Minimum screen resolution: 1366×768 / 1280x720 (still used on older laptops)
+    _MIN_WINDOW_SIZE = (1200, 700)
+    _ID_WINDOW_BOT = wx.NewIdRef()
     _ID_WINDOW_LEFT = wx.NewIdRef()
-    _LEFT_WINDOW_MIN_WIDTH = 50
+    _BOT_WINDOW_HEIGHT = 100
     _LEFT_WINDOW_WIDTH = 150
+    _WINDOW_MIN_SIZE = 50
     _STATUS_SIZE = 170
 
     def __init__(self, title):
@@ -49,12 +54,17 @@ class MainView(wx.MDIParentFrame):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         tb.AddTool(IdManager.ID_SHOW_DATA_TABLE, "", Images.data_table_24.GetBitmap(),
                    "Show data table")
-        tb.AddSeparator()
-        tb.AddTool(IdManager.ID_SHOW_LOG, "", Images.log_messages_24.GetBitmap(),
-                   "Show log messages")
         tb.Realize()
 
     def _create_layout(self):
+        self._bot_win = wx.adv.SashLayoutWindow(self, self._ID_WINDOW_BOT,
+                                                style=wx.NO_BORDER|wx.adv.SW_3D)
+        self._bot_win.SetDefaultSize((-1, self._BOT_WINDOW_HEIGHT))
+        self._bot_win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
+        self._bot_win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
+        self._bot_win.SetSashVisible(wx.adv.SASH_TOP, True)
+        log = ViewLogMessages(self._bot_win)
+
         self._left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
                                                  style=wx.NO_BORDER|wx.adv.SW_3D)
         self._left_win.SetDefaultSize((self._LEFT_WINDOW_WIDTH, -1))
@@ -65,14 +75,16 @@ class MainView(wx.MDIParentFrame):
 
     def _create_status_bar(self):
         sb = self.CreateStatusBar()
-        sb.SetFieldsCount(5)
+        sb.SetFieldsCount(6)
         sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE,
-                            self._STATUS_SIZE, self._STATUS_SIZE,-1])
+                            self._STATUS_SIZE, self._STATUS_SIZE,
+                            self._STATUS_SIZE, -1])
         sb.SetStatusText("Sample time: -", 0)
         sb.SetStatusText("End time: -", 1)
         sb.SetStatusText("Total samples: -", 2)
         sb.SetStatusText("Elapsed time: -", 3)
-        sb.SetStatusText("Status: idle", 4)
+        sb.SetStatusText("Number of samples: 0", 4)
+        sb.SetStatusText("Status: idle", 5)
 
     ##################
     # Event handlers #
@@ -89,8 +101,12 @@ class MainView(wx.MDIParentFrame):
             return
 
         if event.GetId() == self._ID_WINDOW_LEFT:
-            new_width = max(event.GetDragRect().width, self._LEFT_WINDOW_MIN_WIDTH)
+            new_width = max(event.GetDragRect().width, self._WINDOW_MIN_SIZE)
             self._left_win.SetDefaultSize((new_width, -1))
+
+        if event.GetId() == self._ID_WINDOW_BOT:
+            new_height = max(event.GetDragRect().height, self._WINDOW_MIN_SIZE)
+            self._bot_win.SetDefaultSize((-1, new_height))
 
         wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
 
@@ -102,7 +118,7 @@ class MainView(wx.MDIParentFrame):
         return self._left_win.GetSize()[0]
 
     def set_tree_width(self, width):
-        if width > self._LEFT_WINDOW_MIN_WIDTH:
+        if width > self._WINDOW_MIN_SIZE:
             self._left_win.SetDefaultSize((width, -1))
 
 
