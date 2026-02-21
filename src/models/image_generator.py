@@ -10,7 +10,6 @@ Toolbar: 24px
 """
 
 import base64
-import glob
 import os
 import pathlib
 import wx
