@@ -52,8 +52,12 @@ class MainView(wx.MDIParentFrame):
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        tb.AddTool(IdManager.ID_SHOW_PROCESS, "", Images.process_24.GetBitmap(),
+                   "Show process")
         tb.AddTool(IdManager.ID_SHOW_DATA_TABLE, "", Images.data_table_24.GetBitmap(),
                    "Show data table")
+        tb.AddTool(IdManager.ID_SHOW_GRAPH, "", Images.graph_24.GetBitmap(),
+                   "Show graph")
         tb.Realize()
 
     def _create_layout(self):
