@@ -18,6 +18,9 @@ class MainView(wx.MDIParentFrame):
 
     def __init__(self, title):
         super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
+        icon = wx.Icon()
+        icon.CopyFromBitmap(Images.graph_24.GetBitmap())
+        self.SetIcon(icon)
 
         self._create_menu()
         self._create_toolbar()
@@ -35,6 +38,11 @@ class MainView(wx.MDIParentFrame):
 
     def _create_menu(self):
         menu_bar = wx.MenuBar()
+        menu = wx.Menu()
+        menu.Append(IdManager.ID_MENU_NEW_CONFIG, "New configuration")
+        menu.AppendSeparator()
+        menu.Append(IdManager.ID_MENU_EXIT, "Exit")
+        menu_bar.Append(menu, "File")
         self.SetMenuBar(menu_bar)
 
     def _create_toolbar(self):
