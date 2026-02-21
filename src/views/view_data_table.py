@@ -9,8 +9,10 @@ import src.models.images as Images
 
 class ViewDataTable(wx.MDIChildFrame):
 
+    _TITLE = "Data table"
+
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, title=self._TITLE)
 
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.data_table_24.GetBitmap())
