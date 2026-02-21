@@ -30,6 +30,7 @@ class MainController:
             self._view.SetSize(value)
         self._view.Maximize(self._app_settings.get_main_window_maximized())
         self._view.set_tree_width(self._app_settings.get_main_window_tree_width())
+        self._view.set_log_height(self._app_settings.get_main_window_log_height())
         self._logger.debug("Show main view")
         self._view.Show()
 
@@ -74,6 +75,7 @@ class MainController:
             self._app_settings.store_main_window_position(*self._view.GetPosition())
             self._app_settings.store_main_window_size(*self._view.GetSize())
         self._app_settings.store_main_window_tree_width(self._view.get_tree_width())
+        self._app_settings.store_main_window_log_height(self._view.get_log_height())
 
         event.Skip()
 

@@ -79,6 +79,12 @@ class ApplicationSettings:
     def store_main_window_tree_width(self, width):
         return self._store_property("main_window", "tree_width", width)
 
+    def get_main_window_log_height(self):
+        return self._get_property("main_window", "log_height", -1)
+
+    def store_main_window_log_height(self, height):
+        return self._store_property("main_window", "log_height", height)
+
 
 if __name__ == "__main__":
 
@@ -128,6 +134,16 @@ if __name__ == "__main__":
     s.store_main_window_tree_width(new_value)
     test_value = s.get_main_window_tree_width()
     print("New tree width:", test_value)
-    assert test_value == 200
+    assert test_value == new_value
+
+    print("\nMain window log height")
+    test_value = s.get_main_window_log_height()
+    print("Current log height:", test_value)
+    assert test_value == -1
+    new_value = 100
+    s.store_main_window_log_height(new_value)
+    test_value = s.get_main_window_log_height()
+    print("New log height:", test_value)
+    assert test_value == new_value
 
     _remove_settings_file()

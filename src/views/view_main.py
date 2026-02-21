@@ -121,6 +121,13 @@ class MainView(wx.MDIParentFrame):
         if width > self._WINDOW_MIN_SIZE:
             self._left_win.SetDefaultSize((width, -1))
 
+    def get_log_height(self):
+        return self._bot_win.GetSize()[1]
+
+    def set_log_height(self, height):
+        if height > self._WINDOW_MIN_SIZE:
+            self._bot_win.SetDefaultSize((-1, height))
+
 
 if __name__ == "__main__":
 
