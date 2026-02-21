@@ -9,7 +9,6 @@ import src.models.id_manager as IdManager
 from src.models.application_settings import ApplicationSettings
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
-from src.views.view_log_messages import ViewLogMessages
 from src.views.view_main import MainView
 
 
