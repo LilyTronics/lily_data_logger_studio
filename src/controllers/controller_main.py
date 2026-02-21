@@ -10,6 +10,7 @@ from src.models.application_settings import ApplicationSettings
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
 from src.views.view_main import MainView
+from src.views.view_process import ViewProcess
 
 
 class MainController:
@@ -36,6 +37,7 @@ class MainController:
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
 
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
+        self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
 
         self._process_test_options(test_options)
 
@@ -44,6 +46,11 @@ class MainController:
     ###########
 
     def _process_test_options(self, test_options):
+        if test_options.show_view_process:
+            self._logger.debug("Test option: show view process")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_PROCESS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
         if test_options.show_view_data_table:
             self._logger.debug("Test option: show view data table")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
@@ -58,6 +65,10 @@ class MainController:
             cw = matches[0]
             cw.Restore()
         cw.Activate()
+
+    def _show_process(self, event):
+        self._show_child_window(ViewProcess)
+        event.Skip()
 
     def _show_data_table(self, event):
         self._show_child_window(ViewDataTable)
