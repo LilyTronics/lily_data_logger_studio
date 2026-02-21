@@ -7,3 +7,4 @@ class TestOptions:
     log_to_stdout = False
     show_view_process = False
     show_view_data_table = False
+    show_view_graph = False

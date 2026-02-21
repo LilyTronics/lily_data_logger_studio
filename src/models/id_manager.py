@@ -21,3 +21,11 @@ ID_PROCESS_EDIT = wx.NewIdRef()
 ID_PROCESS_UP = wx.NewIdRef()
 ID_PROCESS_DOWN = wx.NewIdRef()
 ID_PROCESS_DELETE = wx.NewIdRef()
+
+# Graph window
+ID_GRAPH_ADD = wx.NewIdRef()
+ID_GRAPH_INSERT = wx.NewIdRef()
+ID_GRAPH_EDIT = wx.NewIdRef()
+ID_GRAPH_UP = wx.NewIdRef()
+ID_GRAPH_DOWN = wx.NewIdRef()
+ID_GRAPH_DELETE = wx.NewIdRef()

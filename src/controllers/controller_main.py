@@ -9,6 +9,7 @@ import src.models.id_manager as IdManager
 from src.models.application_settings import ApplicationSettings
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
+from src.views.view_graph import ViewGraph
 from src.views.view_main import MainView
 from src.views.view_process import ViewProcess
 
@@ -36,8 +37,9 @@ class MainController:
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
 
-        self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
+        self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
+        self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
 
         self._process_test_options(test_options)
 
@@ -56,6 +58,11 @@ class MainController:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
+        if test_options.show_view_graph:
+            self._logger.debug("Test option: show view graph")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPH)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
     def _show_child_window(self, child_class):
         matches = list(filter(lambda x: isinstance(x, child_class), self._view.GetChildren()))
         if len(matches) == 0:
@@ -72,6 +79,10 @@ class MainController:
 
     def _show_data_table(self, event):
         self._show_child_window(ViewDataTable)
+        event.Skip()
+
+    def _show_graph(self, event):
+        self._show_child_window(ViewGraph)
         event.Skip()
 
     ##################
