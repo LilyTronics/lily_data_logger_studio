@@ -63,7 +63,7 @@ class MainView(wx.MDIParentFrame):
         self._bot_win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         self._bot_win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
         self._bot_win.SetSashVisible(wx.adv.SASH_TOP, True)
-        log = ViewLogMessages(self._bot_win)
+        ViewLogMessages(self._bot_win)
 
         self._left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
                                                  style=wx.NO_BORDER|wx.adv.SW_3D)
