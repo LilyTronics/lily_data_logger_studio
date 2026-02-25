@@ -12,6 +12,8 @@ from src.models.test_options import TestOptions
 def run_data_logger(options=TestOptions):
     log = Logger(options.log_to_stdout)
     log.info("Start application")
+    log.info(f"Application path: {AppData.APP_PATH}")
+    log.info(f"Instruments path: {AppData.INSTRUMENTS_PATH}")
     MainController(f"{AppData.APP_NAME} V{AppData.VERSION}", log)
     AppData.wxApp.MainLoop()
     log.info("Application terminated")
