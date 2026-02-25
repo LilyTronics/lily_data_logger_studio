@@ -3,3 +3,6 @@
 
 # Temporary files
 /temp
+
+# Build output
+/build/build_output
