@@ -1,0 +1,60 @@
+"""
+Temperature chamber simulator using UDP.
+"""
+
+import socket
+
+from src.simulators.simulator_base import SimulatorBase
+from src.simulators.simulator_settings import SimulatorSettings
+
+
+class TemperatureChamber(SimulatorBase):
+
+    NAME = "Temperature chamber"
+
+    _RX_BUFFER_SIZE = 1500
+    _TERMINATOR = "\n"
+    _SPEED = 0.5    # Degrees per 0.1 seconds (loop interval)
+
+    def init(self):
+        self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._sock.settimeout(SimulatorSettings.TemperatureChamber.RX_TIME_OUT)
+        self._sock.bind((SimulatorSettings.TemperatureChamber.IP,
+                         SimulatorSettings.TemperatureChamber.PORT))
+        self._temperature = 20.0
+        self._set_point = 20.0
+
+    def run_handler(self):
+        try:
+            response = "unknown command"
+            data, client_address = self._sock.recvfrom(self._RX_BUFFER_SIZE)
+            data = data.decode("latin")
+            if data.endswith(self._TERMINATOR):
+                data = data.strip()
+                if data == "id?":
+                    response = self.NAME
+                if data == "temp?":
+                    response = f"{self._temperature}"
+                if data.startswith("temp="):
+                    self._set_point = float(data.split("=")[1])
+                    response = "ok"
+            response += self._TERMINATOR
+            self._sock.sendto(response.encode("latin"), client_address)
+        except TimeoutError:
+            pass
+
+        if self._temperature < self._set_point:
+            self._temperature += self._SPEED
+        if self._temperature > self._set_point:
+            self._temperature -= self._SPEED
+
+    def cleanup(self):
+        self._sock.close()
+
+
+if __name__ == "__main__":
+
+    from src.simulators.test_simulators import test_simulators
+
+    test_simulators()
