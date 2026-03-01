@@ -78,35 +78,6 @@ class Logger:
 
 if __name__ == "__main__":
 
-    import threading
-    import time
+    from tests.unit_tests.model_tests.logger_test import LoggerTest
 
-
-    def _remove_log_file():
-        if os.path.isfile(AppData.APP_LOG_FILE):
-            os.remove(AppData.APP_LOG_FILE)
-
-    def _generate_error():
-        _ = 1 / 0
-
-    _remove_log_file()
-
-    log = Logger(True)
-    log.info("This is an info message")
-    log.debug("This is a debug message")
-    log.error("This is an error message")
-    log.info("This is a\nmulti line\nmessage")
-    print("This is a standard output message")
-    # Generate an error in a thread
-    threading.Thread(target=_generate_error).start()
-    # Give thread some time
-    time.sleep(0.5)
-
-    log.shut_down()
-
-    with open(AppData.APP_LOG_FILE, "r", encoding="utf-8") as log_fp:
-        content = log_fp.read()
-    print("\nLog file content:")
-    print(content)
-
-    _remove_log_file()
+    LoggerTest().run(True)
