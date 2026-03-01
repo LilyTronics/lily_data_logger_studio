@@ -29,3 +29,10 @@ ID_GRAPH_EDIT = wx.NewIdRef()
 ID_GRAPH_UP = wx.NewIdRef()
 ID_GRAPH_DOWN = wx.NewIdRef()
 ID_GRAPH_DELETE = wx.NewIdRef()
+
+
+if __name__ == "__main__":
+
+    from tests.unit_tests.model_tests.id_manager_test import IdManagerTest
+
+    IdManagerTest().run(True)
