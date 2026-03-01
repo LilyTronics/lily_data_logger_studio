@@ -5,6 +5,7 @@ View for the graph.
 import wx
 
 import src.models.id_manager as IdManager
+import src.models.images as Images
 
 from src.views.view_graphs_panel import ViewGraphsPanel
 
@@ -16,6 +17,10 @@ class ViewGraph(wx.MDIChildFrame):
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
+
+        icon = wx.Icon()
+        icon.CopyFromBitmap(Images.graph_24.GetBitmap())
+        self.SetIcon(icon)
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self._create_graph_panel(), 1, wx.EXPAND | wx.ALL, 1)
