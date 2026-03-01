@@ -88,62 +88,6 @@ class ApplicationSettings:
 
 if __name__ == "__main__":
 
-    def _remove_settings_file():
-        # Start with no setting file
-        if os.path.isfile(AppData.SETTINGS_FILE):
-            os.remove(AppData.SETTINGS_FILE)
+    from tests.unit_tests.model_tests.application_settings_test import ApplicationSettingsTest
 
-    _remove_settings_file()
-    s = ApplicationSettings()
-
-    print("Main window size")
-    test_value = s.get_main_window_size()
-    print("Current window size:", test_value)
-    assert test_value == (-1, -1)
-    new_value = (1000, 650)
-    s.store_main_window_size(*new_value)
-    test_value = s.get_main_window_size()
-    print("New main window size:", test_value)
-    assert test_value == new_value
-
-    print("\nMain window position")
-    test_value = s.get_main_window_position()
-    print("Current window position:", test_value)
-    assert test_value == (-1, -1)
-    new_value = (50, 50)
-    s.store_main_window_position(*new_value)
-    test_value = s.get_main_window_position()
-    print("New main window position:", test_value)
-    assert test_value == new_value
-
-    print("\nMain window maximized")
-    test_value = s.get_main_window_maximized()
-    print("Current window maximized:", test_value)
-    assert not test_value
-    new_value = not test_value
-    s.store_main_window_maximized(new_value)
-    test_value = s.get_main_window_maximized()
-    print("New main window position:", test_value)
-    assert test_value
-
-    print("\nMain window tree width")
-    test_value = s.get_main_window_tree_width()
-    print("Current tree width:", test_value)
-    assert test_value == -1
-    new_value = 200
-    s.store_main_window_tree_width(new_value)
-    test_value = s.get_main_window_tree_width()
-    print("New tree width:", test_value)
-    assert test_value == new_value
-
-    print("\nMain window log height")
-    test_value = s.get_main_window_log_height()
-    print("Current log height:", test_value)
-    assert test_value == -1
-    new_value = 100
-    s.store_main_window_log_height(new_value)
-    test_value = s.get_main_window_log_height()
-    print("New log height:", test_value)
-    assert test_value == new_value
-
-    _remove_settings_file()
+    ApplicationSettingsTest().run(True)
