@@ -22,9 +22,9 @@ arguments = [
     # Not relevant how many public methods there are
     "--disable=too-few-public-methods",
     # We decide how many is too many, thank you very much
-    "--disable=too-many-instance-attributes"
-    # # We have our own preferred import order
-    # "--disable=wrong-import-order"
+    "--disable=too-many-instance-attributes",
+    # Duplicate code is not always duplicate code...
+    "--disable=duplicate-code"
 ]
 
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
