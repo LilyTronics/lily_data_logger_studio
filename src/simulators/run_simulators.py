@@ -17,7 +17,7 @@ _AVAILABLE_SIMULATORS = [
 def start_simulators():
     for sim_class in _AVAILABLE_SIMULATORS:
         # Check if a simulator is already running
-        matches = list(filter(lambda x: isinstance(x, sim_class), _RUNNING_SIMULATORS))
+        matches = list(filter(lambda x, cls=sim_class : isinstance(x, cls), _RUNNING_SIMULATORS))
         if len(matches) == 0:
             try:
                 sim = sim_class()

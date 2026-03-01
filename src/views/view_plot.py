@@ -11,6 +11,8 @@ class ViewPlot(wx.lib.plot.PlotCanvas):
         self.title = title
         super().__init__(parent)
         self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
+        # Names from WX python are not conform the Pyhton standard
+        # pylint: disable=invalid-name
         self.fontSizeLegend = 8
         self.fontSizeAxis = 8
         self.fontSizeTitle = 10
@@ -19,6 +21,7 @@ class ViewPlot(wx.lib.plot.PlotCanvas):
         self.enableAntiAliasing = True
         self.xSpec = "auto"
         self.ySpec = "auto"
+        # pylint: enable=invalid-name
 
         gc = wx.lib.plot.PlotGraphics([wx.lib.plot.PolyLine([])], title)
         self.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))

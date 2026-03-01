@@ -31,10 +31,11 @@ class UdpClient:
             response = self._socket.recv(self._RX_BUFFER_SIZE).decode("latin")
             if response.endswith(self._TERMINATOR):
                 response = response.strip()
-        except ConnectionResetError:
-            raise Exception(f"Could not connect to {self._server_ip_address}:{self._server_port}")
-        except TimeoutError:
-            raise Exception("Error receiver timeout")
+        except ConnectionResetError as e:
+            raise ConnectionError(
+                f"Could not connect to {self._server_ip_address}:{self._server_port}") from e
+        except TimeoutError as e:
+            raise TimeoutError("Error receiver timeout") from e
 
         return response
 

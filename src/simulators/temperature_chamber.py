@@ -16,14 +16,18 @@ class TemperatureChamber(SimulatorBase):
     _TERMINATOR = "\n"
     _SPEED = 0.5    # Degrees per 0.1 seconds (loop interval)
 
+    def __init__(self):
+        super().__init__()
+        self._sock = None
+        self._temperature = 20.0
+        self._set_point = 20.0
+
     def init(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.settimeout(SimulatorSettings.TemperatureChamber.RX_TIME_OUT)
         self._sock.bind((SimulatorSettings.TemperatureChamber.IP,
                          SimulatorSettings.TemperatureChamber.PORT))
-        self._temperature = 20.0
-        self._set_point = 20.0
 
     def run_handler(self):
         try:

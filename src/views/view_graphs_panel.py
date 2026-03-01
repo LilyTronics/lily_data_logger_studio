@@ -71,12 +71,13 @@ if __name__ == "__main__":
             panel = wx.Panel(self)
 
             self._n_graphs = 0
-            self.spinCount = wx.SpinCtrl(panel, value="0", min=0, max=12)
+            self.spin_count = wx.SpinCtrl(panel, value="0", min=0, max=12)
             self.graphs_view = ViewGraphsPanel(panel)
 
             grid = wx.GridBagSizer(5, 5)
-            grid.Add(wx.StaticText(panel, label="Number of Graphs:"), (0, 0), flag=wx.ALIGN_CENTER_VERTICAL)
-            grid.Add(self.spinCount, (0, 1), flag=wx.ALIGN_CENTER_VERTICAL)
+            grid.Add(wx.StaticText(panel, label="Number of Graphs:"), (0, 0),
+                                   flag=wx.ALIGN_CENTER_VERTICAL)
+            grid.Add(self.spin_count, (0, 1), flag=wx.ALIGN_CENTER_VERTICAL)
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(grid, 0, wx.EXPAND | wx.ALL, 5)
@@ -84,17 +85,17 @@ if __name__ == "__main__":
 
             panel.SetSizer(box)
 
-            self.spinCount.Bind(wx.EVT_SPINCTRL, self.on_spin)
+            self.spin_count.Bind(wx.EVT_SPINCTRL, self.on_spin)
 
-        def on_spin(self, event):
-            diff = self.spinCount.GetValue() - self._n_graphs
+        def on_spin(self, _event):
+            diff = self.spin_count.GetValue() - self._n_graphs
             if diff > 0:
                 for i in range(diff):
                     self.graphs_view.add_graph(f"Graph {self._n_graphs + 1 + i}")
             elif diff < 0:
                 for i in range(-diff):
                     self.graphs_view.remove_graph(f"Graph {self._n_graphs}")
-            self._n_graphs = self.spinCount.GetValue()
+            self._n_graphs = self.spin_count.GetValue()
 
 
     app = wx.App(False)
