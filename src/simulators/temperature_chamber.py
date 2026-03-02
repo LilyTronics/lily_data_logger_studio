@@ -59,6 +59,6 @@ class TemperatureChamber(SimulatorBase):
 
 if __name__ == "__main__":
 
-    from src.simulators.test_simulators import test_simulators
+    from tests.unit_tests.simulator_tests.temperature_chamber_test import TemperatureChamberTest
 
-    test_simulators()
+    TemperatureChamberTest().run(True)
