@@ -1,7 +1,9 @@
 [MESSAGES CONTROL]
 disable = missing-function-docstring,
           missing-class-docstring,
-          too-few-public-methods
+          too-few-public-methods,
+          broad-exception-raised,
+          broad-exception-caught
 
 [TYPECHECK]
 ignored-modules = wx
