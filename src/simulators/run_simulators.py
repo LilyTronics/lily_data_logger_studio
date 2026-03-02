@@ -2,17 +2,14 @@
 Run all simulators.
 """
 
-import threading
 import time
 
 from src.simulators.temperature_chamber import TemperatureChamber
-
 
 _RUNNING_SIMULATORS = []
 _AVAILABLE_SIMULATORS = [
     TemperatureChamber
 ]
-
 
 def start_simulators():
     for sim_class in _AVAILABLE_SIMULATORS:
@@ -34,9 +31,6 @@ def start_simulators():
         else:
             print(f"Simulator {sim_class} is already running")
 
-    _show_running_threads()
-
-
 def stop_simulators():
     for sim in _RUNNING_SIMULATORS:
         try:
@@ -51,18 +45,10 @@ def stop_simulators():
             print(f"Could not stop simulator {sim}\n{e}")
 
     del _RUNNING_SIMULATORS[:]
-    _show_running_threads()
-
-
-def _show_running_threads():
-    print("Running threads:")
-    for thread in threading.enumerate():
-        print("-", thread.name)
-    print("")
 
 
 if __name__ == "__main__":
 
-    from src.simulators.test_simulators import test_simulators
+    from tests.unit_tests.simulator_tests.simulators_test import SimulatorsTest
 
-    test_simulators()
+    SimulatorsTest().run(True)
