@@ -61,6 +61,6 @@ class SimulatorBase:
 
 if __name__ == "__main__":
 
-    from src.simulators.test_simulators import test_simulators
+    from tests.unit_tests.simulator_tests.simulators_test import SimulatorsTest
 
-    test_simulators()
+    SimulatorsTest().run(True)
