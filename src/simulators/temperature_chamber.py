@@ -21,6 +21,7 @@ class TemperatureChamber(SimulatorBase):
         self._sock = None
         self._temperature = 20.0
         self._set_point = 20.0
+        self._on_state = False
 
     def init(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -38,6 +39,13 @@ class TemperatureChamber(SimulatorBase):
                 data = data.strip()
                 if data == "id?":
                     response = self.NAME
+                if data == "on":
+                    self._on_state = True
+                    response = "ok"
+                if data == "off":
+                    self._on_state = False
+                    self._temperature = 20.0
+                    response = "ok"
                 if data == "temp?":
                     response = f"{self._temperature}"
                 if data.startswith("temp="):
@@ -48,10 +56,11 @@ class TemperatureChamber(SimulatorBase):
         except TimeoutError:
             pass
 
-        if self._temperature < self._set_point:
-            self._temperature += self._SPEED
-        if self._temperature > self._set_point:
-            self._temperature -= self._SPEED
+        if self._on_state:
+            if self._temperature < self._set_point:
+                self._temperature += self._SPEED
+            if self._temperature > self._set_point:
+                self._temperature -= self._SPEED
 
     def cleanup(self):
         self._sock.close()
