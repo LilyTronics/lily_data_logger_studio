@@ -31,7 +31,7 @@ class TemperatureChamberTest(TestSuite):
         self.log.debug("Set temperature to 30")
         self.log.debug(f"Set temperature response: {tc.send_command('temp=30')}")
         result = self.wait_for(lambda: 29.5 < float(tc.send_command("temp?")) < 30.5, True,
-                               timeout=60, interval=1)
+                               timeout=10, interval=1)
         self.log.debug(f"Current temperature: {tc.send_command('temp?')}")
         self.fail_if(not result, "Temperature did not reach 30 within 60 seconds")
 
