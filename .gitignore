@@ -1,5 +1,6 @@
 # Pyhton stuff
 *.pyc
+/.venv
 
 # Temporary files
 /temp

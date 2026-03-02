@@ -30,9 +30,13 @@ arguments = [
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 for current_folder, sub_folders, filenames in os.walk(root_path):
     sub_folders.sort()
+    # Skip files in virtual environment
+    if current_folder.startswith(os.path.join(root_path, ".venv")):
+        continue
     # Skip files in build output
     if current_folder.startswith(os.path.join(root_path, "build", "build_output")):
         continue
+    # Skip files in temporary folder
     if current_folder.startswith(os.path.join(root_path, "temp")):
         continue
     for filename in filter(lambda x: x.endswith(".py"), filenames):
