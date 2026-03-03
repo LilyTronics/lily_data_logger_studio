@@ -9,3 +9,4 @@ class TestOptions:
     show_view_graph = False
     show_view_process = False
     show_view_settings = False
+    show_view_instruments = False
