@@ -96,7 +96,9 @@ class MainController:
         cw.Activate()
 
     def _show_settings(self, event):
-        self._show_child_window(ViewSettings)
+        dlg = ViewSettings(self._view)
+        dlg.ShowModal()
+        dlg.Destroy()
         event.Skip()
 
     def _show_instruments(self, event):
