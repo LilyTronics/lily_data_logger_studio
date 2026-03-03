@@ -30,6 +30,7 @@ class MainView(wx.MDIParentFrame):
         self._create_menu()
         self._create_toolbar()
         self._create_layout()
+        self._create_tree()
         self._create_status_bar()
 
         self.Bind(wx.EVT_SIZE, self._on_size)
@@ -75,7 +76,17 @@ class MainView(wx.MDIParentFrame):
         self._left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
         self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
+
+    def _create_tree(self):
+        image_list = wx.ImageList(16, 16)
+        image_list.Add(Images.settings_16.GetBitmap())
+        image_list.Add(Images.instruments_16.GetBitmap())
+        image_list.Add(Images.process_16.GetBitmap())
+        image_list.Add(Images.data_table_16.GetBitmap())
+        image_list.Add(Images.graph_16.GetBitmap())
+
         self._tree = wx.TreeCtrl(self._left_win, IdManager.ID_TREE, style=wx.TR_HIDE_ROOT)
+        self._tree.AssignImageList(image_list)
         self._tree.AddRoot("root")
 
     def _create_status_bar(self):
@@ -136,8 +147,8 @@ class MainView(wx.MDIParentFrame):
     def update_configuration(self, configuration):
         root = self._tree.GetRootItem()
         self._tree.DeleteChildren(root)
-        for main_group in configuration.get_main_groups():
-            main_item = self._tree.AppendItem(root, main_group)
+        for i, main_group in enumerate(configuration.get_main_groups()):
+            main_item = self._tree.AppendItem(root, main_group, image=i)
             sub_items = configuration.get_sub_items(main_group)
             for sub_item in sub_items:
                 self._tree.AppendItem(main_item, sub_item)

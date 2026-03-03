@@ -7,6 +7,13 @@ Color: #325c81
 Tree: 16px
 Toolbar: 24px
 
+image name       icon name
+data table     : grid
+graph          : line
+instruments    : processor
+process        : network
+settings       : settings-12
+
 """
 
 import base64
