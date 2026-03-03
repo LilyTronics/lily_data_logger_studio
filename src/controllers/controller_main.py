@@ -41,6 +41,7 @@ class MainController:
         self._view.Show()
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
+        self._view.Bind(wx.EVT_MENU, self._on_menu_new_config, id=IdManager.ID_MENU_NEW_CONFIG)
         self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
 
         self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
@@ -97,10 +98,15 @@ class MainController:
         cw.Activate()
 
     def _show_settings(self, event):
+        self._logger.info(f"Edit settings")
+        settings = self._configuration.get_settings()
+        self._logger.debug(f"Current settings: {settings}")
         dlg = ViewSettings(self._view, self._configuration.get_settings())
         if dlg.ShowModal() == wx.ID_OK:
             try:
-                self._configuration.update_settings(dlg.get_settings())
+                settings = dlg.get_settings()
+                self._logger.debug(f"New settings: {settings}")
+                self._configuration.update_settings(settings)
             except Exception as e:
                 self._logger.error(f"Error updating settings: {e}")
                 ViewDialogs.show_message(self._view, f"Error updating settings: {e}",
@@ -128,6 +134,13 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _on_menu_new_config(self, event):
+        self._logger.info(f"Create new configuration")
+        del self._configuration
+        self._configuration = Configuration()
+        self._view.update_configuration(self._configuration)
+        event.Skip()
 
     def _on_open_config(self, event):
         dlg_title = "Open configuration"
