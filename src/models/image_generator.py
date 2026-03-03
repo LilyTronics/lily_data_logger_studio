@@ -12,6 +12,7 @@ data table     : grid
 graph          : line
 instruments    : processor
 process        : network
+save           : save
 settings       : settings-12
 
 """

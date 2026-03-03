@@ -53,6 +53,9 @@ class MainView(wx.MDIParentFrame):
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        tb.AddTool(IdManager.ID_SAVE_CONFIG, "", Images.save_24.GetBitmap(),
+                   "Save configuration")
+        tb.AddSeparator()
         tb.AddTool(IdManager.ID_SHOW_SETTINGS, "", Images.settings_24.GetBitmap(),
                    "Show settings")
         tb.AddTool(IdManager.ID_SHOW_INSTRUMENTS, "", Images.instruments_24.GetBitmap(),

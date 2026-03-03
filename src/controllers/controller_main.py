@@ -42,6 +42,7 @@ class MainController:
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
 
+        self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_SETTINGS)
         self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
@@ -116,6 +117,26 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _on_save_config(self, event):
+        dlg_title = "Save configuration"
+        dlg = wx.FileDialog(self._view, dlg_title,
+                            wildcard="Configuration files (JSON)|*.json",
+                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        if dlg.ShowModal() == wx.ID_OK:
+            filename = dlg.GetPath()
+            try:
+                self._configuration.save(filename)
+                self._logger.debug(f"Configuration saved to: {filename}")
+                self._view.update_configuration(self._configuration)
+            except Exception as e:
+                self._logger.error(f"Error saving configuration: {e}")
+                wx.MessageBox(f"Error saving configuration: {e}", dlg_title,
+                              wx.ICON_EXCLAMATION, self._view)
+
+        dlg.Destroy()
+        event.Skip()
+
     def _on_tree_item_activated(self, event):
         tree = event.GetEventObject()
         item = event.GetItem()

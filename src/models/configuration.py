@@ -38,16 +38,11 @@ class Configuration:
         try:
             with open(self._filename, "r", encoding="utf-8") as fp:
                 d = json.load(fp)
+            self._configuration = d
         except FileNotFoundError:
             pass
         except json.decoder.JSONDecodeError:
             pass
-
-        return d
-
-    def _write_configuration(self, configuration):
-        with open(self._filename, "w", encoding="utf-8") as fp:
-            json.dump(configuration, fp, indent=2)
 
     ##########
     # Public #
@@ -55,6 +50,11 @@ class Configuration:
 
     def get_filename(self):
         return self._NO_FILENAME if self._filename is None else self._filename
+
+    def save(self, filename):
+        with open(filename, "w", encoding="utf-8") as fp:
+            json.dump(self._configuration, fp, indent=2)
+        self._filename = filename
 
     def get_main_groups(self):
         return self._configuration.keys()
