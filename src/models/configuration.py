@@ -51,6 +51,14 @@ class Configuration:
     def get_filename(self):
         return self._NO_FILENAME if self._filename is None else self._filename
 
+    def load(self, filename):
+        self._filename = None
+        self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
+        with open(filename, "r", encoding="utf-8") as fp:
+            d = json.load(fp)
+        self._configuration = d
+        self._filename = filename
+
     def save(self, filename):
         with open(filename, "w", encoding="utf-8") as fp:
             json.dump(self._configuration, fp, indent=2)

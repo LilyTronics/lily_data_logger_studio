@@ -11,9 +11,10 @@ image name       icon name
 data table     : grid
 graph          : line
 instruments    : processor
+open           : folder 3
 process        : network
 save           : save
-settings       : settings-12
+settings       : settings 12
 
 """
 

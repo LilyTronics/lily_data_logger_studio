@@ -42,6 +42,7 @@ class MainController:
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
 
+        self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_SETTINGS)
         self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_INSTRUMENTS)
@@ -117,6 +118,24 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _on_open_config(self, event):
+        dlg_title = "Open configuration"
+        dlg = wx.FileDialog(self._view, dlg_title,
+                            wildcard="Configuration files (JSON)|*.json",
+                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        if dlg.ShowModal() == wx.ID_OK:
+            filename = dlg.GetPath()
+            try:
+                self._configuration.load(filename)
+                self._logger.debug(f"Configuration loaded from: {filename}")
+            except Exception as e:
+                self._logger.error(f"Error loading configuration: {e}")
+                wx.MessageBox(f"Error loading configuration: {e}", dlg_title,
+                              wx.ICON_EXCLAMATION, self._view)
+        dlg.Destroy()
+        self._view.update_configuration(self._configuration)
+        event.Skip()
 
     def _on_save_config(self, event):
         dlg_title = "Save configuration"
