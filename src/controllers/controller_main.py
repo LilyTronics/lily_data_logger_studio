@@ -13,6 +13,7 @@ from src.views.view_data_table import ViewDataTable
 from src.views.view_graph import ViewGraph
 from src.views.view_main import MainView
 from src.views.view_process import ViewProcess
+from src.views.view_settings import ViewSettings
 
 
 class MainController:
@@ -40,6 +41,7 @@ class MainController:
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
 
+        self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_SETTINGS)
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
         self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
@@ -54,6 +56,11 @@ class MainController:
     ###########
 
     def _process_test_options(self, test_options):
+        if test_options.show_view_settings:
+            self._logger.debug("Test option: show view settings")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_SETTINGS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
         if test_options.show_view_process:
             self._logger.debug("Test option: show view process")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_PROCESS)
@@ -79,6 +86,10 @@ class MainController:
             cw.Restore()
         cw.Activate()
 
+    def _show_settings(self, event):
+        self._show_child_window(ViewSettings)
+        event.Skip()
+
     def _show_process(self, event):
         self._show_child_window(ViewProcess)
         event.Skip()
@@ -100,7 +111,8 @@ class MainController:
         if item.IsOk():
             item_text = tree.GetItemText(item)
             if item_text == "settings":
-                print("Show settings")
+                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_SETTINGS)
+                wx.PostEvent(self._view.GetEventHandler(), post_event)
             if item_text == "instruments":
                 print("Show instruments")
             if item_text == "process":
