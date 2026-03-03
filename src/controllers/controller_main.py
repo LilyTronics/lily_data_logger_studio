@@ -38,6 +38,7 @@ class MainController:
         self._view.Show()
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
+        self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
 
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
@@ -91,6 +92,10 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _on_menu_exit(self, event):
+        self._view.Close()
+        event.Skip()
 
     def _on_view_close(self, event):
         self._logger.debug("Close main view")
