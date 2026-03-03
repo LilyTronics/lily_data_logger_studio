@@ -99,7 +99,12 @@ class MainController:
     def _show_settings(self, event):
         dlg = ViewSettings(self._view, self._configuration.get_settings())
         if dlg.ShowModal() == wx.ID_OK:
-            self._configuration.update_settings(dlg.get_settings())
+            try:
+                self._configuration.update_settings(dlg.get_settings())
+            except Exception as e:
+                self._logger.error(f"Error updating settings: {e}")
+                ViewDialogs.show_message(self._view, f"Error updating settings: {e}",
+                                         "Update settings", wx.ICON_EXCLAMATION)
         dlg.Destroy()
         self._view.update_configuration(self._configuration)
         event.Skip()

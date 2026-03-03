@@ -125,7 +125,6 @@ class ViewSettings(wx.Dialog):
                         total_samples = "The sample time must be smaller than the end time"
                     else:
                         total_samples = int(end_time / sample_time) + 1
-
         self._lbl_total_samples.SetLabel(str(total_samples))
 
     ##########
@@ -135,9 +134,15 @@ class ViewSettings(wx.Dialog):
     def get_settings(self):
         sample_time = self._get_time(self._txt_sample_time, self._cmb_sample_time)
         end_time = self._get_time(self._txt_end_time, self._cmb_end_time)
+        if sample_time is None or sample_time <= 0:
+            raise Exception("The sample time is invalid")
+        if end_time is None or end_time <= 0:
+            raise Exception("The end time is invalid")
+        if sample_time > end_time:
+            raise Exception("The sample time must be smaller than the end time")
         return {
-            "sample_time" : sample_time if sample_time is not None else 3,
-            "end_time" : end_time if end_time is not None else 60,
+            "sample_time" : sample_time,
+            "end_time" : end_time,
             "continuous_mode" : self._radio_continuous.GetValue()
         }
 
