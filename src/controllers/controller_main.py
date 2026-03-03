@@ -10,6 +10,7 @@ from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
+from src.views.view_dialogs import ViewDialogs
 from src.views.view_graph import ViewGraph
 from src.views.view_instruments import ViewInstruments
 from src.views.view_main import MainView
@@ -123,39 +124,32 @@ class MainController:
 
     def _on_open_config(self, event):
         dlg_title = "Open configuration"
-        dlg = wx.FileDialog(self._view, dlg_title,
-                            wildcard="Configuration files (JSON)|*.json",
-                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
-        if dlg.ShowModal() == wx.ID_OK:
-            filename = dlg.GetPath()
+        filename = ViewDialogs.show_open_file(self._view, dlg_title,
+                                              file_filter="Configuration files (JSON)|*.json")
+        if filename is not None:
             try:
+                self._logger.info(f"Load configuration from: {filename}")
                 self._configuration.load(filename)
-                self._logger.debug(f"Configuration loaded from: {filename}")
             except Exception as e:
                 self._logger.error(f"Error loading configuration: {e}")
-                wx.MessageBox(f"Error loading configuration: {e}", dlg_title,
-                              wx.ICON_EXCLAMATION, self._view)
-        dlg.Destroy()
+                ViewDialogs.show_message(self._view, f"Error loading configuration: {e}", dlg_title,
+                                         wx.ICON_EXCLAMATION)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _on_save_config(self, event):
         dlg_title = "Save configuration"
-        dlg = wx.FileDialog(self._view, dlg_title,
-                            wildcard="Configuration files (JSON)|*.json",
-                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
-        if dlg.ShowModal() == wx.ID_OK:
-            filename = dlg.GetPath()
+        filename = ViewDialogs.show_save_file(self._view, dlg_title,
+                                              file_filter="Configuration files (JSON)|*.json")
+        if filename is not None:
             try:
+                self._logger.info(f"Save configuration to: {filename}")
                 self._configuration.save(filename)
-                self._logger.debug(f"Configuration saved to: {filename}")
                 self._view.update_configuration(self._configuration)
             except Exception as e:
                 self._logger.error(f"Error saving configuration: {e}")
-                wx.MessageBox(f"Error saving configuration: {e}", dlg_title,
-                              wx.ICON_EXCLAMATION, self._view)
-
-        dlg.Destroy()
+                ViewDialogs.show_message(self._view, f"Error saving configuration: {e}", dlg_title,
+                                         wx.ICON_EXCLAMATION)
         event.Skip()
 
     def _on_tree_item_activated(self, event):
