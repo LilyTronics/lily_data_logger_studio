@@ -7,6 +7,7 @@ import wx.adv
 import src.models.id_manager as IdManager
 import src.models.images as Images
 
+from src.models.time_converter import TimeConverter
 from src.views.view_log_messages import ViewLogMessages
 
 
@@ -99,17 +100,17 @@ class MainView(wx.MDIParentFrame):
         self._tree.AddRoot("root")
 
     def _create_status_bar(self):
-        sb = self.CreateStatusBar()
-        sb.SetFieldsCount(6)
-        sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE,
-                            self._STATUS_SIZE, self._STATUS_SIZE,
-                            self._STATUS_SIZE, -1])
-        sb.SetStatusText("Sample time: -", 0)
-        sb.SetStatusText("End time: -", 1)
-        sb.SetStatusText("Total samples: -", 2)
-        sb.SetStatusText("Elapsed time: -", 3)
-        sb.SetStatusText("Number of samples: 0", 4)
-        sb.SetStatusText("Status: idle", 5)
+        self._sb = self.CreateStatusBar()
+        self._sb.SetFieldsCount(6)
+        self._sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE,
+                                  self._STATUS_SIZE, self._STATUS_SIZE,
+                                  self._STATUS_SIZE, -1])
+        self._sb.SetStatusText("Sample time: -", 0)
+        self._sb.SetStatusText("End time: -", 1)
+        self._sb.SetStatusText("Total samples: -", 2)
+        self._sb.SetStatusText("Elapsed time: -", 3)
+        self._sb.SetStatusText("Number of samples: 0", 4)
+        self._sb.SetStatusText("Status: idle", 5)
 
     ##################
     # Event handlers #
@@ -162,6 +163,20 @@ class MainView(wx.MDIParentFrame):
             for sub_item in sub_items:
                 self._tree.AppendItem(main_item, sub_item)
         self._tree.ExpandAll()
+
+        settings = configuration.get_settings()
+        sample_time = settings["sample_time"]
+        end_time = "-"
+        total_samples = "-"
+        if not settings["continuous_mode"]:
+            end_time = settings["end_time"]
+            total_samples = int(end_time / sample_time) + 1
+            end_time = TimeConverter.create_duration_time_string(end_time)
+        sample_time = TimeConverter.create_duration_time_string(sample_time)
+        self._sb.SetStatusText(f"Sample time: {sample_time}", 0)
+        self._sb.SetStatusText(f"End time: {end_time}", 1)
+        self._sb.SetStatusText(f"Total samples: {total_samples}", 2)
+
         self.SetTitle(f"{self._title} - {configuration.get_filename()}")
 
 
