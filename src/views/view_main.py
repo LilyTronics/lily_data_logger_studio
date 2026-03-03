@@ -12,7 +12,7 @@ from src.views.view_log_messages import ViewLogMessages
 
 class MainView(wx.MDIParentFrame):
 
-    # Minimum screen resolution: 1366×768 / 1280x720 (still used on older laptops)
+    # Minimum screen resolution: 1366×768 / 1280x720 (still used on older laptops, anno 2026)
     _MIN_WINDOW_SIZE = (1200, 700)
     _ID_WINDOW_BOT = wx.NewIdRef()
     _ID_WINDOW_LEFT = wx.NewIdRef()
@@ -76,6 +76,7 @@ class MainView(wx.MDIParentFrame):
         self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
         self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
         self._tree = wx.TreeCtrl(self._left_win, style=wx.TR_HIDE_ROOT)
+        self._tree.AddRoot("root")
 
     def _create_status_bar(self):
         sb = self.CreateStatusBar()
@@ -131,6 +132,16 @@ class MainView(wx.MDIParentFrame):
     def set_log_height(self, height):
         if height > self._WINDOW_MIN_SIZE:
             self._bot_win.SetDefaultSize((-1, height))
+
+    def update_configuration(self, configuration):
+        root = self._tree.GetRootItem()
+        self._tree.DeleteChildren(root)
+        for main_group in configuration.get_main_groups():
+            main_item = self._tree.AppendItem(root, main_group)
+            sub_items = configuration.get_sub_items(main_group)
+            for sub_item in sub_items:
+                self._tree.AppendItem(main_item, sub_item)
+        self._tree.ExpandAll()
 
 
 if __name__ == "__main__":

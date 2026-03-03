@@ -1,0 +1,67 @@
+"""
+Model for storing and recalling the configuration.
+Configurations contains:
+- Data logging settings
+- Instruments and their settings
+- Process steps
+- Measurements (shows in data table)
+- Graphs settings
+"""
+
+import json
+
+from copy import deepcopy
+
+
+class Configuration:
+
+    _DEFAULT_CONFIGURATION = {
+        "settings": {},
+        "instruments": [],
+        "process": [],
+        "measurements": [],
+        "graphs": []
+    }
+
+    def __init__(self):
+        self._filename = None
+        self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
+
+    ###########
+    # Private #
+    ###########
+
+    def _read_configuration(self):
+        d = {}
+        try:
+            with open(self._filename, "r", encoding="utf-8") as fp:
+                d = json.load(fp)
+        except FileNotFoundError:
+            pass
+        except json.decoder.JSONDecodeError:
+            pass
+
+        return d
+
+    def _write_configuration(self, configuration):
+        with open(self._filename, "w", encoding="utf-8") as fp:
+            json.dump(configuration, fp, indent=2)
+
+    ##########
+    # Public #
+    ##########
+
+    def get_main_groups(self):
+        return self._configuration.keys()
+
+    def get_sub_items(self, main_group):
+        return  list(map(lambda x: x["name"],
+                         filter(lambda x: isinstance(x, dict) and "name" in x,
+                                self._configuration[main_group])))
+
+
+if __name__ == "__main__":
+
+    from tests.unit_tests.model_tests.configuration_test import ConfigurationTest
+
+    ConfigurationTest().run(True)

@@ -7,6 +7,7 @@ import wx
 import src.models.id_manager as IdManager
 
 from src.models.application_settings import ApplicationSettings
+from src.models.configuration import Configuration
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
 from src.views.view_graph import ViewGraph
@@ -20,6 +21,7 @@ class MainController:
         self._logger = logger
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
+        self._configuration = Configuration()
 
         self._logger.debug("Load main view")
         self._view = MainView(title)
@@ -42,6 +44,7 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
 
         self._process_test_options(test_options)
+        wx.CallAfter(self._view.update_configuration, self._configuration)
 
     ###########
     # Private #
