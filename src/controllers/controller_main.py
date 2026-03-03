@@ -97,9 +97,11 @@ class MainController:
         cw.Activate()
 
     def _show_settings(self, event):
-        dlg = ViewSettings(self._view)
-        dlg.ShowModal()
+        dlg = ViewSettings(self._view, self._configuration.get_settings())
+        if dlg.ShowModal() == wx.ID_OK:
+            self._configuration.update_settings(dlg.get_settings())
         dlg.Destroy()
+        self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _show_instruments(self, event):

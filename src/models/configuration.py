@@ -18,7 +18,11 @@ class Configuration:
     _NO_FILENAME = "<new configuration>"
 
     _DEFAULT_CONFIGURATION = {
-        "settings": {},
+        "settings": {
+            "sample_time": 3,
+            "end_time": 60,
+            "continuous_mode": False
+        },
         "instruments": [],
         "process": [],
         "measurements": [],
@@ -71,6 +75,12 @@ class Configuration:
         return  list(map(lambda x: x["name"],
                          filter(lambda x: isinstance(x, dict) and "name" in x,
                                 self._configuration[main_group])))
+
+    def get_settings(self):
+        return deepcopy(self._configuration["settings"])
+
+    def update_settings(self, settings):
+        self._configuration["settings"] = deepcopy(settings)
 
 
 if __name__ == "__main__":

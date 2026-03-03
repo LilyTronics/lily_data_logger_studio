@@ -15,7 +15,7 @@ class ViewSettings(wx.Dialog):
     _TITLE = "Settings"
     _WINDOW_SIZE = (500, -1)
 
-    def __init__(self, parent):
+    def __init__(self, parent, settings):
         super().__init__(parent, title=self._TITLE)
 
         icon = wx.Icon()
@@ -32,6 +32,18 @@ class ViewSettings(wx.Dialog):
         self.Bind(wx.EVT_COMBOBOX, self._on_time_change, self._cmb_end_time)
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_end_time)
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_continuous)
+
+        value, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("sample_time", 3))
+        self._txt_sample_time.SetValue(str(value))
+        self._cmb_sample_time.SetValue(units)
+        value, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("end_time", 60))
+        self._txt_end_time.SetValue(str(value))
+        self._cmb_end_time.SetValue(units)
+        if settings.get("continuous_mode", False):
+            self._radio_continuous.SetValue(True)
+        else:
+            self._radio_end_time.SetValue(True)
+        self._update_total_samples()
 
         self.SetSizer(box)
         self.SetInitialSize(self._WINDOW_SIZE)
@@ -84,7 +96,6 @@ class ViewSettings(wx.Dialog):
         self._update_total_samples()
         event.Skip()
 
-
     ###########
     # Private #
     ###########
@@ -116,6 +127,19 @@ class ViewSettings(wx.Dialog):
                         total_samples = int(end_time / sample_time) + 1
 
         self._lbl_total_samples.SetLabel(str(total_samples))
+
+    ##########
+    # Public #
+    ##########
+
+    def get_settings(self):
+        sample_time = self._get_time(self._txt_sample_time, self._cmb_sample_time)
+        end_time = self._get_time(self._txt_end_time, self._cmb_end_time)
+        return {
+            "sample_time" : sample_time if sample_time is not None else 3,
+            "end_time" : end_time if end_time is not None else 60,
+            "continuous_mode" : self._radio_continuous.GetValue()
+        }
 
 
 if __name__ == "__main__":
