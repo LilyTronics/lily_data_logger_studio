@@ -44,6 +44,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
         self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
 
+        self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated, id=IdManager.ID_TREE)
+
         self._process_test_options(test_options)
         wx.CallAfter(self._view.update_configuration, self._configuration)
 
@@ -92,6 +94,26 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+    def _on_tree_item_activated(self, event):
+        tree = event.GetEventObject()
+        item = event.GetItem()
+        if item.IsOk():
+            item_text = tree.GetItemText(item)
+            if item_text == "settings":
+                print("Show settings")
+            if item_text == "instruments":
+                print("Show instruments")
+            if item_text == "process":
+                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_PROCESS)
+                wx.PostEvent(self._view.GetEventHandler(), post_event)
+            if item_text == "measurements":
+                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
+                wx.PostEvent(self._view.GetEventHandler(), post_event)
+            if item_text == "graphs":
+                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPH)
+                wx.PostEvent(self._view.GetEventHandler(), post_event)
+
+        event.Skip()
 
     def _on_menu_exit(self, event):
         self._view.Close()

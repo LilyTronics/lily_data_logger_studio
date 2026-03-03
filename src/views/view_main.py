@@ -75,7 +75,7 @@ class MainView(wx.MDIParentFrame):
         self._left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
         self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
-        self._tree = wx.TreeCtrl(self._left_win, style=wx.TR_HIDE_ROOT)
+        self._tree = wx.TreeCtrl(self._left_win, IdManager.ID_TREE, style=wx.TR_HIDE_ROOT)
         self._tree.AddRoot("root")
 
     def _create_status_bar(self):

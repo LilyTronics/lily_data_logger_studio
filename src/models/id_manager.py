@@ -14,6 +14,9 @@ ID_SHOW_PROCESS = wx.NewIdRef()
 ID_SHOW_DATA_TABLE = wx.NewIdRef()
 ID_SHOW_GRAPH = wx.NewIdRef()
 
+# Tree view
+ID_TREE = wx.NewIdRef()
+
 # Process window
 ID_PROCESS_ADD = wx.NewIdRef()
 ID_PROCESS_INSERT = wx.NewIdRef()
