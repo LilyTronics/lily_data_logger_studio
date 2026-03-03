@@ -18,7 +18,7 @@ class MainView(wx.MDIParentFrame):
     _ID_WINDOW_LEFT = wx.NewIdRef()
     _BOT_WINDOW_HEIGHT = 100
     _LEFT_WINDOW_WIDTH = 150
-    _WINDOW_MIN_SIZE = 50
+    _WINDOW_MIN_SIZE = 100
     _STATUS_SIZE = 170
 
     def __init__(self, title):
