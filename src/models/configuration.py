@@ -32,6 +32,7 @@ class Configuration:
     def __init__(self):
         self._filename = None
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
+        self._is_changed = False
 
     ###########
     # Private #
@@ -61,12 +62,17 @@ class Configuration:
         with open(filename, "r", encoding="utf-8") as fp:
             d = json.load(fp)
         self._configuration = d
+        self._is_changed = False
         self._filename = filename
 
     def save(self, filename):
         with open(filename, "w", encoding="utf-8") as fp:
             json.dump(self._configuration, fp, indent=2)
         self._filename = filename
+        self._is_changed = False
+
+    def is_changed(self):
+        return self._is_changed
 
     def get_main_groups(self):
         return self._configuration.keys()
@@ -81,6 +87,7 @@ class Configuration:
 
     def update_settings(self, settings):
         self._configuration["settings"] = deepcopy(settings)
+        self._is_changed = True
 
 
 if __name__ == "__main__":

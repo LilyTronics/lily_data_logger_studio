@@ -177,7 +177,9 @@ class MainView(wx.MDIParentFrame):
         self._sb.SetStatusText(f"End time: {end_time}", 1)
         self._sb.SetStatusText(f"Total samples: {total_samples}", 2)
 
-        self.SetTitle(f"{self._title} - {configuration.get_filename()}")
+        title = f"{self._title} - {configuration.get_filename()}"
+        title += "*" if configuration.is_changed() else ""
+        self.SetTitle(title)
 
 
 if __name__ == "__main__":
