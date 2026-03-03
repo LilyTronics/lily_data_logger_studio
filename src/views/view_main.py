@@ -69,6 +69,11 @@ class MainView(wx.MDIParentFrame):
                    "Show data table")
         tb.AddTool(IdManager.ID_SHOW_GRAPH, "", Images.graph_24.GetBitmap(),
                    "Show graph")
+        tb.AddSeparator()
+        tb.AddTool(IdManager.ID_START_LOGGER, "", Images.start_24.GetBitmap(),
+                   "Start data logger")
+        tb.AddTool(IdManager.ID_STOP_LOGGER, "", Images.stop_24.GetBitmap(),
+                   "Stop data logger")
         tb.Realize()
 
     def _create_layout(self):

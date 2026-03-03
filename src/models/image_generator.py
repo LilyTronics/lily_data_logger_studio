@@ -7,14 +7,16 @@ Color: #325c81
 Tree: 16px
 Toolbar: 24px
 
-image name       icon name
-data table     : grid
-graph          : line
-instruments    : processor
-open           : folder 3
-process        : network
-save           : save
-settings       : settings 12
+image name        icon name
+data table      : grid
+graph           : line
+instruments     : processor
+open            : folder 3
+process         : network
+save            : save
+settings        : settings 12
+start           : play
+stop            : stop
 
 """
 
