@@ -15,6 +15,8 @@ from copy import deepcopy
 
 class Configuration:
 
+    _NO_FILENAME = "<new configuration>"
+
     _DEFAULT_CONFIGURATION = {
         "settings": {},
         "instruments": [],
@@ -50,6 +52,9 @@ class Configuration:
     ##########
     # Public #
     ##########
+
+    def get_filename(self):
+        return self._NO_FILENAME if self._filename is None else self._filename
 
     def get_main_groups(self):
         return self._configuration.keys()

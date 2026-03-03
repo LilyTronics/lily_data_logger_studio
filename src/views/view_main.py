@@ -21,7 +21,8 @@ class MainView(wx.MDIParentFrame):
     _STATUS_SIZE = 170
 
     def __init__(self, title):
-        super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
+        self._title = title
+        super().__init__(None, title=self._title, style=wx.DEFAULT_FRAME_STYLE)
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.graph_24.GetBitmap())
         self.SetIcon(icon)
@@ -156,6 +157,7 @@ class MainView(wx.MDIParentFrame):
             for sub_item in sub_items:
                 self._tree.AppendItem(main_item, sub_item)
         self._tree.ExpandAll()
+        self.SetTitle(f"{self._title} - {configuration.get_filename()}")
 
 
 if __name__ == "__main__":
