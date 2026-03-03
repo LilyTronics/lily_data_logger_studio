@@ -16,9 +16,8 @@ class MainView(wx.MDIParentFrame):
     _MIN_WINDOW_SIZE = (1200, 700)
     _ID_WINDOW_BOT = wx.NewIdRef()
     _ID_WINDOW_LEFT = wx.NewIdRef()
-    _BOT_WINDOW_HEIGHT = 100
-    _LEFT_WINDOW_WIDTH = 150
-    _WINDOW_MIN_SIZE = 100
+    _LEFT_MIN_WIDTH = 120
+    _BOTTOM_MIN_HEIGHT = 60
     _STATUS_SIZE = 170
 
     def __init__(self, title):
@@ -68,7 +67,7 @@ class MainView(wx.MDIParentFrame):
     def _create_layout(self):
         self._bot_win = wx.adv.SashLayoutWindow(self, self._ID_WINDOW_BOT,
                                                 style=wx.NO_BORDER|wx.adv.SW_3D)
-        self._bot_win.SetDefaultSize((-1, self._BOT_WINDOW_HEIGHT))
+        self._bot_win.SetDefaultSize((-1, self._BOTTOM_MIN_HEIGHT))
         self._bot_win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         self._bot_win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
         self._bot_win.SetSashVisible(wx.adv.SASH_TOP, True)
@@ -76,7 +75,7 @@ class MainView(wx.MDIParentFrame):
 
         self._left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
                                                  style=wx.NO_BORDER|wx.adv.SW_3D)
-        self._left_win.SetDefaultSize((self._LEFT_WINDOW_WIDTH, -1))
+        self._left_win.SetDefaultSize((self._LEFT_MIN_WIDTH, -1))
         self._left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
         self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
@@ -121,11 +120,11 @@ class MainView(wx.MDIParentFrame):
             return
 
         if event.GetId() == self._ID_WINDOW_LEFT:
-            new_width = max(event.GetDragRect().width, self._WINDOW_MIN_SIZE)
+            new_width = max(event.GetDragRect().width, self._LEFT_MIN_WIDTH)
             self._left_win.SetDefaultSize((new_width, -1))
 
         if event.GetId() == self._ID_WINDOW_BOT:
-            new_height = max(event.GetDragRect().height, self._WINDOW_MIN_SIZE)
+            new_height = max(event.GetDragRect().height, self._BOTTOM_MIN_HEIGHT)
             self._bot_win.SetDefaultSize((-1, new_height))
 
         wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
@@ -138,14 +137,14 @@ class MainView(wx.MDIParentFrame):
         return self._left_win.GetSize()[0]
 
     def set_tree_width(self, width):
-        if width > self._WINDOW_MIN_SIZE:
+        if width > self._LEFT_MIN_WIDTH:
             self._left_win.SetDefaultSize((width, -1))
 
     def get_log_height(self):
         return self._bot_win.GetSize()[1]
 
     def set_log_height(self, height):
-        if height > self._WINDOW_MIN_SIZE:
+        if height > self._BOTTOM_MIN_HEIGHT:
             self._bot_win.SetDefaultSize((-1, height))
 
     def update_configuration(self, configuration):
