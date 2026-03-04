@@ -18,7 +18,7 @@ class Logger:
     TYPE_STDOUT = "STDOUT"
     TYPE_STDERR = "STDERR"
 
-    _TIME_STAMP_FORMAT = "%Y%m%d %H:%M:%S.%f"
+    _TIME_STAMP_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
     _LOG_FORMAT = "{} | {:6} | {}\n"
 
     class _StdLogger:
