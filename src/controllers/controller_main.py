@@ -8,6 +8,7 @@ import src.models.id_manager as IdManager
 
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
+from src.models.data_logger import DataLogger
 from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
 from src.views.view_dialogs import ViewDialogs
@@ -25,6 +26,7 @@ class MainController:
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
+        self._data_logger = DataLogger(self._configuration, self._on_data_logger_update)
 
         self._logger.debug("Load main view")
         self._view = MainView(title)
@@ -51,6 +53,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
         self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
+        self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
+        self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
         self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated, id=IdManager.ID_TREE)
 
@@ -131,6 +135,10 @@ class MainController:
         self._show_child_window(ViewGraph)
         event.Skip()
 
+    def _on_data_logger_update(self, data):
+        if "status" in data:
+            wx.CallAfter(self._view.update_status, data["status"])
+
     ##################
     # Event handlers #
     ##################
@@ -193,6 +201,21 @@ class MainController:
                 post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPH)
                 wx.PostEvent(self._view.GetEventHandler(), post_event)
 
+        event.Skip()
+
+    def _on_data_logger_start(self, event):
+        self._logger.info("Start data logger")
+        try:
+            self._data_logger.start()
+        except Exception as e:
+            self._logger.error(f"Error saving configuration: {e}")
+            ViewDialogs.show_message(self._view, f"Error starting data logger: {e}",
+                                     "Start data logger", wx.ICON_EXCLAMATION)
+        event.Skip()
+
+    def _on_data_logger_stop(self, event):
+        self._logger.info("Stop data logger")
+        self._data_logger.stop()
         event.Skip()
 
     def _on_menu_exit(self, event):

@@ -20,6 +20,10 @@ class MainView(wx.MDIParentFrame):
     _LEFT_MIN_WIDTH = 120
     _BOTTOM_MIN_HEIGHT = 60
     _STATUS_SIZE = 170
+    _LED_SIZE = (16, 16)
+    _COLOR_LED_OFF = "#060"
+    _COLOR_LED_ON = "#0f0"
+    _BLINK_SPEED = 500
 
     def __init__(self, title):
         self._title = title
@@ -34,8 +38,11 @@ class MainView(wx.MDIParentFrame):
         self._create_tree()
         self._create_status_bar()
 
+        self._blink_timer = wx.Timer(self)
+
         self.Bind(wx.EVT_SIZE, self._on_size)
         self.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self._on_sash_drag)
+        self.Bind(wx.EVT_TIMER, self._on_blink_timer, self._blink_timer)
 
         self.SetInitialSize(self._MIN_WINDOW_SIZE)
 
@@ -117,6 +124,11 @@ class MainView(wx.MDIParentFrame):
         self._sb.SetStatusText("Number of samples: 0", 4)
         self._sb.SetStatusText("Status: idle", 5)
 
+        # This will positioned correct using the on size event
+        self._activity_led = wx.Panel(self._sb, wx.ID_ANY, size=self._LED_SIZE,
+                                      style=wx.BORDER_SIMPLE)
+        self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
+
     ##################
     # Event handlers #
     ##################
@@ -126,6 +138,11 @@ class MainView(wx.MDIParentFrame):
         # can be triggered during the destruction of the frame.
         if self:
             wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
+        # Place the LED in the correct position
+        rect = self._sb.GetFieldRect(5)
+        rect.x += 100
+        rect.y += 2
+        self._activity_led.SetPosition((rect.x, rect.y))
 
     def _on_sash_drag(self, event):
         if event.GetDragStatus() == wx.adv.SASH_STATUS_OUT_OF_RANGE:
@@ -140,6 +157,14 @@ class MainView(wx.MDIParentFrame):
             self._bot_win.SetDefaultSize((-1, new_height))
 
         wx.adv.LayoutAlgorithm().LayoutMDIFrame(self)
+
+    def _on_blink_timer(self, event):
+        if self._activity_led.GetBackgroundColour() == self._COLOR_LED_ON:
+            self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
+        else:
+            self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
+        self._activity_led.Refresh()
+        event.Skip()
 
     ##########
     # Public #
@@ -185,6 +210,16 @@ class MainView(wx.MDIParentFrame):
         title = f"{self._title} - {configuration.get_filename()}"
         title += "*" if configuration.is_changed() else ""
         self.SetTitle(title)
+
+    def update_status(self, status):
+        self._sb.SetStatusText(f"Status: {status}", 5)
+        if status == "running":
+            self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
+            self._blink_timer.Start(self._BLINK_SPEED)
+        else:
+            self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
+            self._blink_timer.Stop()
+        self._activity_led.Refresh()
 
 
 if __name__ == "__main__":
