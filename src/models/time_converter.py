@@ -11,7 +11,7 @@ class TimeConverter:
 
     TIME_UNIT_TO_FACTOR = {"seconds": 1, "minutes": 60, "hours": 3600, "days": 86400}
     TIME_UNITS = list(TIME_UNIT_TO_FACTOR.keys())
-    _TIMESTAMP_FORMAT = "%Y%m%d %H:%M:%S"
+    _TIMESTAMP_FORMAT = "%Y%m%d %H%M%S"
 
     @staticmethod
     def create_duration_time_string(seconds):
@@ -27,9 +27,10 @@ class TimeConverter:
     @classmethod
     def convert_seconds_to_time_with_unit(cls, seconds):
         factor = 1
-        for factor in sorted(cls.TIME_UNIT_TO_FACTOR.values(), reverse=True):
-            if seconds % factor == 0:
-                break
+        if seconds > 0:
+            for factor in sorted(cls.TIME_UNIT_TO_FACTOR.values(), reverse=True):
+                if seconds > 0 and seconds % factor == 0:
+                    break
         unit = list(cls.TIME_UNIT_TO_FACTOR.keys())[list(
             cls.TIME_UNIT_TO_FACTOR.values()).index(factor)]
         return int(seconds / factor), unit
@@ -49,17 +50,6 @@ class TimeConverter:
 
 if __name__ == "__main__":
 
-    print("Time stamp:", TimeConverter.get_timestamp())
+    from tests.unit_tests.model_tests.time_converter_test import TimeConverterTest
 
-    print("Time:", TimeConverter.create_duration_time_string(90061))
-
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(60))
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(63))
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(3600))
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(3601))
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(86400))
-    print("Time:", TimeConverter.convert_seconds_to_time_with_unit(86401))
-
-    print("Seconds:", TimeConverter.convert_time_with_unit_to_seconds(1, "minutes"))
-    print("Seconds:", TimeConverter.convert_time_with_unit_to_seconds(1, "hours"))
-    print("Seconds:", TimeConverter.convert_time_with_unit_to_seconds(1, "days"))
+    TimeConverterTest().run(True)
