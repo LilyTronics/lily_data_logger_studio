@@ -2,6 +2,8 @@
 Unit test for the time converter.
 """
 
+import time
+
 from datetime import datetime
 
 from src.models.time_converter import TimeConverter
@@ -53,8 +55,9 @@ class TimeConverterTest(TestSuite):
                          f"Invalid value. Expected: {test_value[3]}")
 
     def test_get_timestamp(self):
-        expected = datetime.now().strftime("%Y%m%d %H%M%S")
-        value = TimeConverter.get_timestamp()
+        timestamp = time.time()
+        expected = datetime.fromtimestamp(timestamp).strftime("%Y%m%d %H%M%S")
+        value = TimeConverter.get_timestamp(timestamp)
         self.log.debug(f"Result: {value}")
         self.fail_if(value != expected, f"Invalid timestamp. Expected: {expected}")
 
