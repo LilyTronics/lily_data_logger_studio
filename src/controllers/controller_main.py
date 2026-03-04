@@ -56,7 +56,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
-        self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated, id=IdManager.ID_TREE)
+        self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated,
+                        id=IdManager.ID_TREE)
 
         self._process_test_options(test_options)
         wx.CallAfter(self._view.update_configuration, self._configuration)
@@ -102,7 +103,7 @@ class MainController:
         cw.Activate()
 
     def _show_settings(self, event):
-        self._logger.info(f"Edit settings")
+        self._logger.info("Edit settings")
         settings = self._configuration.get_settings()
         self._logger.debug(f"Current settings: {settings}")
         dlg = ViewSettings(self._view, self._configuration.get_settings())
@@ -144,7 +145,7 @@ class MainController:
     ##################
 
     def _on_menu_new_config(self, event):
-        self._logger.info(f"Create new configuration")
+        self._logger.info("Create new configuration")
         del self._configuration
         self._configuration = Configuration()
         self._view.update_configuration(self._configuration)

@@ -33,11 +33,11 @@ class ViewSettings(wx.Dialog):
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_end_time)
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_continuous)
 
-        value, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("sample_time", 3))
-        self._txt_sample_time.SetValue(str(value))
+        val, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("sample_time", 3))
+        self._txt_sample_time.SetValue(str(val))
         self._cmb_sample_time.SetValue(units)
-        value, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("end_time", 60))
-        self._txt_end_time.SetValue(str(value))
+        val, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("end_time", 60))
+        self._txt_end_time.SetValue(str(val))
         self._cmb_end_time.SetValue(units)
         if settings.get("continuous_mode", False):
             self._radio_continuous.SetValue(True)
