@@ -6,18 +6,20 @@ import wx
 
 import src.models.id_manager as IdManager
 
+from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_settings import ControllerSettings
+
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
 from src.models.data_logger import DataLogger
 from src.models.test_options import TestOptions
+
 from src.views.view_data_table import ViewDataTable
 from src.views.view_dialogs import ViewDialogs
 from src.views.view_graphs import ViewGraphs
 from src.views.view_instruments import ViewInstruments
 from src.views.view_main import MainView
 from src.views.view_process import ViewProcess
-from src.views.view_settings import ViewSettings
 
 
 class MainController:
@@ -133,40 +135,18 @@ class MainController:
     ##################
 
     def _on_menu_new_config(self, event):
-        self._logger.info("Create new configuration")
-        del self._configuration
-        self._configuration = Configuration()
+        self._configuration = ControllerConfiguration.new(self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _on_open_config(self, event):
-        dlg_title = "Open configuration"
-        filename = ViewDialogs.show_open_file(self._view, dlg_title,
-                                              file_filter="Configuration files (JSON)|*.json")
-        if filename is not None:
-            try:
-                self._logger.info(f"Load configuration from: {filename}")
-                self._configuration.load(filename)
-            except Exception as e:
-                self._logger.error(f"Error loading configuration: {e}")
-                ViewDialogs.show_message(self._view, f"Error loading configuration: {e}", dlg_title,
-                                         wx.ICON_EXCLAMATION)
+        ControllerConfiguration.load(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _on_save_config(self, event):
-        dlg_title = "Save configuration"
-        filename = ViewDialogs.show_save_file(self._view, dlg_title,
-                                              file_filter="Configuration files (JSON)|*.json")
-        if filename is not None:
-            try:
-                self._logger.info(f"Save configuration to: {filename}")
-                self._configuration.save(filename)
-                self._view.update_configuration(self._configuration)
-            except Exception as e:
-                self._logger.error(f"Error saving configuration: {e}")
-                ViewDialogs.show_message(self._view, f"Error saving configuration: {e}", dlg_title,
-                                         wx.ICON_EXCLAMATION)
+        ControllerConfiguration.save(self._view, self._configuration, self._logger)
+        self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _on_tree_item_activated(self, event):
