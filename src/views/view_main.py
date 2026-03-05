@@ -4,6 +4,8 @@ Main view
 
 import wx.adv
 
+from wx.lib.agw.customtreectrl import CustomTreeCtrl
+
 import src.models.id_manager as IdManager
 import src.models.images as Images
 
@@ -29,7 +31,7 @@ class MainView(wx.MDIParentFrame):
         self._title = title
         super().__init__(None, title=self._title, style=wx.DEFAULT_FRAME_STYLE)
         icon = wx.Icon()
-        icon.CopyFromBitmap(Images.graph_24.GetBitmap())
+        icon.CopyFromBitmap(Images.graphs_24.GetBitmap())
         self.SetIcon(icon)
 
         self._create_menu()
@@ -74,7 +76,7 @@ class MainView(wx.MDIParentFrame):
                    "Show process")
         tb.AddTool(IdManager.ID_SHOW_DATA_TABLE, "", Images.data_table_24.GetBitmap(),
                    "Show data table")
-        tb.AddTool(IdManager.ID_SHOW_GRAPH, "", Images.graph_24.GetBitmap(),
+        tb.AddTool(IdManager.ID_SHOW_GRAPH, "", Images.graphs_24.GetBitmap(),
                    "Show graph")
         tb.AddSeparator()
         tb.AddTool(IdManager.ID_START_LOGGER, "", Images.start_24.GetBitmap(),
@@ -105,9 +107,15 @@ class MainView(wx.MDIParentFrame):
         image_list.Add(Images.instruments_16.GetBitmap())
         image_list.Add(Images.process_16.GetBitmap())
         image_list.Add(Images.data_table_16.GetBitmap())
+        image_list.Add(Images.graphs_16.GetBitmap())
+        image_list.Add(Images.time_16.GetBitmap())
+        image_list.Add(Images.switch_16.GetBitmap())
+        image_list.Add(Images.instrument_16.GetBitmap())
+        image_list.Add(Images.measurement_16.GetBitmap())
         image_list.Add(Images.graph_16.GetBitmap())
 
-        self._tree = wx.TreeCtrl(self._left_win, IdManager.ID_TREE, style=wx.TR_HIDE_ROOT)
+        self._tree = wx.TreeCtrl(self._left_win, IdManager.ID_TREE,
+                                 style=wx.TR_HIDE_ROOT | wx.TR_LINES_AT_ROOT | wx.TR_HAS_BUTTONS)
         self._tree.AssignImageList(image_list)
         self._tree.AddRoot("root")
 
@@ -191,7 +199,12 @@ class MainView(wx.MDIParentFrame):
             main_item = self._tree.AppendItem(root, main_group, image=i)
             sub_items = configuration.get_sub_items(main_group)
             for sub_item in sub_items:
-                self._tree.AppendItem(main_item, sub_item)
+                if main_group == "settings":
+                    if "time" in sub_item:
+                        image_index = 5
+                    else:
+                        image_index = 6
+                self._tree.AppendItem(main_item, sub_item, image_index)
         self._tree.ExpandAll()
 
         settings = configuration.get_settings()

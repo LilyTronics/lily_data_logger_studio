@@ -9,14 +9,19 @@ Toolbar: 24px
 
 image name        icon name
 data table      : grid
-graph           : line
+graph           : use graphs, remove bottom line, center top line
+graphs          : line
+instrument      : chip 2 (make it solid, and add pin 1 mark from processor)
 instruments     : processor
+measurement     : speedometer (remove small bar)
 open            : folder 3
 process         : network
 save            : save
 settings        : settings 12
 start           : play
 stop            : stop
+switch          : switch 3
+time            : time
 
 """
 

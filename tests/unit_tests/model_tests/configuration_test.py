@@ -19,7 +19,6 @@ class ConfigurationTest(TestSuite):
         for group in groups:
             sub_items = self._configuration.get_sub_items(group)
             self.log.debug(f"Sub items for group '{group}': {sub_items}")
-            self.fail_if(len(sub_items) != 0, "Expected no sub items")
 
 
 if __name__ == "__main__":

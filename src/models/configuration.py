@@ -12,6 +12,8 @@ import json
 
 from copy import deepcopy
 
+from src.models.time_converter import TimeConverter
+
 
 class Configuration:
 
@@ -78,9 +80,18 @@ class Configuration:
         return self._configuration.keys()
 
     def get_sub_items(self, main_group):
-        return  list(map(lambda x: x["name"],
-                         filter(lambda x: isinstance(x, dict) and "name" in x,
-                                self._configuration[main_group])))
+        sub_items = []
+        collection = self._configuration[main_group]
+        if main_group == "settings":
+            for key in collection:
+                value = collection[key]
+                if key.endswith("_time"):
+                    value = TimeConverter.create_duration_time_string(value)
+                if isinstance(value, bool):
+                    value = "yes" if value else "no"
+                key = key.replace("_", " ")
+                sub_items.append(f"{key}: {value}")
+        return sub_items
 
     def get_settings(self):
         return deepcopy(self._configuration["settings"])
