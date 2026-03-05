@@ -209,7 +209,7 @@ class MainController:
         try:
             self._data_logger.start()
         except Exception as e:
-            self._logger.error(f"Error saving configuration: {e}")
+            self._logger.error(f"Error starting data logger: {e}")
             ViewDialogs.show_message(self._view, f"Error starting data logger: {e}",
                                      "Start data logger", wx.ICON_EXCLAMATION)
         event.Skip()
