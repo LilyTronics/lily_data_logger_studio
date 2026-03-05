@@ -5,12 +5,13 @@ View for the instruments.
 import wx
 
 import src.models.images as Images
+import src.views.view_sizes as ViewSizes
 
 
-class ViewInstruments(wx.MDIChildFrame):
+class ViewInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
-    _GAP = 5
+    _WINDOW_SIZE = (600, 400)
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
@@ -19,12 +20,18 @@ class ViewInstruments(wx.MDIChildFrame):
         icon.CopyFromBitmap(Images.instruments_24.GetBitmap())
         self.SetIcon(icon)
 
-        box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(self._create_controls(), 1, wx.EXPAND | wx.ALL, 1)
-        self.SetSizer(box)
+        box = wx.BoxSizer(wx.HORIZONTAL)
+        box.Add(self._create_list(self), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
 
-    def _create_controls(self):
-        grid = wx.GridBagSizer(self._GAP, self._GAP)
+        self.SetSizer(box)
+        self.SetInitialSize(self._WINDOW_SIZE)
+        self.CenterOnParent()
+
+    def _create_list(self, parent):
+        self._lst_instruments = wx.ListCtrl(parent)
+
+        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid.Add(self._lst_instruments, (0, 0), wx.DefaultSpan)
         return grid
 
 

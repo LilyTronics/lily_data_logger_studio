@@ -6,6 +6,7 @@ import wx
 
 import src.models.id_manager as IdManager
 
+from src.controllers.controller_settings import ControllerSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
 from src.models.data_logger import DataLogger
@@ -103,20 +104,7 @@ class MainController:
         cw.Activate()
 
     def _show_settings(self, event):
-        self._logger.info("Edit settings")
-        settings = self._configuration.get_settings()
-        self._logger.debug(f"Current settings: {settings}")
-        dlg = ViewSettings(self._view, self._configuration.get_settings())
-        if dlg.ShowModal() == wx.ID_OK:
-            try:
-                settings = dlg.get_settings()
-                self._logger.debug(f"New settings: {settings}")
-                self._configuration.update_settings(settings)
-            except Exception as e:
-                self._logger.error(f"Error updating settings: {e}")
-                ViewDialogs.show_message(self._view, f"Error updating settings: {e}",
-                                         "Update settings", wx.ICON_EXCLAMATION)
-        dlg.Destroy()
+        ControllerSettings(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
