@@ -233,6 +233,16 @@ class MainView(wx.MDIParentFrame):
             self._blink_timer.Stop()
         self._activity_led.Refresh()
 
+    def show_child_window(self, child_class):
+        matches = list(filter(lambda x: isinstance(x, child_class), self.GetChildren()))
+        if len(matches) == 0:
+            cw = child_class(self)
+            cw.Show()
+        else:
+            cw = matches[0]
+            cw.Restore()
+        cw.Activate()
+
 
 if __name__ == "__main__":
 
