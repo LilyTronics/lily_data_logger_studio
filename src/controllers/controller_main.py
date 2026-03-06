@@ -98,16 +98,6 @@ class MainController:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPHS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-    def _show_child_window(self, child_class):
-        matches = list(filter(lambda x: isinstance(x, child_class), self._view.GetChildren()))
-        if len(matches) == 0:
-            cw = child_class(self._view)
-            cw.Show()
-        else:
-            cw = matches[0]
-            cw.Restore()
-        cw.Activate()
-
     def _show_settings(self, event):
         ControllerSettings(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
