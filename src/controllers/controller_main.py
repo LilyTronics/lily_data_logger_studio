@@ -7,18 +7,15 @@ import wx
 import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
+from src.controllers.controller_data_logger import ControllerDataLogger
 from src.controllers.controller_data_table import ControllerDataTable
 from src.controllers.controller_graphs import ControllerGraphs
 from src.controllers.controller_instruments import ControllerInstruments
 from src.controllers.controller_process import ControllerProcess
 from src.controllers.controller_settings import ControllerSettings
-
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
-from src.models.data_logger import DataLogger
 from src.models.test_options import TestOptions
-
-from src.views.view_dialogs import ViewDialogs
 from src.views.view_main import MainView
 
 
@@ -29,7 +26,6 @@ class MainController:
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
-        self._data_logger = DataLogger(self._configuration, self._on_data_logger_update)
 
         self._logger.debug("Load main view")
         self._view = MainView(title)
@@ -38,6 +34,9 @@ class MainController:
         self._view.Show()
 
         self._process_test_options(test_options)
+
+        self._controller_data_logger = ControllerDataLogger(self._view, self._configuration, self._logger)
+
         wx.CallAfter(self._view.update_configuration, self._configuration)
 
     ###########
@@ -120,10 +119,6 @@ class MainController:
         ControllerGraphs(self._view, self._configuration, self._logger)
         event.Skip()
 
-    def _on_data_logger_update(self, data):
-        if "status" in data:
-            wx.CallAfter(self._view.update_status, data["status"])
-
     ##################
     # Event handlers #
     ##################
@@ -167,18 +162,11 @@ class MainController:
         event.Skip()
 
     def _on_data_logger_start(self, event):
-        self._logger.info("Start data logger")
-        try:
-            self._data_logger.start()
-        except Exception as e:
-            self._logger.error(f"Error starting data logger: {e}")
-            ViewDialogs.show_message(self._view, f"Error starting data logger: {e}",
-                                     "Start data logger", wx.ICON_EXCLAMATION)
+        self._controller_data_logger.start()
         event.Skip()
 
     def _on_data_logger_stop(self, event):
-        self._logger.info("Stop data logger")
-        self._data_logger.stop()
+        self._controller_data_logger.stop()
         event.Skip()
 
     def _on_menu_exit(self, event):
@@ -193,7 +181,6 @@ class MainController:
             self._app_settings.store_main_window_size(*self._view.GetSize())
         self._app_settings.store_main_window_tree_width(self._view.get_tree_width())
         self._app_settings.store_main_window_log_height(self._view.get_log_height())
-
         event.Skip()
 
 
