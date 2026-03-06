@@ -33,6 +33,18 @@ class MainController:
 
         self._logger.debug("Load main view")
         self._view = MainView(title)
+        self._prepare_view()
+        self._logger.debug("Show main view")
+        self._view.Show()
+
+        self._process_test_options(test_options)
+        wx.CallAfter(self._view.update_configuration, self._configuration)
+
+    ###########
+    # Private #
+    ###########
+
+    def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
         if -1 not in value:
             self._view.SetPosition(value)
@@ -42,8 +54,6 @@ class MainController:
         self._view.Maximize(self._app_settings.get_main_window_maximized())
         self._view.set_tree_width(self._app_settings.get_main_window_tree_width())
         self._view.set_log_height(self._app_settings.get_main_window_log_height())
-        self._logger.debug("Show main view")
-        self._view.Show()
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_MENU, self._on_menu_new_config, id=IdManager.ID_MENU_NEW_CONFIG)
@@ -61,13 +71,6 @@ class MainController:
 
         self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated,
                         id=IdManager.ID_TREE)
-
-        self._process_test_options(test_options)
-        wx.CallAfter(self._view.update_configuration, self._configuration)
-
-    ###########
-    # Private #
-    ###########
 
     def _process_test_options(self, test_options):
         if test_options.show_view_settings:
