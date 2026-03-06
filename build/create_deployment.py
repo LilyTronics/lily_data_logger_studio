@@ -48,15 +48,29 @@ def _create_version_file(version_file, artifacts_path):
     with open(version_file, "w", encoding="utf-8") as fp:
         fp.write(version_template)
 
+def _copy_drivers(app_path):
+    print(f"Copy the drivers from: {AppData.INSTRUMENTS_PATH}")
+    output_folder = os.path.join(app_path, "instruments")
+    os.makedirs(output_folder)
+    print(f"Output folder: {output_folder}")
+    for current_path, sub_folders, filenames in os.walk(AppData.INSTRUMENTS_PATH):
+        sub_folders.sort()
+        for filename in filenames:
+            if filename.endswith(".py"):
+                full_path = os.path.join(current_path, filename)
+                print(f"Copy: {full_path}")
+                target = os.path.join(output_folder, full_path[len(AppData.INSTRUMENTS_PATH) + 1:])
+                os.makedirs(os.path.dirname(target), exist_ok=True)
+                print(f"To  : {target}")
+                shutil.copy2(full_path, target)
 
-def _create_zip_file(dist_path):
+def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")
     print(platform.system())
     filename = f"{AppData.EXE_NAME}_{AppData.VERSION}_{platform.system()}.zip"
     zip_filename = os.path.join(dist_path, filename)
     with zipfile.ZipFile(zip_filename, "w") as zip_object:
         # Add dist files
-        app_path = os.path.join(dist_path, AppData.EXE_NAME)
         for current_folder, sub_folders, filenames in os.walk(str(app_path)):
             sub_folders.sort()
             for filename in filenames:
@@ -73,6 +87,7 @@ def create_deployment():
     init_file = os.path.join(os.path.dirname(src.__file__), "main.py")
     icon_file = os.path.join(artifacts_path, "app.ico")
     dist_path = os.path.join(output_folder, "dist")
+    app_path = os.path.join(dist_path, AppData.EXE_NAME)
 
     horizontal_line = "=" * 120
     print(f"\n{horizontal_line}")
@@ -90,7 +105,6 @@ def create_deployment():
     _create_version_file(version_file, artifacts_path)
 
     work_path = os.path.join(output_folder, "work")
-    # spec_path = os.path.join(output_folder, "spec")
 
     PyInstaller.__main__.run([
         init_file,
@@ -106,7 +120,8 @@ def create_deployment():
         f"--distpath={dist_path}"
     ])
 
-    _create_zip_file(dist_path)
+    _copy_drivers(app_path)
+    _create_zip_file(dist_path, app_path)
 
     print("\nBuild done")
 
