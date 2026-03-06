@@ -15,6 +15,7 @@ from src.controllers.controller_process import ControllerProcess
 from src.controllers.controller_settings import ControllerSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
+from src.models.drivers import Drivers
 from src.models.test_options import TestOptions
 from src.views.view_main import MainView
 
@@ -38,10 +39,14 @@ class MainController:
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration, self._logger)
 
         wx.CallAfter(self._view.update_configuration, self._configuration)
+        wx.CallAfter(self._load_drivers)
 
     ###########
     # Private #
     ###########
+
+    def _load_drivers(self):
+        Drivers.load(self._logger.debug)
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
