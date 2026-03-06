@@ -7,6 +7,7 @@ import wx
 import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
+from src.controllers.controller_instruments import ControllerInstruments
 from src.controllers.controller_settings import ControllerSettings
 
 from src.models.application_settings import ApplicationSettings
@@ -114,7 +115,8 @@ class MainController:
         event.Skip()
 
     def _show_instruments(self, event):
-        self._show_child_window(ViewInstruments)
+        ControllerInstruments(self._view, self._configuration, self._logger)
+        self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _show_process(self, event):
