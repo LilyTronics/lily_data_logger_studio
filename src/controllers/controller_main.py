@@ -18,7 +18,6 @@ from src.models.test_options import TestOptions
 from src.views.view_data_table import ViewDataTable
 from src.views.view_dialogs import ViewDialogs
 from src.views.view_graphs import ViewGraphs
-from src.views.view_instruments import ViewInstruments
 from src.views.view_main import MainView
 from src.views.view_process import ViewProcess
 
