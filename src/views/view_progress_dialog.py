@@ -5,7 +5,7 @@ Progress dialog.
 import wx
 
 
-class ProgressDialog(wx.ProgressDialog):
+class ViewProgressDialog(wx.ProgressDialog):
 
     _TIMER_INTERVAL = 100
 
@@ -30,6 +30,9 @@ class ProgressDialog(wx.ProgressDialog):
     # Public #
     ##########
 
+    def set_maximum(self, value):
+        self.SetRange(value)
+
     def destroy(self):
         self._timer.Stop()
         self.Destroy()
@@ -51,11 +54,13 @@ if __name__ == "__main__":
 
     app = wx.App(redirect=False)
 
-    dlg = ProgressDialog(None, "Test progress", 100)
+    dlg = ViewProgressDialog(None, "Test progress", 100)
 
-    for i in range(1, 101):
+    for i in range(1, 51):
         if not dlg.update(i, f"item {i}"):
             break
         time.sleep(0.2)
+        if i == 10:
+            dlg.set_maximum(50)
 
     dlg.destroy()

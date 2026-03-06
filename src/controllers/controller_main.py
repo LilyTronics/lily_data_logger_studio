@@ -18,6 +18,7 @@ from src.models.configuration import Configuration
 from src.models.drivers import Drivers
 from src.models.test_options import TestOptions
 from src.views.view_main import MainView
+from src.views.view_progress_dialog import ViewProgressDialog
 
 
 class MainController:
@@ -27,6 +28,7 @@ class MainController:
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
+        self._view_progress = None
 
         self._logger.debug("Load main view")
         self._view = MainView(title)
@@ -46,7 +48,13 @@ class MainController:
     ###########
 
     def _load_drivers(self):
-        Drivers.load(self._logger.debug)
+        self._view_progress = ViewProgressDialog(self._view, "Load drivers", 1)
+        try:
+            Drivers.load(self._update_view_progress)
+        except Exception as e:
+            self._logger.Error(f"Error loading driver: {e}")
+        self._view_progress.destroy()
+        self._view_progress = None
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
@@ -127,6 +135,13 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _update_view_progress(self, value, message, new_max=0):
+        if self._view_progress is not None:
+            if new_max > 0:
+                self._view_progress.set_maximum(new_max)
+            self._view_progress.update(value, message)
+            wx.YieldIfNeeded()
 
     def _on_menu_new_config(self, event):
         self._configuration = ControllerConfiguration.new(self._logger)
