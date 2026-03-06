@@ -8,6 +8,7 @@ import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_data_table import ControllerDataTable
+from src.controllers.controller_graphs import ControllerGraphs
 from src.controllers.controller_instruments import ControllerInstruments
 from src.controllers.controller_process import ControllerProcess
 from src.controllers.controller_settings import ControllerSettings
@@ -18,7 +19,6 @@ from src.models.data_logger import DataLogger
 from src.models.test_options import TestOptions
 
 from src.views.view_dialogs import ViewDialogs
-from src.views.view_graphs import ViewGraphs
 from src.views.view_main import MainView
 
 
@@ -65,7 +65,7 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
-        self._view.Bind(wx.EVT_TOOL, self._show_graph, id=IdManager.ID_SHOW_GRAPH)
+        self._view.Bind(wx.EVT_TOOL, self._show_graphs, id=IdManager.ID_SHOW_GRAPHS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -93,9 +93,9 @@ class MainController:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-        if test_options.show_view_graph:
-            self._logger.debug("Test option: show view graph")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPH)
+        if test_options.show_view_graphs:
+            self._logger.debug("Test option: show view graphs")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPHS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
     def _show_child_window(self, child_class):
@@ -126,8 +126,8 @@ class MainController:
         ControllerDataTable(self._view, self._configuration, self._logger)
         event.Skip()
 
-    def _show_graph(self, event):
-        self._show_child_window(ViewGraphs)
+    def _show_graphs(self, event):
+        ControllerGraphs(self._view, self._configuration, self._logger)
         event.Skip()
 
     def _on_data_logger_update(self, data):
@@ -171,7 +171,7 @@ class MainController:
                 post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
                 wx.PostEvent(self._view.GetEventHandler(), post_event)
             if item_text == "graphs":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPH)
+                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPHS)
                 wx.PostEvent(self._view.GetEventHandler(), post_event)
 
         event.Skip()

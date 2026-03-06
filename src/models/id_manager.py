@@ -16,7 +16,7 @@ ID_SHOW_SETTINGS = wx.NewIdRef()
 ID_SHOW_INSTRUMENTS = wx.NewIdRef()
 ID_SHOW_PROCESS = wx.NewIdRef()
 ID_SHOW_DATA_TABLE = wx.NewIdRef()
-ID_SHOW_GRAPH = wx.NewIdRef()
+ID_SHOW_GRAPHS = wx.NewIdRef()
 ID_START_LOGGER = wx.NewIdRef()
 ID_STOP_LOGGER = wx.NewIdRef()
 

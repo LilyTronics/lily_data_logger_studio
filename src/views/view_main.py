@@ -74,7 +74,7 @@ class MainView(wx.MDIParentFrame):
                    "Show process")
         tb.AddTool(IdManager.ID_SHOW_DATA_TABLE, "", Images.data_table_24.GetBitmap(),
                    "Show data table")
-        tb.AddTool(IdManager.ID_SHOW_GRAPH, "", Images.graphs_24.GetBitmap(),
+        tb.AddTool(IdManager.ID_SHOW_GRAPHS, "", Images.graphs_24.GetBitmap(),
                    "Show graph")
         tb.AddSeparator()
         tb.AddTool(IdManager.ID_START_LOGGER, "", Images.start_24.GetBitmap(),
