@@ -1,0 +1,11 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 300,
+    "continuous_mode": false
+  },
+  "instruments": [],
+  "process": [],
+  "measurements": [],
+  "graphs": []
+}
