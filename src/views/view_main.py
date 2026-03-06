@@ -4,8 +4,6 @@ Main view
 
 import wx.adv
 
-from wx.lib.agw.customtreectrl import CustomTreeCtrl
-
 import src.models.id_manager as IdManager
 import src.models.images as Images
 
@@ -195,6 +193,7 @@ class MainView(wx.MDIParentFrame):
     def update_configuration(self, configuration):
         root = self._tree.GetRootItem()
         self._tree.DeleteChildren(root)
+        image_index = 0
         for i, main_group in enumerate(configuration.get_main_groups()):
             main_item = self._tree.AppendItem(root, main_group, image=i)
             sub_items = configuration.get_sub_items(main_group)
