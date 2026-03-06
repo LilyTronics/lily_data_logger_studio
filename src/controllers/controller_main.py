@@ -7,6 +7,7 @@ import wx
 import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
+from src.controllers.controller_data_table import ControllerDataTable
 from src.controllers.controller_instruments import ControllerInstruments
 from src.controllers.controller_process import ControllerProcess
 from src.controllers.controller_settings import ControllerSettings
@@ -16,7 +17,6 @@ from src.models.configuration import Configuration
 from src.models.data_logger import DataLogger
 from src.models.test_options import TestOptions
 
-from src.views.view_data_table import ViewDataTable
 from src.views.view_dialogs import ViewDialogs
 from src.views.view_graphs import ViewGraphs
 from src.views.view_main import MainView
@@ -120,11 +120,10 @@ class MainController:
 
     def _show_process(self, event):
         ControllerProcess(self._view, self._configuration, self._logger)
-        self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _show_data_table(self, event):
-        self._show_child_window(ViewDataTable)
+        ControllerDataTable(self._view, self._configuration, self._logger)
         event.Skip()
 
     def _show_graph(self, event):
