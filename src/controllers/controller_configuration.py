@@ -26,9 +26,10 @@ class ControllerConfiguration:
                 configuration.load(filename)
             except Exception as e:
                 logger.error(f"Error loading configuration: {e}")
-                ViewDialogs.show_message(parent_view, f"Error loading configuration: {e}", dlg_title,
-                                         wx.ICON_EXCLAMATION)
+                ViewDialogs.show_message(parent_view, f"Error loading configuration: {e}",
+                                         dlg_title, wx.ICON_EXCLAMATION)
 
+    @staticmethod
     def save(parent_view, configuration, logger):
         dlg_title = "Save configuration"
         filename = ViewDialogs.show_save_file(parent_view, dlg_title,
