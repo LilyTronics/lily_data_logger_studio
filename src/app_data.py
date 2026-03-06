@@ -17,10 +17,13 @@ COMPANY = "LilyTronics"
 # Application path depends on if run from script or from the executable
 if EXE_NAME in sys.executable:
     APP_PATH = os.path.dirname(sys.executable)
+    # We must add the application path for import instruments in the executable
+    sys.path.insert(0, str(APP_PATH))
 else:
     APP_PATH = os.path.dirname(os.path.dirname(__file__))
 
 INSTRUMENTS_PATH = os.path.join(APP_PATH, "instruments")
+DRIVERS_PATH = os.path.join(INSTRUMENTS_PATH, "drivers")
 
 wxApp.SetAppName(EXE_NAME)
 _sp = wx.StandardPaths.Get()
@@ -32,7 +35,8 @@ APP_LOG_FILE = os.path.join(_sp.GetUserDataDir(), f"{EXE_NAME}.log")
 if __name__ == "__main__":
 
     print(f"{APP_NAME} V{VERSION}")
-    print("App path:", APP_PATH)
+    print("App path        :", APP_PATH)
     print("Instruments path:", INSTRUMENTS_PATH)
-    print("Settings file:", SETTINGS_FILE)
-    print("App log file:", APP_LOG_FILE)
+    print("Drivers path    :", DRIVERS_PATH)
+    print("Settings file   :", SETTINGS_FILE)
+    print("App log file    :", APP_LOG_FILE)
