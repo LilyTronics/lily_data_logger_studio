@@ -17,7 +17,7 @@ class MainView(wx.MDIParentFrame):
     _MIN_WINDOW_SIZE = (1200, 700)
     _ID_WINDOW_BOT = wx.NewIdRef()
     _ID_WINDOW_LEFT = wx.NewIdRef()
-    _LEFT_MIN_WIDTH = 120
+    _LEFT_MIN_WIDTH = 220
     _BOTTOM_MIN_HEIGHT = 60
     _STATUS_SIZE = 170
     _LED_SIZE = (16, 16)
