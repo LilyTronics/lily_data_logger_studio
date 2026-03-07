@@ -66,7 +66,7 @@ class Configuration:
     def _get_index_of_instrument(self, instrument_id):
         for i in range(len(self._configuration["instruments"])):
             if self._configuration["instruments"][i]["id"] == instrument_id:
-                 return i
+                return i
         raise Exception("No instrument found for this ID")
 
     ##########
