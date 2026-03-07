@@ -48,14 +48,14 @@ class ViewInstruments(wx.Dialog):
         # General controls
         lbl_name = wx.StaticText(parent, wx.ID_ANY, "Name:")
         self._txt_name = wx.TextCtrl(parent, wx.ID_ANY)
-        lbl_driver = wx.StaticText(parent, wx.ID_ANY, "Driver:")
-        self._cmb_driver = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY)
+        lbl_drivers = wx.StaticText(parent, wx.ID_ANY, "Driver:")
+        self._cmb_drivers = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY)
 
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(lbl_name, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_name, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL | wx.EXPAND)
-        grid.Add(lbl_driver, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(self._cmb_driver, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(lbl_drivers, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._cmb_drivers, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.AddGrowableCol(1)
 
         box.Add(grid, 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
@@ -78,6 +78,12 @@ class ViewInstruments(wx.Dialog):
 
         return box
 
+    ##########
+    # Public #
+    ##########
+
+    def set_driver_names(self, driver_names):
+        self._cmb_drivers.SetItems(driver_names)
 
 if __name__ == "__main__":
 
@@ -86,5 +92,6 @@ if __name__ == "__main__":
 
     TestOptions.log_to_stdout = True
     TestOptions.show_view_instruments = True
+    TestOptions.suppress_loading_drivers = True
 
     run_data_logger(TestOptions)
