@@ -26,7 +26,7 @@ class DriversTest(TestSuite):
             f"The numbers of drivers is not correct. Expected: {self._EXPECTED_NR_FOF_DRIVERS}")
 
     def test_reload_drivers(self):
-        self.log.debug(f"Reload drivers")
+        self.log.debug("Reload drivers")
         Drivers.load(self._on_progress)
         drivers = Drivers.get_drivers()
         self.log.debug(f"Drivers: {drivers}")
