@@ -30,16 +30,16 @@ class ViewLogMessages(wx.TextCtrl):
                              wx.FONTWEIGHT_NORMAL, False))
 
         self._update_timer = wx.Timer(self)
-
         self.Bind(wx.EVT_TIMER, self._on_update_timer, self._update_timer)
-
         self._update_timer.Start(self._UPDATE_TIME)
+
+        wx.CallAfter(self._show_messages)
 
     ###########
     # Private #
     ###########
 
-    def _on_update_timer(self, event):
+    def _show_messages(self):
         with open(AppData.APP_LOG_FILE, "r", encoding="utf-8") as fp:
             lines = fp.readlines()
 
@@ -51,9 +51,14 @@ class ViewLogMessages(wx.TextCtrl):
                     break
             else:
                 self.SetDefaultStyle(wx.TextAttr(self._COLOR_DEFAULT))
-
             self.AppendText(line)
 
+    ##################
+    # Event handlers #
+    ##################
+
+    def _on_update_timer(self, event):
+        self._show_messages()
         event.Skip()
 
 
