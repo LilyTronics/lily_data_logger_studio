@@ -9,6 +9,7 @@ Configurations contains:
 """
 
 import json
+import uuid
 
 from copy import deepcopy
 
@@ -31,6 +32,13 @@ class Configuration:
         "graphs": []
     }
 
+    _INSTRUMENT = {
+        "id": "",
+        "name": "",
+        "driver": "",
+        "settings": {}
+    }
+
     def __init__(self):
         self._filename = None
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
@@ -50,6 +58,16 @@ class Configuration:
             pass
         except json.decoder.JSONDecodeError:
             pass
+
+    @staticmethod
+    def _generate_id():
+        return str(uuid.uuid4())
+
+    def _get_index_of_instrument(self, instrument_id):
+        for i in range(len(self._configuration["instruments"])):
+            if self._configuration["instruments"][i]["id"] == instrument_id:
+                 return i
+        raise Exception("No instrument found for this ID")
 
     ##########
     # Public #
@@ -93,12 +111,53 @@ class Configuration:
                 sub_items.append(f"{key}: {value}")
         return sub_items
 
+    ############
+    # Settings #
+    ############
+
     def get_settings(self):
         return deepcopy(self._configuration["settings"])
 
     def update_settings(self, settings):
         self._configuration["settings"] = deepcopy(settings)
         self._is_changed = True
+
+    ###############
+    # Instruments #
+    ###############
+
+    def get_instruments(self):
+        return deepcopy(self._configuration["instruments"])
+
+    def get_instrument(self, query):
+        # Query can be name or ID. Prio = ID
+        matches = [x for x in self.get_instruments() if x["id"] == query]
+        if len(matches) == 0:
+            matches = [x for x in self.get_instruments() if x["name"] == query]
+        return None if len(matches) != 1 else deepcopy(matches[0])
+
+    def add_instrument(self, name, driver, settings):
+        if self.get_instrument(name) is not None:
+            raise Exception("An instrument with this name already exists")
+        instrument = deepcopy(self._INSTRUMENT)
+        instrument["id"] = self._generate_id()
+        instrument["name"] = name
+        instrument["driver"] = driver
+        instrument["settings"] = deepcopy(settings)
+        self._configuration["instruments"].append(instrument)
+
+    def update_instrument(self, instrument_id, name, driver, settings):
+        i = self._get_index_of_instrument(instrument_id)
+        instrument = self.get_instrument(name)
+        if instrument is not None and instrument["id"] != instrument_id:
+            raise Exception("An instrument with this name already exists")
+        self._configuration["instruments"][i]["name"] = name
+        self._configuration["instruments"][i]["driver"] = driver
+        self._configuration["instruments"][i]["settings"] = settings
+
+    def delete_instrument(self, instrument_id):
+        i = self._get_index_of_instrument(instrument_id)
+        self._configuration["instruments"].pop(i)
 
 
 if __name__ == "__main__":
