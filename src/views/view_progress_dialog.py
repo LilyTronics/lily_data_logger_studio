@@ -5,13 +5,19 @@ Progress dialog.
 import wx
 
 
-class ViewProgressDialog(wx.ProgressDialog):
+class ViewProgressDialog(wx.GenericProgressDialog):
 
     _TIMER_INTERVAL = 100
 
-    def __init__(self, parent, title, maximum):
+    def __init__(self, parent, title, maximum, frame_width=400):
         super().__init__(title, " ", maximum, parent, wx.PD_CAN_ABORT | wx.PD_APP_MODAL)
+        # Trick for setting the frame width
+        text = "a"
+        while (self.GetTextExtent(text)[0] < frame_width):
+            text += "a"
+        self.Update(0, text)
         self.Fit()
+        self.Update(0, " ")
         self.CenterOnParent()
         self._timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self._on_timer, self._timer)
@@ -41,8 +47,6 @@ class ViewProgressDialog(wx.ProgressDialog):
         do_continue = True
         if value < self.GetRange():
             do_continue = self.Update(value, message)[0]
-            self.Fit()
-            self.CenterOnParent()
         else:
             self.destroy()
         return do_continue
