@@ -8,7 +8,6 @@ import src.models.id_manager as IdManager
 
 from src.models.drivers import Drivers
 from src.views.view_instruments import ViewInstruments
-from src.views.view_dialogs import ViewDialogs
 
 
 class ControllerInstruments:
@@ -19,27 +18,18 @@ class ControllerInstruments:
         logger.debug(f"Current instruments: {instruments}")
         driver_names = [x.name for x in Drivers.get_drivers()]
 
-        dlg = ViewInstruments(parent_view)
-        dlg.set_driver_names(driver_names)
+        self._dlg = ViewInstruments(parent_view)
+        self._dlg.set_driver_names(driver_names)
 
-        dlg.Bind(wx.EVT_BUTTON, self._on_add, id=IdManager.ID_INSTRUMENT_ADD)
-        dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
-        dlg.Bind(wx.EVT_BUTTON, self._on_test, id=IdManager.ID_INSTRUMENT_TEST)
-        dlg.Bind(wx.EVT_BUTTON, self._on_apply, id=IdManager.ID_INSTRUMENT_APPLY)
-        dlg.Bind(wx.EVT_BUTTON, self._on_cancel, id=IdManager.ID_INSTRUMENT_CANCEL)
-        dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_INSTRUMENT_CLOSE)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_add, id=IdManager.ID_INSTRUMENT_ADD)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_test, id=IdManager.ID_INSTRUMENT_TEST)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_apply, id=IdManager.ID_INSTRUMENT_APPLY)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_cancel, id=IdManager.ID_INSTRUMENT_CANCEL)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_INSTRUMENT_CLOSE)
 
-        if dlg.ShowModal() == wx.ID_OK:
-            pass
-            # try:
-            #     instruments = dlg.get_instruments()
-            #     logger.debug(f"New instruments: {instruments}")
-            #     configuration.update_instruments(instruments)
-            # except Exception as e:
-            #     logger.error(f"Error updating instruments: {e}")
-            #     ViewDialogs.show_message(parent_view, f"Error updating instruments: {e}",
-            #                              "Update instruments", wx.ICON_EXCLAMATION)
-        dlg.Destroy()
+        self._dlg.ShowModal()
+        self._dlg.Destroy()
 
     ##################
     # Event handlers #
@@ -61,6 +51,7 @@ class ControllerInstruments:
         event.Skip()
 
     def _on_close(self, event):
+        self._dlg.Close()
         event.Skip()
 
 
