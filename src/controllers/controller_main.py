@@ -41,14 +41,14 @@ class MainController:
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration, self._logger)
 
         wx.CallAfter(self._view.update_configuration, self._configuration)
-        wx.CallAfter(self._load_drivers)
+
+        # Invloke loading drivers
+        event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_RELOAD_DRIVERS)
+        wx.PostEvent(self._view.GetEventHandler(), event)
 
     ###########
     # Private #
     ###########
-
-    def _load_drivers(self):
-        self._controller_drivers.load()
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
@@ -67,6 +67,7 @@ class MainController:
 
         self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
+        self._view.Bind(wx.EVT_TOOL, self._on_reload_drivers, id=IdManager.ID_RELOAD_DRIVERS)
         self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_SETTINGS)
         self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
@@ -129,6 +130,10 @@ class MainController:
     ##################
     # Event handlers #
     ##################
+
+    def _on_reload_drivers(self, event):
+        self._controller_drivers.load()
+        event.Skip()
 
     def _on_menu_new_config(self, event):
         self._configuration = ControllerConfiguration.new(self._logger)

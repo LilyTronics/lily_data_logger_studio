@@ -16,6 +16,7 @@ instruments     : processor
 measurement     : speedometer (remove small bar)
 open            : folder 3
 process         : network
+refresh         : refresh
 save            : save
 settings        : settings 12
 start           : play
@@ -73,7 +74,7 @@ def test_generated_images():
     import src.models.images as Images
 
     app = wx.App(False)
-    f = wx.Frame(None, title="Images test")
+    f = wx.Dialog(None, title="Images test")
     f.SetInitialSize((300, 200))
     panel = wx.Panel(f)
     box = wx.BoxSizer(wx.VERTICAL)
@@ -81,13 +82,12 @@ def test_generated_images():
     f.Show()
 
     i = 0
-    max_per_row = 6
+    max_per_row = 10
     sizer = None
     for attr in dir(Images):
         image = getattr(Images, attr)
         if isinstance(image, wx.lib.embeddedimage.PyEmbeddedImage):
             bmp = image.GetBitmap()
-            print(bmp)
             static_bitmap = wx.StaticBitmap(panel, bitmap=bmp)
             if i == 0:
                 sizer = wx.BoxSizer(wx.HORIZONTAL)

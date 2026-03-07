@@ -12,6 +12,7 @@ ID_MENU_EXIT = wx.NewIdRef()
 # Toolbar icons
 ID_OPEN_CONFIG = wx.NewIdRef()
 ID_SAVE_CONFIG = wx.NewIdRef()
+ID_RELOAD_DRIVERS = wx.NewIdRef()
 ID_SHOW_SETTINGS = wx.NewIdRef()
 ID_SHOW_INSTRUMENTS = wx.NewIdRef()
 ID_SHOW_PROCESS = wx.NewIdRef()
