@@ -47,7 +47,7 @@ class ConfigurationTest(TestSuite):
         self.log.debug("Add instrument with same name")
         try:
             self._configuration.add_instrument("test instrument 1", driver_name, settings)
-            self.Fail("Expected an exception, but was not raised")
+            self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
             self.log.debug(f"Message: {e}")
@@ -91,7 +91,7 @@ class ConfigurationTest(TestSuite):
         try:
             self._configuration.update_instrument(instrument["id"], instruments[1]["name"],
                                                 instrument["driver"], instrument["settings"])
-            self.Fail("Expected an exception, but was not raised")
+            self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
             self.log.debug(f"Message: {e}")
@@ -105,7 +105,7 @@ class ConfigurationTest(TestSuite):
         try:
             self._configuration.update_instrument("invalid ID", instrument["name"],
                                                 instrument["driver"], instrument["settings"])
-            self.Fail("Expected an exception, but was not raised")
+            self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
             self.log.debug(f"Message: {e}")
@@ -127,7 +127,7 @@ class ConfigurationTest(TestSuite):
         self.log.debug("Delete instrument with invalid ID")
         try:
             self._configuration.delete_instrument("invalid ID")
-            self.Fail("Expected an exception, but was not raised")
+            self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
             self.log.debug(f"Message: {e}")
