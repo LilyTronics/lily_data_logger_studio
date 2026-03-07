@@ -1,9 +1,13 @@
 [MESSAGES CONTROL]
-disable = missing-function-docstring,
+disable = broad-exception-raised,
+          broad-exception-caught,
+          cyclic-import,
+          duplicate-code,
+          missing-function-docstring,
           missing-class-docstring,
           too-few-public-methods,
-          broad-exception-raised,
-          broad-exception-caught
+          too-many-instance-attributes,
+          too-many-locals
 
 [TYPECHECK]
 ignored-modules = wx
