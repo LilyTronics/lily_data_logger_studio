@@ -9,16 +9,15 @@ import src.models.id_manager as IdManager
 from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_data_logger import ControllerDataLogger
 from src.controllers.controller_data_table import ControllerDataTable
+from src.controllers.controller_drivers import ControllerDrivers
 from src.controllers.controller_graphs import ControllerGraphs
 from src.controllers.controller_instruments import ControllerInstruments
 from src.controllers.controller_process import ControllerProcess
 from src.controllers.controller_settings import ControllerSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
-from src.models.drivers import Drivers
 from src.models.test_options import TestOptions
 from src.views.view_main import MainView
-from src.views.view_progress_dialog import ViewProgressDialog
 
 
 class MainController:
@@ -38,6 +37,7 @@ class MainController:
 
         self._process_test_options(test_options)
 
+        self._controller_drivers = ControllerDrivers(self._view)
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration, self._logger)
 
         wx.CallAfter(self._view.update_configuration, self._configuration)
@@ -48,13 +48,7 @@ class MainController:
     ###########
 
     def _load_drivers(self):
-        self._view_progress = ViewProgressDialog(self._view, "Load drivers", 1)
-        try:
-            Drivers.load(self._update_view_progress)
-        except Exception as e:
-            self._logger.Error(f"Error loading driver: {e}")
-        self._view_progress.destroy()
-        self._view_progress = None
+        self._controller_drivers.load()
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
@@ -135,13 +129,6 @@ class MainController:
     ##################
     # Event handlers #
     ##################
-
-    def _update_view_progress(self, value, message, new_max=0):
-        if self._view_progress is not None:
-            if new_max > 0:
-                self._view_progress.set_maximum(new_max)
-            self._view_progress.update(value, message)
-            wx.YieldIfNeeded()
 
     def _on_menu_new_config(self, event):
         self._configuration = ControllerConfiguration.new(self._logger)
