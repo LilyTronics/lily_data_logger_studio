@@ -14,3 +14,7 @@ class DriverBase(ABC):
 
         if cls.name is DriverBase.name:
             raise ValueError(f"The name is not set in driver {cls.__name__}")
+
+    @classmethod
+    def get_class_name(cls):
+        return cls.__name__
