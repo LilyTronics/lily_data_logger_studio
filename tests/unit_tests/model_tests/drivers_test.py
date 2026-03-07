@@ -8,15 +8,28 @@ from tests.lib.test_suite import TestSuite
 
 class DriversTest(TestSuite):
 
+    _EXPECTED_NR_FOF_DRIVERS = 1
+
     def _on_progress(self, *params):
         self.log.debug(f"Loading: {params}")
 
     def test_list_drivers(self):
         self.log.debug("List drivers, before load")
-        print(Drivers.get_drivers())
+        drivers = Drivers.get_drivers()
+        self.log.debug(f"Drivers: {drivers}")
+        self.fail_if(len(drivers) > 0, "There should not be any drivers")
         self.log.debug("List drivers, after load")
         Drivers.load(self._on_progress)
-        print(Drivers.get_drivers())
+        drivers = Drivers.get_drivers()
+        self.log.debug(f"Drivers: {drivers}")
+        self.fail_if(len(drivers) != self._EXPECTED_NR_FOF_DRIVERS,
+            f"The numbers of drivers is not correct. Expected: {self._EXPECTED_NR_FOF_DRIVERS}")
+
+    def test_reload_drivers(self):
+        self.log.debug(f"Reload drivers")
+        Drivers.load(self._on_progress)
+        drivers = Drivers.get_drivers()
+        self.log.debug(f"Drivers: {drivers}")
 
 
 if __name__ == "__main__":
