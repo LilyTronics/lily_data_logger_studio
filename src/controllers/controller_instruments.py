@@ -12,7 +12,7 @@ from src.views.view_instruments import ViewInstruments
 
 class ControllerInstruments:
 
-    def __init__(self, parent_view, configuration, logger):
+    def __init__(self, parent_view, logger):
         logger.info("Edit instruments")
         instruments = []
         logger.debug(f"Current instruments: {instruments}")

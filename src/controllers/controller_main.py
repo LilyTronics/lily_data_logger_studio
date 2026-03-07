@@ -113,20 +113,20 @@ class MainController:
         event.Skip()
 
     def _show_instruments(self, event):
-        ControllerInstruments(self._view, self._configuration, self._logger)
+        ControllerInstruments(self._view, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _show_process(self, event):
-        ControllerProcess(self._view, self._configuration, self._logger)
+        ControllerProcess(self._view, self._logger)
         event.Skip()
 
     def _show_data_table(self, event):
-        ControllerDataTable(self._view, self._configuration, self._logger)
+        ControllerDataTable(self._view, self._logger)
         event.Skip()
 
     def _show_graphs(self, event):
-        ControllerGraphs(self._view, self._configuration, self._logger)
+        ControllerGraphs(self._view, self._logger)
         event.Skip()
 
     ##################

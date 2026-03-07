@@ -7,7 +7,7 @@ from src.views.view_graphs import ViewGraphs
 
 class ControllerGraphs:
 
-    def __init__(self, parent_view, configuration, logger):
+    def __init__(self, parent_view, logger):
         logger.info("Show graphs")
         parent_view.show_child_window(ViewGraphs)
 

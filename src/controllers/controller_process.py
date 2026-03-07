@@ -7,7 +7,7 @@ from src.views.view_process import ViewProcess
 
 class ControllerProcess:
 
-    def __init__(self, parent_view, configuration, logger):
+    def __init__(self, parent_view, logger):
         logger.info("Show process")
         parent_view.show_child_window(ViewProcess)
 

@@ -7,7 +7,7 @@ from src.views.view_data_table import ViewDataTable
 
 class ControllerDataTable:
 
-    def __init__(self, parent_view, configuration, logger):
+    def __init__(self, parent_view, logger):
         logger.info("Show data table")
         parent_view.show_child_window(ViewDataTable)
 
