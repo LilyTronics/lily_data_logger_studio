@@ -4,7 +4,6 @@ Provide access to the instrument drivers.
 
 import inspect
 import os
-import time
 
 from importlib.util import module_from_spec
 from importlib.util import spec_from_file_location
@@ -15,14 +14,11 @@ import src.app_data as AppData
 class Drivers:
 
     _drivers = []
-    _step_delay = 1
-    _item_delay = 0.5
 
     @classmethod
     def load(cls, progress_callback):
         driver_files = []
-        progress_callback(0, f"Load drivers from: {AppData.DRIVERS_PATH}")
-        time.sleep(cls._step_delay)
+        progress_callback(-1, f"Load drivers from: {AppData.DRIVERS_PATH}")
         for current_path, subfolders, filenames in os.walk(AppData.DRIVERS_PATH):
             subfolders.sort()
             for filename in filenames:
@@ -32,13 +28,11 @@ class Drivers:
                 if filename.endswith(".py"):
                     driver_files.append(full_path)
         total = len(driver_files)
-        progress_callback(0, f"Load {total} drivers", total)
-        time.sleep(cls._step_delay)
+        progress_callback(-1, f"Load {total} drivers", total)
         for i, filename in enumerate(driver_files):
-            name = os.path.basename(filename)
-            progress_callback(i, f"Load driver from: {name} ({i + 1}/{total})")
-            time.sleep(cls._item_delay)
-            name = name.split(".")[0]
+            rel_path = filename[len(AppData.INSTRUMENTS_PATH) + 1:]
+            progress_callback(i, f"Load driver from: {rel_path} ({i + 1}/{total})")
+            name = os.path.basename(filename).split(".")[0]
             spec = spec_from_file_location(name, str(filename))
             module = module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -54,7 +48,6 @@ class Drivers:
                         if len(classes) > 0:
                             cls._drivers.append(attribute)
         progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
-        time.sleep(cls._step_delay)
 
     @classmethod
     def get_drivers(cls):
