@@ -26,8 +26,7 @@ class Drivers:
     def load(cls, progress_callback=None):
         if progress_callback is None:
             progress_callback = cls._callback
-        cls._lock.acquire()
-        try:
+        with cls._lock:
             del cls._drivers[:]
             driver_files = []
             progress_callback(-1, f"Load drivers from: {AppData.DRIVERS_PATH}")
@@ -41,6 +40,7 @@ class Drivers:
                         driver_files.append(full_path)
             total = len(driver_files)
             progress_callback(-1, f"Load {total} drivers", total)
+            i = 0
             for i, filename in enumerate(driver_files):
                 rel_path = filename[len(AppData.INSTRUMENTS_PATH) + 1:]
                 progress_callback(i, f"Load driver from: {rel_path} ({i + 1}/{total})")
@@ -62,8 +62,6 @@ class Drivers:
                                 attribute()
                                 cls._drivers.append(attribute)
             progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
-        finally:
-            cls._lock.release()
 
     @classmethod
     def get_drivers(cls):
