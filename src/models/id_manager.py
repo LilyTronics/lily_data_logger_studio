@@ -24,6 +24,14 @@ ID_STOP_LOGGER = wx.NewIdRef()
 # Tree view
 ID_TREE = wx.NewIdRef()
 
+# Instruments view
+ID_INSTRUMENT_ADD = wx.NewIdRef()
+ID_INSTRUMENT_DELETE = wx.NewIdRef()
+ID_INSTRUMENT_TEST = wx.NewIdRef()
+ID_INSTRUMENT_APPLY = wx.NewIdRef()
+ID_INSTRUMENT_CANCEL = wx.NewIdRef()
+ID_INSTRUMENT_CLOSE = wx.NewIdRef()
+
 # Process window
 ID_PROCESS_ADD = wx.NewIdRef()
 ID_PROCESS_INSERT = wx.NewIdRef()

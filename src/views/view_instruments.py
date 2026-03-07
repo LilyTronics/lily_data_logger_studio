@@ -4,6 +4,7 @@ View for the instruments.
 
 import wx
 
+import src.models.id_manager as IdManager
 import src.models.images as Images
 import src.views.view_sizes as ViewSizes
 
@@ -30,8 +31,8 @@ class ViewInstruments(wx.Dialog):
 
     def _create_list(self, parent):
         self._lst_instruments = wx.ListCtrl(parent)
-        btn_add = wx.Button(parent, wx.ID_ANY, "Add")
-        btn_delete = wx.Button(parent, wx.ID_ANY,"Delete")
+        btn_add = wx.Button(parent, IdManager.ID_INSTRUMENT_ADD, "Add")
+        btn_delete = wx.Button(parent, IdManager.ID_INSTRUMENT_DELETE,"Delete")
 
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(self._lst_instruments, (0, 0), (1, 2), wx.EXPAND)
@@ -63,10 +64,10 @@ class ViewInstruments(wx.Dialog):
         box.Add(wx.Panel(parent), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
 
         # Buttons
-        btn_test = wx.Button(parent, wx.ID_ANY, "Test")
-        btn_apply = wx.Button(parent, wx.ID_ANY, "Apply")
-        btn_cancel = wx.Button(parent, wx.ID_ANY, "Cancel")
-        btn_close = wx.Button(parent, wx.ID_ANY, "Close")
+        btn_test = wx.Button(parent, IdManager.ID_INSTRUMENT_TEST, "Test")
+        btn_apply = wx.Button(parent, IdManager.ID_INSTRUMENT_APPLY, "Apply")
+        btn_cancel = wx.Button(parent, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
+        btn_close = wx.Button(parent, IdManager.ID_INSTRUMENT_CLOSE, "Close")
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
         grid.Add(btn_apply, (0, 1), wx.DefaultSpan)
