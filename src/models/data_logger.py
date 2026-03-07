@@ -5,8 +5,6 @@ Data logger object
 - Storing the results in the proper places.
 """
 
-import threading
-
 
 class DataLogger:
 
