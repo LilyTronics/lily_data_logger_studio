@@ -2,8 +2,7 @@
 Base class for all transport classes.
 """
 
-from abc import ABC, abstractmethod
-
+from abc import ABC
 
 class TransportBase(ABC):
     pass

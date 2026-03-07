@@ -2,7 +2,7 @@
 Base class for all protocol classes.
 """
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class ProtocolBase(ABC):

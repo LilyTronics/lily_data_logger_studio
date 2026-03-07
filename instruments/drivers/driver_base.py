@@ -2,7 +2,7 @@
 Base class for all driver classes.
 """
 
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class DriverBase(ABC):
