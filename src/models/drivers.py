@@ -17,8 +17,15 @@ class Drivers:
     _drivers = []
     _lock = threading.Lock()
 
+    # Dummy callback in case the progress callback is None
+    @staticmethod
+    def _callback(*params):
+        pass
+
     @classmethod
-    def load(cls, progress_callback):
+    def load(cls, progress_callback=None):
+        if progress_callback is None:
+            progress_callback = cls._callback
         cls._lock.acquire()
         try:
             del cls._drivers[:]
