@@ -46,6 +46,8 @@ class Drivers:
                         if "ABC" in classes:
                             classes.remove("ABC")
                         if len(classes) > 0:
+                            # Instantiate class to see if the driver contains error
+                            attribute()
                             cls._drivers.append(attribute)
         progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
 
