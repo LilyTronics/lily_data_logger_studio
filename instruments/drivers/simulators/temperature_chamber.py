@@ -6,4 +6,5 @@ from instruments.drivers.driver_base import DriverBase
 
 
 class TemperatureChamber(DriverBase):
-    pass
+
+    name = "Temperature chamber simulator"
