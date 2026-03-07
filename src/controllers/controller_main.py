@@ -35,16 +35,18 @@ class MainController:
         self._logger.debug("Show main view")
         self._view.Show()
 
-        self._process_test_options(test_options)
-
-        self._controller_drivers = ControllerDrivers(self._view)
-        self._controller_data_logger = ControllerDataLogger(self._view, self._configuration, self._logger)
+        self._controller_drivers = ControllerDrivers(self._view, self._logger,
+                                                     TestOptions.suppress_loading_drivers)
+        self._controller_data_logger = ControllerDataLogger(self._view, self._configuration,
+                                                            self._logger)
 
         wx.CallAfter(self._view.update_configuration, self._configuration)
 
         # Invloke loading drivers
         event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_RELOAD_DRIVERS)
         wx.PostEvent(self._view.GetEventHandler(), event)
+
+        self._process_test_options(test_options)
 
     ###########
     # Private #
