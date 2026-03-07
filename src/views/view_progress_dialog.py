@@ -13,7 +13,7 @@ class ViewProgressDialog(wx.GenericProgressDialog):
         super().__init__(title, " ", maximum, parent, wx.PD_CAN_ABORT | wx.PD_APP_MODAL)
         # Trick for setting the frame width
         text = "a"
-        while (self.GetTextExtent(text)[0] < frame_width):
+        while self.GetTextExtent(text)[0] < frame_width:
             text += "a"
         self.Update(0, text)
         self.Fit()
