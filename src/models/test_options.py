@@ -10,3 +10,4 @@ class TestOptions:
     show_view_process = False
     show_view_settings = False
     show_view_instruments = False
+    suppress_loading_drivers = False
