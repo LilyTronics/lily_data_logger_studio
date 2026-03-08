@@ -39,7 +39,7 @@ class DriversTest(TestSuite):
         settings = Drivers.get_settings(name)
         self.log.debug(f"Settings: {settings}")
 
-        self.log.debug(f"Get settings for unknown driver")
+        self.log.debug("Get settings for unknown driver")
         try:
             settings = Drivers.get_settings("unknown driver")
             self.fail("Expected an exception, but was not raised")
