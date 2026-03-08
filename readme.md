@@ -6,6 +6,9 @@ Log data and control electronics instruments.
 * Output to table, graph and CSV file
 * Write your own drivers using Python for any instrument
 
+![main window](manual/images/main_window.png)
+
+
 # Installation
 
 Download the zip file from the releases. This contains the compiled executable, libraries and instruments
