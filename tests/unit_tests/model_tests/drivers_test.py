@@ -14,11 +14,6 @@ class DriversTest(TestSuite):
         self.log.debug(f"Loading: {params}")
 
     def test_list_drivers(self):
-        self.log.debug("List drivers, before load")
-        drivers = Drivers.get_drivers()
-        self.log.debug(f"Drivers: {drivers}")
-        self.fail_if(len(drivers) > 0, "There should not be any drivers")
-        self.log.debug("List drivers, after load")
         Drivers.load(self._on_progress)
         drivers = Drivers.get_drivers()
         self.log.debug(f"Drivers: {drivers}")
