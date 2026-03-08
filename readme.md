@@ -9,7 +9,24 @@ Log data and control electronics instruments.
 ![main window](manual/images/main_window.png)
 
 
-# Installation
+## Road map
+
+Release 1.0:
+* Read and save configuration files ✅
+* Change configuration settings ✅
+* Load and reload drivers from the instruments package ✅
+* Edit instruments in the configuration ≫
+* Edit process for controlling instruments
+* Start/stop data logger
+* Show measurements in the data table
+* Show measurements in one or more graphs
+* Write mearurement to a CSV file
+* Show live updates on the process
+
+For now the application is tested on Windows 11. But since it is all Python code, it could be
+running on other OS as well.
+
+## Installation
 
 Download the zip file from the releases. This contains the compiled executable, libraries and instruments
 package. It is a portable applicationa and doesn't require any installation.
@@ -17,15 +34,15 @@ Just unpack the zip file into a folder and run the executable.
 Two manuals are included in PDF format. One about using the application and
 one about adding instruments to the instruments package.
 
-# Instruments package
+## Instruments package
 
 The application uses a separate instruments package containing all Python code for communicating with
 the instruments. This package can be updated seperately from the application.
 This way any instrument can be integrated with the application even after installing the application.
 
-# Disclamer
+---
+
+© LilyTronics by Danny van der Pol
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
-
-(c) LilyTronics by Danny van der Pol
