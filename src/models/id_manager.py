@@ -25,6 +25,7 @@ ID_STOP_LOGGER = wx.NewIdRef()
 ID_TREE = wx.NewIdRef()
 
 # Instruments view
+ID_INSTRUMENT_DRIVER = wx.NewIdRef()
 ID_INSTRUMENT_ADD = wx.NewIdRef()
 ID_INSTRUMENT_DELETE = wx.NewIdRef()
 ID_INSTRUMENT_TEST = wx.NewIdRef()

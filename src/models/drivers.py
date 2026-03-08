@@ -67,6 +67,13 @@ class Drivers:
     def get_drivers(cls):
         return cls._drivers
 
+    @classmethod
+    def get_settings(cls, driver_name):
+        matches = [x for x in cls._drivers if x.name == driver_name]
+        if len(matches) != 1:
+            raise Exception(f"No driver matching '{driver_name}'")
+        return matches[0].settings
+
 
 if __name__ == "__main__":
 

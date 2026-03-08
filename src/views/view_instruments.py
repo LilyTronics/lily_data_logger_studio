@@ -16,23 +16,24 @@ class ViewInstruments(wx.Dialog):
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
+        self._settins_controls = {}
 
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.instruments_24.GetBitmap())
         self.SetIcon(icon)
 
         box = wx.BoxSizer(wx.HORIZONTAL)
-        box.Add(self._create_list(self), 2, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_controls(self), 3, wx.EXPAND)
+        box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_controls(), 3, wx.EXPAND)
 
         self.SetSizer(box)
         self.SetInitialSize(self._WINDOW_SIZE)
         self.CenterOnParent()
 
-    def _create_list(self, parent):
-        self._lst_instruments = wx.ListCtrl(parent)
-        btn_add = wx.Button(parent, IdManager.ID_INSTRUMENT_ADD, "Add")
-        btn_delete = wx.Button(parent, IdManager.ID_INSTRUMENT_DELETE,"Delete")
+    def _create_list(self):
+        self._lst_instruments = wx.ListCtrl(self)
+        btn_add = wx.Button(self, IdManager.ID_INSTRUMENT_ADD, "Add")
+        btn_delete = wx.Button(self, IdManager.ID_INSTRUMENT_DELETE,"Delete")
 
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(self._lst_instruments, (0, 0), (1, 2), wx.EXPAND)
@@ -43,14 +44,15 @@ class ViewInstruments(wx.Dialog):
 
         return grid
 
-    def _create_controls(self, parent):
+    def _create_controls(self):
         box = wx.BoxSizer(wx.VERTICAL)
 
         # General controls
-        lbl_name = wx.StaticText(parent, wx.ID_ANY, "Name:")
-        self._txt_name = wx.TextCtrl(parent, wx.ID_ANY)
-        lbl_drivers = wx.StaticText(parent, wx.ID_ANY, "Driver:")
-        self._cmb_drivers = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY)
+        lbl_name = wx.StaticText(self, wx.ID_ANY, "Name:")
+        self._txt_name = wx.TextCtrl(self, wx.ID_ANY)
+        lbl_drivers = wx.StaticText(self, wx.ID_ANY, "Driver:")
+        self._cmb_drivers = wx.ComboBox(self, IdManager.ID_INSTRUMENT_DRIVER,
+                                        style=wx.CB_READONLY)
 
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(lbl_name, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -59,15 +61,17 @@ class ViewInstruments(wx.Dialog):
         grid.Add(self._cmb_drivers, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.AddGrowableCol(1)
 
+        # Driver specific settings
+        self._settings_grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        self._settings_grid.Add(wx.Panel(self), (0, 0))
         box.Add(grid, 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        # Driver specific controls would go here
-        box.Add(wx.Panel(parent), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
 
         # Buttons
-        btn_test = wx.Button(parent, IdManager.ID_INSTRUMENT_TEST, "Test")
-        btn_save = wx.Button(parent, IdManager.ID_INSTRUMENT_SAVE, "Save")
-        btn_cancel = wx.Button(parent, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
-        btn_close = wx.Button(parent, IdManager.ID_INSTRUMENT_CLOSE, "Close")
+        btn_test = wx.Button(self, IdManager.ID_INSTRUMENT_TEST, "Test")
+        btn_save = wx.Button(self, IdManager.ID_INSTRUMENT_SAVE, "Save")
+        btn_cancel = wx.Button(self, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
+        btn_close = wx.Button(self, IdManager.ID_INSTRUMENT_CLOSE, "Close")
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
         grid.Add(btn_save, (0, 1), wx.DefaultSpan)
@@ -85,6 +89,25 @@ class ViewInstruments(wx.Dialog):
 
     def set_driver_names(self, driver_names):
         self._cmb_drivers.SetItems(driver_names)
+
+    def show_driver_settings(self, settings):
+        self._settins_controls.clear()
+        self._settings_grid.Clear(True)
+        try:
+            for i, setting in enumerate(settings):
+                lbl = wx.StaticText(self, wx.ID_ANY, setting.name)
+                ctrl_class = getattr(wx, setting.gui_control)
+                ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+                ctrl.SetValue(str(setting.default_value))
+                self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+                self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        except:
+            # Restore layout
+            self._settings_grid.Add(wx.Panel(self), (0, 0))
+            raise
+
+        self.Layout()
+
 
 if __name__ == "__main__":
 
