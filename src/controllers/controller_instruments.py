@@ -7,6 +7,8 @@ import wx
 import src.models.id_manager as IdManager
 
 from src.models.drivers import Drivers
+from src.simulators.run_simulators import start_simulators
+from src.simulators.run_simulators import stop_simulators
 from src.views.view_dialogs import ViewDialogs
 from src.views.view_instruments import ViewInstruments
 
@@ -35,6 +37,33 @@ class ControllerInstruments:
         self._dlg.ShowModal()
         self._dlg.Destroy()
 
+    ###########
+    # Private #
+    ###########
+
+    def _test_instrument(self):
+        settings = self._dlg.get_settings()
+        self._dlg.clear_console()
+        try:
+            driver_class = Drivers.get_driver(settings["driver"])
+            assert driver_class is not None, f"No driver found for '{settings["driver"]}'"
+            self._dlg.add_console_message(f"Test driver: {driver_class.name}")
+            if driver_class.is_simulator:
+                start_simulators()
+            driver = driver_class(settings["settings"])
+            self._dlg.add_console_message("Initialize driver")
+            driver.init()
+            self._dlg.add_console_message("Run driver test")
+            driver.test_driver()
+            self._dlg.add_console_message("Shut down driver")
+            driver.shut_down()
+            self._dlg.add_console_message("Driver test finished (passed)")
+        except Exception as e:
+            self._dlg.add_console_message(f"Error: {e}")
+            self._dlg.add_console_message("Driver test finished (failed)")
+        finally:
+            stop_simulators()
+
     ##################
     # Event handlers #
     ##################
@@ -56,6 +85,7 @@ class ControllerInstruments:
         event.Skip()
 
     def _on_test(self, event):
+        self._test_instrument()
         event.Skip()
 
     def _on_save(self, event):

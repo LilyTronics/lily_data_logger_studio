@@ -13,6 +13,10 @@ class ViewInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
     _WINDOW_SIZE = (800, 500)
+    _CONSOLE_HEIGHT = 100
+
+    _COLOR_DEFAULT = "#000"
+    _COLOR_ERROR = "#f60"
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
@@ -45,9 +49,19 @@ class ViewInstruments(wx.Dialog):
         return grid
 
     def _create_controls(self):
-        box = wx.BoxSizer(wx.VERTICAL)
+        # Placeholder for driver settings
+        self._settings_grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        self._settings_grid.Add(wx.Panel(self), (0, 0))
 
-        # General controls
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_test_console(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+
+        return box
+
+    def _create_general_controls(self):
         lbl_name = wx.StaticText(self, wx.ID_ANY, "Name:")
         self._txt_name = wx.TextCtrl(self, wx.ID_ANY)
         lbl_drivers = wx.StaticText(self, wx.ID_ANY, "Driver:")
@@ -61,17 +75,22 @@ class ViewInstruments(wx.Dialog):
         grid.Add(self._cmb_drivers, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.AddGrowableCol(1)
 
-        # Driver specific settings
-        self._settings_grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
-        self._settings_grid.Add(wx.Panel(self), (0, 0))
-        box.Add(grid, 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        return grid
 
-        # Buttons
+    def _create_test_console(self):
+        self._txt_console = wx.TextCtrl(self, size=(-1, self._CONSOLE_HEIGHT),
+                                        style=wx.TE_MULTILINE | wx.TE_DONTWRAP |
+                                        wx.TE_READONLY | wx.TE_RICH)
+        self._txt_console.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL,
+                                          wx.FONTWEIGHT_NORMAL, False))
+        return self._txt_console
+
+    def _create_buttons(self):
         btn_test = wx.Button(self, IdManager.ID_INSTRUMENT_TEST, "Test")
         btn_save = wx.Button(self, IdManager.ID_INSTRUMENT_SAVE, "Save")
         btn_cancel = wx.Button(self, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
         btn_close = wx.Button(self, IdManager.ID_INSTRUMENT_CLOSE, "Close")
+
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
         grid.Add(btn_save, (0, 1), wx.DefaultSpan)
@@ -79,9 +98,7 @@ class ViewInstruments(wx.Dialog):
         grid.Add(btn_close, (0, 3), wx.DefaultSpan, wx.ALIGN_RIGHT)
         grid.AddGrowableCol(3)
 
-        box.Add(grid, 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-
-        return box
+        return grid
 
     ##########
     # Public #
@@ -95,18 +112,38 @@ class ViewInstruments(wx.Dialog):
         self._settings_grid.Clear(True)
         try:
             for i, setting in enumerate(settings):
-                lbl = wx.StaticText(self, wx.ID_ANY, setting.name)
+                lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
                 ctrl_class = getattr(wx, setting.gui_control)
                 ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
                 ctrl.SetValue(str(setting.default_value))
                 self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                 self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+                self._settins_controls[setting.name] = ctrl
         except:
             # Restore layout
             self._settings_grid.Add(wx.Panel(self), (0, 0))
             raise
 
         self.Layout()
+
+    def get_settings(self):
+        settings = {
+            "name": self._txt_name.GetValue().strip(),
+            "driver": self._cmb_drivers.GetValue(),
+            "settings": {}
+        }
+        for key in self._settins_controls:
+            settings["settings"][key] = self._settins_controls[key].GetValue().strip()
+        return settings
+
+    def clear_console(self):
+        self._txt_console.Clear()
+
+    def add_console_message(self, message):
+        self._txt_console.SetDefaultStyle(wx.TextAttr(self._COLOR_DEFAULT))
+        if "error" in message.lower():
+            self._txt_console.SetDefaultStyle(wx.TextAttr(self._COLOR_ERROR))
+        self._txt_console.AppendText(f"{message}\n")
 
 
 if __name__ == "__main__":

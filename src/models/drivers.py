@@ -58,8 +58,6 @@ class Drivers:
                             if "ABC" in classes:
                                 classes.remove("ABC")
                             if len(classes) > 0:
-                                # Instantiate class to see if the driver contains error
-                                attribute()
                                 cls._drivers.append(attribute)
             progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
 
@@ -72,7 +70,16 @@ class Drivers:
         matches = [x for x in cls._drivers if x.name == driver_name]
         if len(matches) != 1:
             raise Exception(f"No driver matching '{driver_name}'")
-        return matches[0].settings
+        return matches[0].driver_settings
+
+    @classmethod
+    def get_driver(cls, query):
+        # Query can be class name or driver name
+        # Prio is class name
+        matches = [x for x in cls._drivers if x.get_class_name() == query]
+        if len(matches) == 0:
+            matches = [x for x in cls._drivers if x.name == query]
+        return None if len(matches) != 1 else matches[0]
 
 
 if __name__ == "__main__":
