@@ -65,12 +65,12 @@ class ViewInstruments(wx.Dialog):
 
         # Buttons
         btn_test = wx.Button(parent, IdManager.ID_INSTRUMENT_TEST, "Test")
-        btn_apply = wx.Button(parent, IdManager.ID_INSTRUMENT_APPLY, "Apply")
+        btn_save = wx.Button(parent, IdManager.ID_INSTRUMENT_SAVE, "Save")
         btn_cancel = wx.Button(parent, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
         btn_close = wx.Button(parent, IdManager.ID_INSTRUMENT_CLOSE, "Close")
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
-        grid.Add(btn_apply, (0, 1), wx.DefaultSpan)
+        grid.Add(btn_save, (0, 1), wx.DefaultSpan)
         grid.Add(btn_cancel, (0, 2), wx.DefaultSpan)
         grid.Add(btn_close, (0, 3), wx.DefaultSpan, wx.ALIGN_RIGHT)
         grid.AddGrowableCol(3)

@@ -24,7 +24,7 @@ class ControllerInstruments:
         self._dlg.Bind(wx.EVT_BUTTON, self._on_add, id=IdManager.ID_INSTRUMENT_ADD)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_test, id=IdManager.ID_INSTRUMENT_TEST)
-        self._dlg.Bind(wx.EVT_BUTTON, self._on_apply, id=IdManager.ID_INSTRUMENT_APPLY)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_save, id=IdManager.ID_INSTRUMENT_SAVE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_cancel, id=IdManager.ID_INSTRUMENT_CANCEL)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_INSTRUMENT_CLOSE)
 
@@ -44,7 +44,7 @@ class ControllerInstruments:
     def _on_test(self, event):
         event.Skip()
 
-    def _on_apply(self, event):
+    def _on_save(self, event):
         event.Skip()
 
     def _on_cancel(self, event):
