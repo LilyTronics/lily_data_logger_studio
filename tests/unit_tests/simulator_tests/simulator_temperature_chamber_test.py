@@ -9,7 +9,7 @@ from tests.lib.test_suite import TestSuite
 from tests.lib.udp_client import UdpClient
 
 
-class TemperatureChamberTest(TestSuite):
+class SimulatorTemperatureChamberTest(TestSuite):
 
     def setup(self):
         start_simulators()
@@ -20,8 +20,8 @@ class TemperatureChamberTest(TestSuite):
     def test_temperature_chamber(self):
         self.log.debug("Connect to temperature chamber")
         tc = UdpClient(SimulatorSettings.TemperatureChamber.IP,
-                    SimulatorSettings.TemperatureChamber.PORT,
-                    SimulatorSettings.TemperatureChamber.RX_TIME_OUT)
+                       SimulatorSettings.TemperatureChamber.PORT,
+                       SimulatorSettings.TemperatureChamber.RX_TIME_OUT)
         sim_id = tc.send_command("id?")
         self.log.debug(f"ID: {sim_id}")
         self.fail_if(sim_id != "Temperature chamber", f"Unexpected simulator ID: {sim_id}")
@@ -54,4 +54,4 @@ class TemperatureChamberTest(TestSuite):
 
 if __name__ == "__main__":
 
-    TemperatureChamberTest().run(True)
+    SimulatorTemperatureChamberTest().run(True)
