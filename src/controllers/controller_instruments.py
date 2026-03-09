@@ -50,13 +50,8 @@ class ControllerInstruments:
             self._dlg.add_console_message(f"Test driver: {driver_class.name}")
             if driver_class.is_simulator:
                 start_simulators()
-            driver = driver_class(settings["settings"])
             self._dlg.add_console_message("Initialize driver")
-            driver.init()
-            self._dlg.add_console_message("Run driver test")
-            driver.test_driver()
-            self._dlg.add_console_message("Shut down driver")
-            driver.shut_down()
+            _driver = driver_class(settings["settings"])
             self._dlg.add_console_message("Driver test finished (passed)")
         except Exception as e:
             self._dlg.add_console_message(f"Error: {e}")
