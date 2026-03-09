@@ -17,7 +17,7 @@ class MainView(wx.MDIParentFrame):
     _MIN_WINDOW_SIZE = (1200, 700)
     _ID_WINDOW_BOT = wx.NewIdRef()
     _ID_WINDOW_LEFT = wx.NewIdRef()
-    _LEFT_MIN_WIDTH = 220
+    _LEFT_MIN_WIDTH = 250
     _BOTTOM_MIN_HEIGHT = 60
     _STATUS_SIZE = 170
     _LED_SIZE = (16, 16)
@@ -206,6 +206,8 @@ class MainView(wx.MDIParentFrame):
                         image_index = 5
                     else:
                         image_index = 6
+                elif main_group == "instruments":
+                    image_index = 7
                 self._tree.AppendItem(main_item, sub_item, image_index)
         self._tree.ExpandAll()
 
