@@ -132,8 +132,8 @@ class ViewInstruments(wx.Dialog):
             "driver": self._cmb_drivers.GetValue(),
             "settings": {}
         }
-        for key in self._settins_controls:
-            settings["settings"][key] = self._settins_controls[key].GetValue().strip()
+        for key, ctrl in self._settins_controls.items():
+            settings["settings"][key] = ctrl.GetValue().strip()
         return settings
 
     def clear_console(self):
