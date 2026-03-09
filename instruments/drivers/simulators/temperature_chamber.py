@@ -10,8 +10,10 @@ class TemperatureChamber(DriverBase):
 
     name = "Temperature chamber simulator"
 
-    settings = [
+    driver_settings = [
         DriverSetting("host", str, "localhost", DriverSetting.CTRL_TEXT),
         DriverSetting("port", int, 17000, DriverSetting.CTRL_TEXT),
         DriverSetting("timeout", float, 0.2, DriverSetting.CTRL_TEXT)
     ]
+
+    is_simulator = True
