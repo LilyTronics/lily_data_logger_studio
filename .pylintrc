@@ -1,5 +1,6 @@
 [MESSAGES CONTROL]
-disable = broad-exception-raised,
+disable = attribute-defined-outside-init,
+          broad-exception-raised,
           broad-exception-caught,
           cyclic-import,
           duplicate-code,
