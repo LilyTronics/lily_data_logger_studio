@@ -4,7 +4,18 @@
     "end_time": 300,
     "continuous_mode": false
   },
-  "instruments": [],
+  "instruments": [
+    {
+      "id": "65d977b3-a363-4642-921a-b3324f86472d",
+      "name": "Temperature Chamber (sim)",
+      "driver": "TemperatureChamber",
+      "settings": {
+        "host": "localhost",
+        "port": 17000,
+        "timeout": 0.2
+      }
+    }
+  ],
   "process": [],
   "measurements": [],
   "graphs": []
