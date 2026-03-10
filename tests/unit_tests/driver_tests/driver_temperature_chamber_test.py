@@ -25,8 +25,11 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug("Stop simulators")
         stop_simulators()
 
-    def test_driver(self):
-        pass
+    def test_id(self):
+        self.log.debug("Get ID synchronously")
+        response = self.driver.process_channel("gid")
+        self.log.debug(f"Response: {response}")
+
 
 if __name__ == "__main__":
 
