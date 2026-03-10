@@ -18,12 +18,12 @@ class TemperatureChamber(DriverBase):
     ]
 
     channels = [
-        DriverChannel("get instrument ID"),
-        DriverChannel("get actual temperature"),
-        DriverChannel("get temperature setpoint"),
-        DriverChannel("set temperature setpoint"),
-        DriverChannel("get power state"),
-        DriverChannel("set power state", False)
+        DriverChannel("GID", "get instrument ID"),
+        DriverChannel("GAT", "get actual temperature"),
+        DriverChannel("GTS", "get temperature setpoint"),
+        DriverChannel("STS", "set temperature setpoint"),
+        DriverChannel("GPS", "get power state"),
+        DriverChannel("SPS", "set power state", False)
     ]
 
     is_simulator = True
