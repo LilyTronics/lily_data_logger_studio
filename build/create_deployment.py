@@ -6,6 +6,7 @@ import os
 import platform
 import shutil
 import zipfile
+import py_compile
 import PyInstaller.__main__
 import src
 
@@ -62,7 +63,19 @@ def _copy_drivers(app_path):
                 target = os.path.join(output_folder, full_path[len(AppData.INSTRUMENTS_PATH) + 1:])
                 os.makedirs(os.path.dirname(target), exist_ok=True)
                 print(f"To  : {target}")
-                shutil.copy2(full_path, target)
+                with open(full_path, "r", encoding="utf-8") as fp:
+                    lines = fp.readlines()
+                # Remove test code
+                output = ""
+                with open(target, "w", encoding="utf-8") as fp:
+                    for line in lines:
+                        if "if __name__ == \"__main__\"" in line:
+                            break
+                        output += line
+                    fp.write(f"{output.strip()}\n")
+                # Comile to byte code to prevent accidental edits
+                py_compile.compile(target, cfile=target + "c")
+                os.remove(target)
 
 def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")

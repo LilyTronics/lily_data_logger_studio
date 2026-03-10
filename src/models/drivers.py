@@ -17,6 +17,11 @@ class Drivers:
     _drivers = []
     _lock = threading.Lock()
 
+    _EXCLUDED_FILES = [
+        "driver_base.py", "driver_base.pyc", "driver_channel.py", "driver_channel.pyc",
+        "driver_settings.py", "driver_settings.pyc"
+    ]
+
     # Dummy callback in case the progress callback is None
     @staticmethod
     def _callback(*params):
@@ -31,12 +36,14 @@ class Drivers:
             driver_files = []
             progress_callback(-1, f"Load drivers from: {AppData.DRIVERS_PATH}")
             for current_path, subfolders, filenames in os.walk(AppData.DRIVERS_PATH):
+                if "__pycache__" in current_path:
+                    continue
                 subfolders.sort()
                 for filename in filenames:
-                    if filename == "driver_base.py" or filename.startswith("_"):
+                    if filename in cls._EXCLUDED_FILES or filename.startswith("_"):
                         continue
                     full_path = os.path.join(current_path, filename)
-                    if filename.endswith(".py"):
+                    if filename.endswith(".py") or filename.endswith(".pyc"):
                         driver_files.append(full_path)
             total = len(driver_files)
             progress_callback(-1, f"Load {total} drivers", total)
@@ -86,4 +93,4 @@ if __name__ == "__main__":
 
     from tests.unit_tests.model_tests.drivers_test import DriversTest
 
-    DriversTest().run(True)
+    DriversTest().run()
