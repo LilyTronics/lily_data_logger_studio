@@ -27,3 +27,11 @@ class DriverSetting:
         self.type = setting_type
         self.default_value = default_value
         self.gui_control = gui_control
+
+
+if __name__ == "__main__":
+
+    from tests.unit_tests.driver_tests.driver_temperature_chamber_test import \
+        DriverTemperatureChamberTest
+
+    DriverTemperatureChamberTest().run()

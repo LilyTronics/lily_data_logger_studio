@@ -34,3 +34,11 @@ class DriverChannel:
         self.name = name
         self.expect_response = expect_response
         self.direction = self.DIR_INPUT if name.startswith("get ") else self.DIR_OUTPUT
+
+
+if __name__ == "__main__":
+
+    from tests.unit_tests.driver_tests.driver_temperature_chamber_test import \
+        DriverTemperatureChamberTest
+
+    DriverTemperatureChamberTest().run()
