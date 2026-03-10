@@ -2,11 +2,16 @@
 Base class for all driver classes.
 """
 
+import inspect
+
 from abc import ABC
+from abc import abstractmethod
 from typing import final
 
 from instruments.drivers.driver_channel import DriverChannel
 from instruments.drivers.driver_settings import DriverSetting
+from instruments.protocol.protocol_base import ProtocolBase
+from instruments.transport.transport_base import TransportBase
 
 
 class DriverBase(ABC):
@@ -14,34 +19,127 @@ class DriverBase(ABC):
     name = "base class"
     driver_settings = None
     channels = None
+    transport = None
+    transport_settings = {}
+    protocol = None
+    protocol_settings = {}
     is_simulator = False
 
     def __init__(self, settings):
         self.user_settings = settings
+        self.transport = self.transport(self.transport_settings, self.user_settings)
+        self.protocol = self.protocol(self.transport, self.protocol_settings, self.user_settings)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         # Driver name
-        assert cls.name is not DriverBase.name, f"The name is not set in driver {cls.__name__}"
-        assert cls.name != "", f"The name is not set in driver {cls.__name__}"
+        if cls.name is DriverBase.name or not cls.name:
+            raise ValueError(
+                f"Driver name is not set in driver {cls.__name__}"
+            )
         # Driver settings
-        assert cls.driver_settings is not None, f"The settings is not set in driver {cls.__name__}"
-        assert isinstance(cls.driver_settings, list), \
-            f"The settings is not a list in driver {cls.__name__}"
-        assert len(cls.driver_settings) > 0, f"The settings is empty in driver {cls.__name__}"
+        if cls.driver_settings is None:
+            raise ValueError(
+                f"Driver_settings is not set in driver {cls.__name__}"
+            )
+        if not isinstance(cls.driver_settings, list):
+            raise TypeError(
+                f"Driver_settings must be a list in driver {cls.__name__}"
+            )
+        if not cls.driver_settings:
+            raise ValueError(
+                f"Driver_settings is empty in driver {cls.__name__}"
+            )
         for setting in cls.driver_settings:
-            assert isinstance(setting, DriverSetting), \
-                f"The settings is not a type DriverSetting in driver {cls.__name__}"
+            if not isinstance(setting, DriverSetting):
+                raise TypeError(
+                    f"Driver_settings must contain only DriverSetting instances "
+                    f"in driver {cls.__name__}"
+                )
         # Channels
-        assert cls.channels is not None, f"The channels is not set in driver {cls.__name__}"
-        assert isinstance(cls.channels, list), \
-            f"The channels is not a list in driver {cls.__name__}"
-        assert len(cls.channels) > 0, f"The channels is empty in driver {cls.__name__}"
+        if cls.channels is None:
+            raise ValueError(
+                f"Channels is not set in driver {cls.__name__}"
+            )
+        if not isinstance(cls.channels, list):
+            raise TypeError(
+                f"Channels must be a list in driver {cls.__name__}"
+            )
+        if not cls.channels:
+            raise ValueError(
+                f"Channels is empty in driver {cls.__name__}"
+            )
         for channel in cls.channels:
-            assert isinstance(channel, DriverChannel), \
-                f"The channels is not a type DriverChannel in driver {cls.__name__}"
+            if not isinstance(channel, DriverChannel):
+                raise TypeError(
+                    f"Channels must contain only DriverChannel instances "
+                    f"in driver {cls.__name__}"
+                )
+        # Transport
+        if cls.transport is None:
+            raise ValueError(
+                f"Transport is not set in driver {cls.__name__}"
+            )
+        if TransportBase not in inspect.getmro(cls.transport):
+            raise TypeError(
+                f"Transport must be a subclass of TransportBase in driver {cls.__name__}"
+            )
+        # Protocol
+        if cls.protocol is None:
+            raise ValueError(
+                f"Protocol is not set in driver {cls.__name__}"
+            )
+        if ProtocolBase not in inspect.getmro(cls.protocol):
+            raise TypeError(
+                f"Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
+            )
+
+    ##########
+    # Public #
+    ##########
 
     @classmethod
     @final
     def get_class_name(cls):
         return cls.__name__
+
+    @final
+    def process_channel(self, channel_query):
+        query = channel_query.strip().lower()
+        matches = [
+            channel for channel in self.channels
+            if query == channel.channel_id.lower()
+            or query == channel.name.lower()
+        ]
+        if len(matches) == 0:
+            raise LookupError(
+                f"Channel '{channel_query}' not found in driver {self.get_class_name()}"
+            )
+        if len(matches) > 1:
+            raise LookupError(
+                f"Channel '{channel_query}' is ambiguous in driver {self.get_class_name()}"
+            )
+        channel = matches[0]
+        command = self.build_command(channel)
+        response = self.protocol.process_command(channel, command)
+        return self.parse_response(channel, response)
+
+    #############
+    # Overrides #
+    #############
+
+    @abstractmethod
+    def build_command(self, channel):
+        pass
+
+    @abstractmethod
+    def parse_response(self, channel, response):
+        pass
+
+
+if __name__ == "__main__":
+
+    from tests.unit_tests.driver_tests.driver_temperature_chamber_test import \
+        DriverTemperatureChamberTest
+
+    DriverTemperatureChamberTest().run()
