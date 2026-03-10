@@ -3,6 +3,7 @@ Base class for all driver classes.
 """
 
 from abc import ABC
+from typing import final
 
 from instruments.drivers.driver_channel import DriverChannel
 from instruments.drivers.driver_settings import DriverSetting
@@ -41,5 +42,6 @@ class DriverBase(ABC):
                 f"The channels is not a type DriverChannel in driver {cls.__name__}"
 
     @classmethod
+    @final
     def get_class_name(cls):
         return cls.__name__
