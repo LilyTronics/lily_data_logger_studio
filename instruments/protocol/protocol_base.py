@@ -3,7 +3,7 @@ Base class for all protocol classes.
 """
 
 from abc import ABC
-
+from abc import abstractmethod
 
 class ProtocolBase(ABC):
 
@@ -16,8 +16,16 @@ class ProtocolBase(ABC):
     # Public #
     ##########
 
-    def process_command(self, *args):
-        print(*args)
+    def process_command(self, channel, command):
+        data = self.build_data()
+
+    #############
+    # Overrides #
+    #############
+
+    @abstractmethod
+    def build_data(self):
+        pass
 
 
 if __name__ == "__main__":
