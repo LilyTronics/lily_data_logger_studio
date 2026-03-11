@@ -112,7 +112,7 @@ class DriverBase(ABC):
             print(f"({self.get_class_name()})", message)
 
     @final
-    def process_channel(self, channel_query):
+    def process_channel(self, channel_query, value=None):
         self.log_debug(f"Get channel for query: '{channel_query}'")
         query = channel_query.strip().lower()
         matches = [
@@ -130,7 +130,7 @@ class DriverBase(ABC):
             )
         channel = matches[0]
         self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
-        command = self.build_command(channel)
+        command = self.build_command(channel, value)
         if not isinstance(command, bytes):
             raise TypeError("Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
