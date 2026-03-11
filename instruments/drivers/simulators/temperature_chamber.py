@@ -16,7 +16,6 @@ class TemperatureChamber(DriverBase):
     driver_settings = [
         DriverSetting("host", str, "localhost", DriverSetting.CTRL_TEXT),
         DriverSetting("port", int, 17000, DriverSetting.CTRL_TEXT),
-        DriverSetting("timeout", float, 0.2, DriverSetting.CTRL_TEXT)
     ]
 
     channels = [
@@ -30,6 +29,10 @@ class TemperatureChamber(DriverBase):
 
     transport = TransportUdp
     protocol = ProtocolAscii
+
+    transport_settings = {
+        "timeout": 0.5
+    }
 
     is_simulator = True
 
