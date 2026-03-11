@@ -15,6 +15,7 @@ class TemperatureChamber(SimulatorBase):
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = "\n"
     _SPEED = 0.5    # Degrees per 0.1 seconds (loop interval)
+    _TIMEOUT = 0.5
 
     def __init__(self):
         super().__init__()
@@ -26,7 +27,7 @@ class TemperatureChamber(SimulatorBase):
     def init(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._sock.settimeout(SimulatorSettings.TemperatureChamber["timeout"])
+        self._sock.settimeout(self._TIMEOUT)
         self._sock.bind((SimulatorSettings.TemperatureChamber["host"],
                          SimulatorSettings.TemperatureChamber["port"]))
 

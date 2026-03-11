@@ -7,8 +7,7 @@ class SimulatorSettings:
 
     TemperatureChamber = {
         "host": "localhost",
-        "port": 17000,
-        "timeout": 0.2
+        "port": 51000
     }
 
 
