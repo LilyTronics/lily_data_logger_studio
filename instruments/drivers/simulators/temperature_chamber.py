@@ -22,7 +22,7 @@ class TemperatureChamber(DriverBase):
         DriverChannel("gid", "get instrument ID", str),
         DriverChannel("gat", "get actual temperature", float),
         DriverChannel("gts", "get temperature setpoint", float),
-        DriverChannel("sts", "set temperature setpoint", float),
+        DriverChannel("sts", "set temperature setpoint", str),
         DriverChannel("gps", "get power state", int),
         DriverChannel("sps", "set power state", int, False)
     ]
@@ -40,18 +40,32 @@ class TemperatureChamber(DriverBase):
 
     is_simulator = True
 
-    def build_command(self, channel):
+    def build_command(self, channel, value):
         if channel.channel_id == "gid":
             return b"id?"
+        elif channel.channel_id == "gat":
+            return b"temp?"
+        elif channel.channel_id == "gts":
+            return b"tset?"
+        elif channel.channel_id == "sts":
+            return f"temp={value:.1f}".encode("utf-8")
+        elif channel.channel_id == "gps":
+            return b"pwr?"
+        elif channel.channel_id == "sps":
+            return f"pwr={value}".encode("utf-8")
         else:
             raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
                              f"driver {self.get_class_name()}")
 
     def parse_response(self, channel, response):
-        if channel.value_type is str:
+        if channel.response_type is float:
+            response = float(response)
+        elif channel.response_type is int:
+            response = int(response)
+        elif channel.response_type is str:
             response = response.decode("utf-8")
         else:
-            raise ValueError(f"Value type '{channel.value_type}' is not implemented in "
+            raise ValueError(f"Value type '{channel.response_type}' is not implemented in "
                              f"driver {self.get_class_name()}")
         return response
 
