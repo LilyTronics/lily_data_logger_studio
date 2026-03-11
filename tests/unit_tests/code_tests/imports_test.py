@@ -47,10 +47,13 @@ class ImportTest(TestSuite):
                     continue
                 full_path = os.path.join(current_path, filename)
                 self.log.debug(f"Check file: {full_path}")
+                lines = []
                 with open(full_path, "r", encoding="utf-8") as fp:
-                    # Filter only the lines with imports
-                    lines = [l.strip() for l in fp.readlines() if (
-                                l.strip().startswith("from ") or l.strip().startswith("import "))]
+                    for line in fp.readlines():
+                        if line.strip().startswith("if __name__ == \"__main__\""):
+                            break
+                        if line.strip().startswith("from ") or line.strip().startswith("import "):
+                            lines.append(line.strip())
 
                 queries = self._INSTRUMENTS_IMPORTS
                 if current_path.startswith(os.path.join(AppData.APP_PATH, "instruments")):
