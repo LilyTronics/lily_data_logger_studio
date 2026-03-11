@@ -13,15 +13,17 @@ class TemperatureChamber(SimulatorBase):
     NAME = "Temperature chamber"
 
     _RX_BUFFER_SIZE = 1500
-    _TERMINATOR = "\n"
+    _TERMINATOR = b"\n"
     _SPEED = 0.5    # Degrees per 0.1 seconds (loop interval)
     _TIMEOUT = 0.5
+    _NOISE = 0.1
+    _OFF_TEMPERATURE = 20.0
 
     def __init__(self):
         super().__init__()
         self._sock = None
-        self._temperature = 20.0
-        self._set_point = 20.0
+        self._temperature = self._OFF_TEMPERATURE
+        self._set_point = self._OFF_TEMPERATURE
         self._on_state = False
 
     def init(self):
@@ -33,27 +35,28 @@ class TemperatureChamber(SimulatorBase):
 
     def run_handler(self):
         try:
-            response = "unknown command"
+            response = b"unknown command"
             data, client_address = self._sock.recvfrom(self._RX_BUFFER_SIZE)
-            data = data.decode("latin")
             if data.endswith(self._TERMINATOR):
                 data = data.strip()
-                if data == "id?":
-                    response = self.NAME
-                if data == "on":
-                    self._on_state = True
-                    response = "ok"
-                if data == "off":
-                    self._on_state = False
-                    self._temperature = 20.0
-                    response = "ok"
-                if data == "temp?":
-                    response = f"{self._temperature}"
-                if data.startswith("temp="):
-                    self._set_point = float(data.split("=")[1])
-                    response = "ok"
-            response += self._TERMINATOR
-            self._sock.sendto(response.encode("latin"), client_address)
+                if data == b"id?":
+                    response = self.NAME.encode("utf-8")
+                elif data == b"temp?":
+                    response = f"{self._temperature}".encode("utf-8")
+                elif data == b"tset?":
+                    response = f"{self._set_point}".encode("utf-8")
+                elif data == b"pwr?":
+                    response = b"1" if self._on_state else b"0"
+                elif data.startswith(b"temp="):
+                    self._set_point = float(data.split(b"=")[1])
+                    response = b"ok"
+                elif data.startswith(b"pwr="):
+                    self._on_state = bool(int(data.split(b"=")[1]))
+                    response = None
+
+            if response is not None:
+                response += self._TERMINATOR
+                self._sock.sendto(response, client_address)
         except TimeoutError:
             pass
 
@@ -62,6 +65,11 @@ class TemperatureChamber(SimulatorBase):
                 self._temperature += self._SPEED
             if self._temperature > self._set_point:
                 self._temperature -= self._SPEED
+        else:
+            if self._temperature > self._OFF_TEMPERATURE:
+                self._temperature -= self._SPEED
+            if self._temperature < self._OFF_TEMPERATURE:
+                self._temperature += self._SPEED
 
     def cleanup(self):
         self._sock.close()
