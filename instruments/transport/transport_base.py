@@ -6,9 +6,10 @@ from abc import ABC
 
 class TransportBase(ABC):
 
-    def __init__(self, transport_settings, user_settings):
+    def __init__(self, transport_settings, user_settings, debug):
         self.transport_settings = transport_settings
         self.user_settings = user_settings
+        self.debug = debug
 
 
 if __name__ == "__main__":

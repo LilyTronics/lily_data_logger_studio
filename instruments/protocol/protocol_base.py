@@ -4,20 +4,31 @@ Base class for all protocol classes.
 
 from abc import ABC
 from abc import abstractmethod
+from typing import final
+
 
 class ProtocolBase(ABC):
 
-    def __init__(self, transport, protocol_settings, user_settings):
+    def __init__(self, transport, protocol_settings, user_settings, debug):
         self.transport = transport
         self.protocol_settings = protocol_settings
         self.user_settings = user_settings
+        self.debug = debug
 
     ##########
     # Public #
     ##########
 
+    @final
+    def log_debug(self, message):
+        if self.debug:
+            print("(protocol)", message)
+
+    @final
     def process_command(self, channel, command):
-        data = self.build_data()
+        self.log_debug(f"Process command: {command}")
+        data = self.build_data(command)
+        self.log_debug(f"Command data: {data}")
 
     #############
     # Overrides #

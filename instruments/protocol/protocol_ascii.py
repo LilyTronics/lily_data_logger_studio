@@ -7,11 +7,11 @@ from instruments.protocol.protocol_base import ProtocolBase
 
 class ProtocolAscii(ProtocolBase):
 
-    DEFAULT_END_OF_LINE = "\n"
+    DEFAULT_END_OF_LINE = b"\n"
 
     def build_data(self, data_in):
-        eol = self.protocolsettings.get("end_of_line", self.DEFAULT_END_OF_LINE)
-        return f"{data_in}{eol}"
+        eol = self.protocol_settings.get("end_of_line", self.DEFAULT_END_OF_LINE)
+        return data_in + eol
 
 
 if __name__ == "__main__":

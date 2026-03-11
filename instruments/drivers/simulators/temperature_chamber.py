@@ -35,14 +35,14 @@ class TemperatureChamber(DriverBase):
     }
 
     protocol_settings = {
-        "end_of_line": "\n"
+        "end_of_line": b"\n"
     }
 
     is_simulator = True
 
     def build_command(self, channel):
         if channel.channel_id == "gid":
-            return "id?"
+            return b"id?"
         else:
             raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
                              f"driver {self.get_class_name()}")

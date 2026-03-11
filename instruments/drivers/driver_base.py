@@ -25,10 +25,12 @@ class DriverBase(ABC):
     protocol_settings = {}
     is_simulator = False
 
-    def __init__(self, settings):
+    def __init__(self, settings, debug=False):
         self.user_settings = settings
-        self.transport = self.transport(self.transport_settings, self.user_settings)
-        self.protocol = self.protocol(self.transport, self.protocol_settings, self.user_settings)
+        self.debug = debug
+        self.transport = self.transport(self.transport_settings, self.user_settings, self.debug)
+        self.protocol = self.protocol(self.transport, self.protocol_settings,
+                                      self.user_settings, self.debug)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -104,7 +106,13 @@ class DriverBase(ABC):
         return cls.__name__
 
     @final
+    def log_debug(self, message):
+        if self.debug:
+            print("(driver)", message)
+
+    @final
     def process_channel(self, channel_query):
+        self.log_debug(f"Get channel for query: '{channel_query}'")
         query = channel_query.strip().lower()
         matches = [
             channel for channel in self.channels
@@ -120,7 +128,11 @@ class DriverBase(ABC):
                 f"Channel '{channel_query}' is ambiguous in driver {self.get_class_name()}"
             )
         channel = matches[0]
+        self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
         command = self.build_command(channel)
+        if not isinstance(command, bytes):
+            raise TypeError("Command must be of type bytes")
+        self.log_debug(f"Channel command: {command}")
         response = self.protocol.process_command(channel, command)
         return self.parse_response(channel, response)
 
@@ -129,7 +141,7 @@ class DriverBase(ABC):
     #############
 
     @abstractmethod
-    def build_command(self, channel):
+    def build_command(self, channel) -> bytes:
         pass
 
     @abstractmethod
