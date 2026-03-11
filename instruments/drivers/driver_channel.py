@@ -9,8 +9,9 @@ class DriverChannel:
 
     DIR_INPUT = "input"
     DIR_OUTPUT = "output"
+    SUPPORTED_TYPES = [float, int, str]
 
-    def __init__(self, channel_id, name, expect_response=True):
+    def __init__(self, channel_id, name, value_type, expect_response=True):
         if not isinstance(channel_id, str):
             raise TypeError("Channel ID must be a string")
         if not channel_id:
@@ -27,11 +28,14 @@ class DriverChannel:
             raise ValueError(
                 "Channel name must start with 'get ' or 'set '"
             )
+        if value_type not in self.SUPPORTED_TYPES:
+            raise ValueError(f"Value type {value_type} is not supported")
         if not isinstance(expect_response, bool):
             raise TypeError("Expect response must be a boolean")
 
         self.channel_id = channel_id
         self.name = name
+        self.value_type = value_type
         self.expect_response = expect_response
         self.direction = self.DIR_INPUT if name.startswith("get ") else self.DIR_OUTPUT
 

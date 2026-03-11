@@ -19,7 +19,7 @@ class DriverTemperatureChamberTest(TestSuite):
         Drivers.load()
         driver_class = Drivers.get_driver("TemperatureChamber")
         self.fail_if(driver_class is None, "The driver is not found")
-        self.driver = driver_class(SimulatorSettings.TemperatureChamber, True)
+        self.driver = driver_class(SimulatorSettings.TemperatureChamber, "DPT")
 
     def teardown(self):
         self.log.debug("Stop simulators")

@@ -19,12 +19,12 @@ class TemperatureChamber(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID"),
-        DriverChannel("gat", "get actual temperature"),
-        DriverChannel("gts", "get temperature setpoint"),
-        DriverChannel("sts", "set temperature setpoint"),
-        DriverChannel("gps", "get power state"),
-        DriverChannel("sps", "set power state", False)
+        DriverChannel("gid", "get instrument ID", str),
+        DriverChannel("gat", "get actual temperature", float),
+        DriverChannel("gts", "get temperature setpoint", float),
+        DriverChannel("sts", "set temperature setpoint", float),
+        DriverChannel("gps", "get power state", int),
+        DriverChannel("sps", "set power state", int, False)
     ]
 
     transport = TransportUdp
@@ -48,6 +48,11 @@ class TemperatureChamber(DriverBase):
                              f"driver {self.get_class_name()}")
 
     def parse_response(self, channel, response):
+        if channel.value_type is str:
+            response = response.decode("utf-8")
+        else:
+            raise ValueError(f"Value type '{channel.value_type}' is not implemented in "
+                             f"driver {self.get_class_name()}")
         return response
 
 

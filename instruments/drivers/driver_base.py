@@ -25,12 +25,13 @@ class DriverBase(ABC):
     protocol_settings = {}
     is_simulator = False
 
-    def __init__(self, settings, debug=False):
+    def __init__(self, settings, debug=""):
         self.user_settings = settings
+        # Debug: D/P/T: Driver, Protocol, Transport (e.g.: "DT": driver and transport)
         self.debug = debug
-        self.transport = self.transport(self.transport_settings, self.user_settings, self.debug)
-        self.protocol = self.protocol(self.transport, self.protocol_settings,
-                                      self.user_settings, self.debug)
+        self.transport = self.transport(self.transport_settings | self.user_settings, self.debug)
+        self.protocol = self.protocol(self.transport, self.protocol_settings | self.user_settings,
+                                      self.debug)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -107,7 +108,7 @@ class DriverBase(ABC):
 
     @final
     def log_debug(self, message):
-        if self.debug:
+        if "D" in self.debug:
             print(f"({self.get_class_name()})", message)
 
     @final
@@ -134,7 +135,13 @@ class DriverBase(ABC):
             raise TypeError("Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
         response = self.protocol.process_command(channel, command)
-        return self.parse_response(channel, response)
+        if channel.expect_response:
+            self.log_debug(f"Channel response: {response}")
+            response = self.parse_response(channel, response)
+            self.log_debug(f"Channel return value: {response}")
+        else:
+            self.log_debug(f"No channel response expected ({response})")
+        return response
 
     #############
     # Overrides #
