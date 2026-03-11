@@ -24,19 +24,20 @@ class UdpClient:
     def close(self):
         self._socket.close()
 
-    def send_command(self, command):
+    def send_command(self, command, expect_response=True):
         command += self._END_OF_LINE
-        response = ""
+        response = None
         self._socket.sendto(command.encode("latin"), (self._server_ip_address, self._server_port))
-        try:
-            response = self._socket.recv(self._RX_BUFFER_SIZE).decode("latin")
-            if response.endswith(self._END_OF_LINE):
-                response = response.strip()
-        except ConnectionResetError as e:
-            raise ConnectionError(
-                f"Could not connect to {self._server_ip_address}:{self._server_port}") from e
-        except TimeoutError as e:
-            raise TimeoutError("Error receiver timeout") from e
+        if expect_response:
+            try:
+                response = self._socket.recv(self._RX_BUFFER_SIZE).decode("latin")
+                if response.endswith(self._END_OF_LINE):
+                    response = response.strip()
+            except ConnectionResetError as e:
+                raise ConnectionError(
+                    f"Could not connect to {self._server_ip_address}:{self._server_port}") from e
+            except TimeoutError as e:
+                raise TimeoutError("Error receiver timeout") from e
 
         return response
 
