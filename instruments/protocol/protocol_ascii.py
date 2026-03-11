@@ -9,7 +9,7 @@ class ProtocolAscii(ProtocolBase):
 
     DEFAULT_END_OF_LINE = b"\n"
 
-    def build_data(self, data_in):
+    def build_packet(self, data_in):
         eol = self.protocol_settings.get("end_of_line", self.DEFAULT_END_OF_LINE)
         return data_in + eol
 

@@ -27,7 +27,7 @@ class ProtocolBase(ABC):
     @final
     def process_command(self, channel, command):
         self.log_debug(f"Process command: {command}")
-        data = self.build_data(command)
+        data = self.build_packet(command)
         self.log_debug(f"Command data: {data}")
 
     #############
@@ -35,7 +35,7 @@ class ProtocolBase(ABC):
     #############
 
     @abstractmethod
-    def build_data(self):
+    def build_packet(self):
         pass
 
 
