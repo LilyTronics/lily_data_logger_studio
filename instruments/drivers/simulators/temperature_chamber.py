@@ -34,6 +34,10 @@ class TemperatureChamber(DriverBase):
         "timeout": 0.5
     }
 
+    protocol_settings = {
+        "end_of_line": "\n"
+    }
+
     is_simulator = True
 
     def build_command(self, channel):
