@@ -108,7 +108,7 @@ class DriverBase(ABC):
     @final
     def log_debug(self, message):
         if self.debug:
-            print("(driver)", message)
+            print(f"({self.get_class_name()})", message)
 
     @final
     def process_channel(self, channel_query):

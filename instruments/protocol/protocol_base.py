@@ -22,7 +22,7 @@ class ProtocolBase(ABC):
     @final
     def log_debug(self, message):
         if self.debug:
-            print("(protocol)", message)
+            print(f"({self.__class__.__name__})", message)
 
     @final
     def process_command(self, channel, command):
