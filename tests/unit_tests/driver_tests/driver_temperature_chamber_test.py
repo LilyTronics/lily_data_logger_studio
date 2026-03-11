@@ -25,10 +25,43 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug("Stop simulators")
         stop_simulators()
 
-    def test_id(self):
-        self.log.debug("Get ID synchronously")
+    def test_get_id(self):
+        self.log.debug("Get ID")
         response = self.driver.process_channel("gid")
         self.log.debug(f"Response: {response}")
+        self.fail_if(response != "Temperature chamber", "The ID is not correct")
+
+    def test_get_actual_temperature(self):
+        self.log.debug("Get actual temperature")
+        response = self.driver.process_channel("gat")
+        self.log.debug(f"Response: {response}")
+        self.fail_if(not isinstance(response, float), "The response is not a float")
+
+    def test_temperature_setpoint(self):
+        self.log.debug("Get temperature setpoint")
+        set_point = self.driver.process_channel("gts")
+        self.log.debug(f"Response: {set_point}")
+        self.fail_if(not isinstance(set_point, float), "The response is not a float")
+        set_point += 5
+        response = self.driver.process_channel("sts", set_point)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(response != "ok", "The response is not 'ok'")
+        response = self.driver.process_channel("gts")
+        self.log.debug(f"Response: {response}")
+        self.fail_if(response != set_point, "The setpoint was not updated correctly")
+
+    def test_power_state(self):
+        self.log.debug("Get power state")
+        state = self.driver.process_channel("gps")
+        self.log.debug(f"Response: {state}")
+        self.fail_if(not isinstance(state, int), "The response is not an int")
+        state = 1 - state
+        response = self.driver.process_channel("sps", state)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(response is not None, "The response is not Non")
+        response = self.driver.process_channel("gps")
+        self.log.debug(f"Response: {response}")
+        self.fail_if(response != state, "The power state was not updated correctly")
 
 
 if __name__ == "__main__":
