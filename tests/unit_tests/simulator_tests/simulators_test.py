@@ -34,7 +34,6 @@ class SimulatorsTest(TestSuite):
         self.fail_if(len(after_simulators) != len(before_simulators),
                      f"Invaid number of simulators running. Expected: {before_simulators}")
 
-
     def test_stop_simulators(self):
         stop_simulators()
         self.sleep(1)
@@ -45,4 +44,4 @@ class SimulatorsTest(TestSuite):
 
 if __name__ == "__main__":
 
-    SimulatorsTest().run(True)
+    SimulatorsTest().run()
