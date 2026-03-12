@@ -35,7 +35,7 @@ If you find the Lily Data Logger Studio usefull and want to support it you can s
 * Write instrument drivers. With more drivers the software becomes more usefull.
 * If you cannot write instrument drivers yourself, we can do it for you.
   * We need access to the instrument (remote connection to a PC that is connected with the instrument).
-  * You can send the instrument to us for borrowing and we can create a driver. Then we send it back.
+  * You can send the instrument to us for borrowing and we can create a driver, then we send it back.
 * Promote this software using your social channels.
 
 ## Installation
@@ -58,4 +58,5 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
+
 
