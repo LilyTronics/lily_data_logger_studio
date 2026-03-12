@@ -20,7 +20,7 @@ class ViewInstruments(wx.Dialog):
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
-        self._settins_controls = {}
+        self._settings_controls = {}
 
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.instruments_24.GetBitmap())
@@ -108,7 +108,7 @@ class ViewInstruments(wx.Dialog):
         self._cmb_drivers.SetItems(driver_names)
 
     def show_driver_settings(self, settings):
-        self._settins_controls.clear()
+        self._settings_controls.clear()
         self._settings_grid.Clear(True)
         try:
             for i, setting in enumerate(settings):
@@ -118,7 +118,7 @@ class ViewInstruments(wx.Dialog):
                 ctrl.SetValue(str(setting.default_value))
                 self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                 self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                self._settins_controls[setting.name] = ctrl
+                self._settings_controls[setting.name] = ctrl
         except:
             # Restore layout
             self._settings_grid.Add(wx.Panel(self), (0, 0))
@@ -132,7 +132,7 @@ class ViewInstruments(wx.Dialog):
             "driver": self._cmb_drivers.GetValue(),
             "settings": {}
         }
-        for key, ctrl in self._settins_controls.items():
+        for key, ctrl in self._settings_controls.items():
             settings["settings"][key] = ctrl.GetValue().strip()
         return settings
 
