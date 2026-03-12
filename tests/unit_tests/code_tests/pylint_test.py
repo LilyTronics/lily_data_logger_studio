@@ -14,7 +14,7 @@ import src.app_data as AppData
 from tests.lib.test_suite import TestSuite
 
 
-class TestSuiteTest(TestSuite):
+class PylintTest(TestSuite):
 
     def test_pylint(self):
         targets = []
@@ -48,4 +48,4 @@ class TestSuiteTest(TestSuite):
 
 if __name__ == "__main__":
 
-    TestSuiteTest().run()
+    PylintTest().run()
