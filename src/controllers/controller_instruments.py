@@ -18,8 +18,6 @@ class ControllerInstruments:
     def __init__(self, parent_view, logger):
         self._logger = logger
         self._logger.info("Edit instruments")
-        instruments = []
-        self._logger.debug(f"Current instruments: {instruments}")
         driver_names = [x.name for x in Drivers.get_drivers()]
 
         self._dlg = ViewInstruments(parent_view)
