@@ -130,6 +130,9 @@ class Configuration:
     # Instruments #
     ###############
 
+    def get_new_instrument(self):
+        return deepcopy(self._INSTRUMENT)
+
     def get_instruments(self):
         return deepcopy(self._configuration["instruments"])
 

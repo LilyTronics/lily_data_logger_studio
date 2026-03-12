@@ -76,12 +76,11 @@ class ControllerInstruments:
 
     def _get_instrument_from_view(self):
         settings = self._dlg.get_settings()
-        instrument = {
-            "id": self._selected_id,
-            "name": settings["name"],
-            "driver": settings["driver"],
-            "settings": settings["settings"]
-        }
+        instrument = self._configuration.get_new_instrument()
+        instrument["id"] = self._selected_id
+        instrument["name"] = settings["name"]
+        instrument["driver"] = settings["driver"]
+        instrument["settings"] = settings["settings"]
         if instrument["name"] == "":
             raise Exception("Name cannot be empty")
         return instrument
