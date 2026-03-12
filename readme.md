@@ -8,7 +8,6 @@ Log data and control electronics instruments.
 
 ![main window](manual/images/main_window.png)
 
-
 ## Road map
 
 Release 1.0:
@@ -28,6 +27,16 @@ For now the application is tested on Windows 11. But since it is all Python code
 running on other OS as well.
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
+
+## Contributing
+
+If you find the Lily Data Logger Studio usefull and want to support it you can support in the following ways:
+* Sponsor us, so we can spend more time on maintaining this software (https://github.com/sponsors/LilyTronics)
+* Write instrument drivers. With more drivers the software becomes more usefull.
+* If you cannot write instrument drivers yourself, we can do it for you.
+  * We need access to the instrument (remote connection to a PC that is connected with the instrument).
+  * You can send the instrument to us for borrowing and we can create a driver. Then we send it back.
+* Promote this software using your social channels.
 
 ## Installation
 
@@ -49,3 +58,4 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
+
