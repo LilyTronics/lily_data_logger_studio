@@ -26,6 +26,8 @@ class ControllerInstruments:
         self._dlg.set_driver_names(driver_names)
         self._update_instruments()
 
+        self._dlg.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_activated,
+                       id=IdManager.ID_INSTRUMENT_LIST)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_new, id=IdManager.ID_INSTRUMENT_NEW)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_test, id=IdManager.ID_INSTRUMENT_TEST)
@@ -88,6 +90,16 @@ class ControllerInstruments:
     # Event handlers #
     ##################
 
+    def _on_activated(self, event):
+        instrument_id = event.GetEventObject().id_map.get(event.GetIndex(), None)
+        if instrument_id is not None:
+            self._selected_id = instrument_id
+            instrument = self._configuration.get_instrument(instrument_id)
+            settings = Drivers.get_settings(instrument["driver"])
+            self._dlg.show_instrument(instrument, settings)
+
+        event.Skip()
+
     def _on_driver_select(self, event):
         try:
             settings = Drivers.get_settings(event.GetString())
@@ -112,8 +124,12 @@ class ControllerInstruments:
         try:
             instrument = self._get_instrument_from_view()
             self._logger.debug(f"Save instrument: {instrument}")
-            self._configuration.add_instrument(instrument["name"], instrument["driver"],
-                                               instrument["settings"])
+            if self._selected_id is None:
+                self._configuration.add_instrument(instrument["name"], instrument["driver"],
+                                                instrument["settings"])
+            else:
+                self._configuration.update_instrument(instrument["id"], instrument["name"],
+                                                    instrument["driver"], instrument["settings"])
         except Exception as e:
             self._logger.error(f"Error saving instrument: {e}")
             ViewDialogs.show_message(self._dlg, f"Error saving instrument: {e}",
@@ -135,6 +151,7 @@ if __name__ == "__main__":
     from src.main import run_data_logger
     from src.models.test_options import TestOptions
 
+    TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
     TestOptions.show_view_instruments = True
     TestOptions.suppress_loading_drivers = True

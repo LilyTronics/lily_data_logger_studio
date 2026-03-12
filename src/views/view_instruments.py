@@ -34,7 +34,8 @@ class ViewInstruments(wx.Dialog):
         self.CenterOnParent()
 
     def _create_list(self):
-        self._lst_instruments = wx.ListCtrl(self, style=wx.LC_REPORT | wx.LC_NO_SORT_HEADER)
+        self._lst_instruments = wx.ListCtrl(self, IdManager.ID_INSTRUMENT_LIST,
+                                            style=wx.LC_REPORT | wx.LC_NO_SORT_HEADER)
         self._lst_instruments.InsertColumn(0, "Instruments:", width=self._COL_WIDTH)
         self._lst_instruments.id_map = {}
 
@@ -135,6 +136,15 @@ class ViewInstruments(wx.Dialog):
 
         self.Layout()
 
+    def show_instrument(self, instrument, driver_settings):
+        self._txt_name.SetValue(instrument["name"])
+        self._cmb_drivers.SetValue(instrument["driver"])
+        self.show_driver_settings(driver_settings)
+        for key, value in instrument["settings"].items():
+            if key in self._settings_controls:
+                ctrl, _ctrl_type = self._settings_controls[key]
+                ctrl.SetValue(str(value))
+
     def get_settings(self):
         settings = {
             "name": self._txt_name.GetValue().strip(),
@@ -169,6 +179,7 @@ if __name__ == "__main__":
     from src.main import run_data_logger
     from src.models.test_options import TestOptions
 
+    TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
     TestOptions.show_view_instruments = True
     TestOptions.suppress_loading_drivers = True
