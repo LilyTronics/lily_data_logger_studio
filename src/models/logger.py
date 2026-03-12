@@ -43,6 +43,7 @@ class Logger:
         with open(self._filename, "w", encoding="utf-8") as fp:
             fp.close()
         self._output = ""
+        self._stdout_callback = None
 
         self._org_stdout = sys.stdout
         self._org_stderr = sys.stderr
@@ -53,6 +54,9 @@ class Logger:
     def shut_down(self):
         sys.stdout = self._org_stdout
         sys.stderr = self._org_stderr
+
+    def set_stdout_callback(self, callback):
+        self._stdout_callback = callback
 
     def info(self, message):
         self.handle_message(self.TYPE_INFO, f"{message}\n")
@@ -70,10 +74,15 @@ class Logger:
             index = self._output.find("\n")
             message = self._LOG_FORMAT.format(timestamp, message_type, self._output[:index])
             self._output = self._output[index + 1:]
-            with open(self._filename, "a", encoding="utf-8") as fp:
-                fp.write(message)
-            if self._log_to_stdout:
-                self._org_stdout.write(message)
+            if message_type in [self.TYPE_STDOUT, self.TYPE_STDERR] and \
+                self._stdout_callback is not None:
+                # Only log STDOUT and STDERR messages to the callback
+                self._stdout_callback(message)
+            else:
+                with open(self._filename, "a", encoding="utf-8") as fp:
+                    fp.write(message)
+                if self._log_to_stdout:
+                    self._org_stdout.write(message)
 
 
 if __name__ == "__main__":

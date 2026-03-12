@@ -13,7 +13,7 @@ class ViewInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
     _WINDOW_SIZE = (800, 500)
-    _CONSOLE_HEIGHT = 100
+    _CONSOLE_HEIGHT = 150
 
     _COLOR_DEFAULT = "#000"
     _COLOR_ERROR = "#f60"
@@ -28,7 +28,7 @@ class ViewInstruments(wx.Dialog):
 
         box = wx.BoxSizer(wx.HORIZONTAL)
         box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_controls(), 3, wx.EXPAND)
+        box.Add(self._create_controls(), 5, wx.EXPAND)
 
         self.SetSizer(box)
         self.SetInitialSize(self._WINDOW_SIZE)

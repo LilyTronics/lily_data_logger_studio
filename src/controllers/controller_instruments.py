@@ -38,27 +38,32 @@ class ControllerInstruments:
     ###########
     # Private #
     ###########
+    def _log_to_console(self, message):
+        if "|" in message:
+            message = message.split("|")[-1]
+        self._dlg.add_console_message(message.strip())
 
     def _test_instrument(self):
+        self._logger.set_stdout_callback(self._log_to_console)
         try:
             settings = self._dlg.get_settings()
-            self._logger.debug(f"Testing instrument with settings: {settings}")
             self._dlg.clear_console()
             driver_class = Drivers.get_driver(settings["driver"])
             assert driver_class is not None, f"No driver found for '{settings["driver"]}'"
-            self._dlg.add_console_message(f"Test driver: {driver_class.name}")
+            self._log_to_console(f"Test driver: {driver_class.name}")
             if driver_class.is_simulator:
                 start_simulators()
-            self._dlg.add_console_message("Initialize driver")
+            self._log_to_console("Initialize driver")
             driver = driver_class(settings["settings"], "DPT")
-            self._dlg.add_console_message("Run driver test")
+            self._log_to_console("Run driver test")
             driver.test_driver()
-            self._dlg.add_console_message("Driver test finished (passed)")
+            self._log_to_console("Driver test finished (passed)")
         except Exception as e:
-            self._dlg.add_console_message(f"Error: {e}")
-            self._dlg.add_console_message("Driver test finished (failed)")
+            self._log_to_console(f"Error: {e}")
+            self._log_to_console("Driver test finished (failed)")
         finally:
             stop_simulators()
+        self._logger.set_stdout_callback(None)
 
     ##################
     # Event handlers #
