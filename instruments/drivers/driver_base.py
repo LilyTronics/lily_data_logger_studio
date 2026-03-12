@@ -148,7 +148,7 @@ class DriverBase(ABC):
     #############
 
     @abstractmethod
-    def build_command(self, channel) -> bytes:
+    def build_command(self, channel, value=None):
         pass
 
     @abstractmethod
