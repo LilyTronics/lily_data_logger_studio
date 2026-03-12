@@ -16,7 +16,8 @@ class TransportUdp(TransportBase):
 
     def is_connection_ready(self):
         try:
-            self.socket.getpeername()
+            address = self.socket.getpeername()
+            self.log_debug(f"Connect to: {address[0]}:{address[1]}")
             return True
         except:
             return False

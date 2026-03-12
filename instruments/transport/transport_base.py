@@ -16,10 +16,16 @@ class TransportBase(ABC):
     def __init__(self, transport_settings, debug):
         self.transport_settings = transport_settings
         self.debug = debug
+        self.log_debug(f"Transport settings: {self.transport_settings}")
 
     ##########
     # Public #
     ##########
+
+    @classmethod
+    @final
+    def get_class_name(cls):
+        return cls.__name__
 
     @final
     def log_debug(self, message):

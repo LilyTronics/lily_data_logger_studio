@@ -13,6 +13,8 @@ class ProtocolBase(ABC):
         self.transport = transport
         self.protocol_settings = protocol_settings
         self.debug = debug
+        self.log_debug(f"Transport: {self.transport.get_class_name()}")
+        self.log_debug(f"Protocol settings: {self.protocol_settings}")
 
     ##########
     # Public #
