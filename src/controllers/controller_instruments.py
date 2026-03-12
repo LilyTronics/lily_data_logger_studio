@@ -15,13 +15,16 @@ from src.views.view_instruments import ViewInstruments
 
 class ControllerInstruments:
 
-    def __init__(self, parent_view, logger):
+    def __init__(self, parent_view, logger, configuration):
         self._logger = logger
+        self._configuration = configuration
         self._logger.info("Edit instruments")
         driver_names = [x.name for x in Drivers.get_drivers()]
+        self._selected_id = None
 
         self._dlg = ViewInstruments(parent_view)
         self._dlg.set_driver_names(driver_names)
+        self._update_instruments()
 
         self._dlg.Bind(wx.EVT_BUTTON, self._on_new, id=IdManager.ID_INSTRUMENT_NEW)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
@@ -38,6 +41,10 @@ class ControllerInstruments:
     ###########
     # Private #
     ###########
+
+    def _update_instruments(self):
+        self._dlg.set_instruments(self._configuration.get_instruments())
+
     def _log_to_console(self, message):
         if "|" in message:
             message = message.split("|")[-1]
@@ -65,6 +72,18 @@ class ControllerInstruments:
             stop_simulators()
         self._logger.set_stdout_callback(None)
 
+    def _get_instrument_from_view(self):
+        settings = self._dlg.get_settings()
+        instrument = {
+            "id": self._selected_id,
+            "name": settings["name"],
+            "driver": settings["driver"],
+            "settings": settings["settings"]
+        }
+        if instrument["name"] == "":
+            raise Exception("Name cannot be empty")
+        return instrument
+
     ##################
     # Event handlers #
     ##################
@@ -90,6 +109,17 @@ class ControllerInstruments:
         event.Skip()
 
     def _on_save(self, event):
+        try:
+            instrument = self._get_instrument_from_view()
+            self._logger.debug(f"Save instrument: {instrument}")
+            self._configuration.add_instrument(instrument["name"], instrument["driver"],
+                                               instrument["settings"])
+        except Exception as e:
+            self._logger.error(f"Error saving instrument: {e}")
+            ViewDialogs.show_message(self._dlg, f"Error saving instrument: {e}",
+                                     "Save Instrument", wx.ICON_EXCLAMATION)
+            return
+        self._update_instruments()
         event.Skip()
 
     def _on_cancel(self, event):

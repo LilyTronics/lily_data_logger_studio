@@ -13,7 +13,7 @@ class ViewInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
     _WINDOW_SIZE = (800, 500)
-
+    _COL_WIDTH = 180
     _COLOR_DEFAULT = "#000"
     _COLOR_ERROR = "#f60"
 
@@ -34,7 +34,10 @@ class ViewInstruments(wx.Dialog):
         self.CenterOnParent()
 
     def _create_list(self):
-        self._lst_instruments = wx.ListCtrl(self)
+        self._lst_instruments = wx.ListCtrl(self, style=wx.LC_REPORT | wx.LC_NO_SORT_HEADER)
+        self._lst_instruments.InsertColumn(0, "Instruments:", width=self._COL_WIDTH)
+        self._lst_instruments.id_map = {}
+
         btn_add = wx.Button(self, IdManager.ID_INSTRUMENT_NEW, "New")
         btn_delete = wx.Button(self, IdManager.ID_INSTRUMENT_DELETE,"Delete")
 
@@ -101,6 +104,13 @@ class ViewInstruments(wx.Dialog):
     ##########
     # Public #
     ##########
+
+    def set_instruments(self, instruments):
+        self._lst_instruments.DeleteAllItems()
+        self._lst_instruments.id_map.clear()
+        for instrument in sorted(instruments, key=lambda x: x["name"]):
+            index = self._lst_instruments.InsertItem(self._lst_instruments.GetItemCount(), instrument["name"])
+            self._lst_instruments.id_map[index] = instrument["id"]
 
     def set_driver_names(self, driver_names):
         self._cmb_drivers.SetItems(driver_names)

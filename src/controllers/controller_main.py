@@ -113,7 +113,7 @@ class MainController:
         event.Skip()
 
     def _show_instruments(self, event):
-        ControllerInstruments(self._view, self._logger)
+        ControllerInstruments(self._view, self._logger, self._configuration)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
