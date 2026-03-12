@@ -55,7 +55,7 @@ class SimulatorTemperatureChamberTest(TestSuite):
         tc.send_command("pwr=0", False)
         result = self._wait_for_temperature(tc, 20.0)
         self.log.debug(f"Current temperature: {temp}")
-        self.fail_if(not result, f"Temperature did not return to 20 degrees")
+        self.fail_if(not result, "Temperature did not return to 20 degrees")
 
 
 if __name__ == "__main__":
