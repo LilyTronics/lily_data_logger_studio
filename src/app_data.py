@@ -10,7 +10,7 @@ import wx
 wxApp = wx.App(redirect=False)
 
 APP_NAME = "Lily Data Logger Studio\u2122"   # \u2122 is the trademark symbol
-VERSION = "0.1"
+VERSION = "0.2"
 EXE_NAME = "LilyDataLoggerStudio"
 COMPANY = "LilyTronics"
 

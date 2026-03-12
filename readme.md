@@ -15,8 +15,8 @@ Release 1.0:
 * Read and save configuration files ✅
 * Change configuration settings ✅
 * Load and reload drivers from the instruments package ✅
-* Edit instruments in the configuration ≫
-* Edit process for controlling instruments
+* Edit instruments in the configuration ✅
+* Edit process for controlling instruments ≫
 * Start/stop data logger
 * Show measurements in the data table
 * Edit graphs in the configuration
@@ -49,4 +49,3 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
-
