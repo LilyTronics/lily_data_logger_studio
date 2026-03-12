@@ -13,7 +13,6 @@ class ViewInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
     _WINDOW_SIZE = (800, 500)
-    _CONSOLE_HEIGHT = 150
 
     _COLOR_DEFAULT = "#000"
     _COLOR_ERROR = "#f60"
@@ -56,7 +55,7 @@ class ViewInstruments(wx.Dialog):
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
         box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_test_console(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
         box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
 
         return box
@@ -78,8 +77,7 @@ class ViewInstruments(wx.Dialog):
         return grid
 
     def _create_test_console(self):
-        self._txt_console = wx.TextCtrl(self, size=(-1, self._CONSOLE_HEIGHT),
-                                        style=wx.TE_MULTILINE | wx.TE_DONTWRAP |
+        self._txt_console = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_DONTWRAP |
                                         wx.TE_READONLY | wx.TE_RICH)
         self._txt_console.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL,
                                           wx.FONTWEIGHT_NORMAL, False))
