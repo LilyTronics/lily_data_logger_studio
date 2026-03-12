@@ -110,6 +110,9 @@ class ControllerInstruments:
         event.Skip()
 
     def _on_new(self, event):
+        instrument = self._configuration.get_new_instrument()
+        self._selected_id = None
+        self._dlg.show_instrument(instrument, None)
         event.Skip()
 
     def _on_delete(self, event):

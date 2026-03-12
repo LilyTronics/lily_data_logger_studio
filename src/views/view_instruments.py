@@ -120,25 +120,31 @@ class ViewInstruments(wx.Dialog):
     def show_driver_settings(self, settings):
         self._settings_controls.clear()
         self._settings_grid.Clear(True)
-        try:
-            for i, setting in enumerate(settings):
-                lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
-                ctrl_class = getattr(wx, setting.gui_control)
-                ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
-                ctrl.SetValue(str(setting.default_value))
-                self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                self._settings_controls[setting.name] = (ctrl, setting.type)
-        except:
-            # Restore layout
+        if settings is None:
             self._settings_grid.Add(wx.Panel(self), (0, 0))
-            raise
+        else:
+            try:
+                for i, setting in enumerate(settings):
+                    lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
+                    ctrl_class = getattr(wx, setting.gui_control)
+                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+                    ctrl.SetValue(str(setting.default_value))
+                    self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+                    self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+                    self._settings_controls[setting.name] = (ctrl, setting.type)
+            except:
+                # Restore layout
+                self._settings_grid.Add(wx.Panel(self), (0, 0))
+                raise
 
         self.Layout()
 
     def show_instrument(self, instrument, driver_settings):
         self._txt_name.SetValue(instrument["name"])
-        self._cmb_drivers.SetValue(instrument["driver"])
+        if instrument["driver"] in self._cmb_drivers.GetItems():
+            self._cmb_drivers.SetValue(instrument["driver"])
+        else:
+            self._cmb_drivers.SetSelection(wx.NOT_FOUND)
         self.show_driver_settings(driver_settings)
         for key, value in instrument["settings"].items():
             if key in self._settings_controls:
