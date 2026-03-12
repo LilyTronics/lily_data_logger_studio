@@ -85,6 +85,11 @@ class ControllerInstruments:
             raise Exception("Name cannot be empty")
         return instrument
 
+    def _show_instrument(self):
+        instrument = self._configuration.get_instrument(self._selected_id)
+        settings = Drivers.get_settings(instrument["driver"])
+        self._dlg.show_instrument(instrument, settings)
+
     ##################
     # Event handlers #
     ##################
@@ -93,10 +98,7 @@ class ControllerInstruments:
         instrument_id = event.GetEventObject().id_map.get(event.GetIndex(), None)
         if instrument_id is not None:
             self._selected_id = instrument_id
-            instrument = self._configuration.get_instrument(instrument_id)
-            settings = Drivers.get_settings(instrument["driver"])
-            self._dlg.show_instrument(instrument, settings)
-
+            self._show_instrument()
         event.Skip()
 
     def _on_driver_select(self, event):
@@ -141,6 +143,7 @@ class ControllerInstruments:
         event.Skip()
 
     def _on_cancel(self, event):
+        self._show_instrument()
         event.Skip()
 
     def _on_close(self, event):
