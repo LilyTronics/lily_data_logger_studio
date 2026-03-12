@@ -41,15 +41,15 @@ class ProtocolBase(ABC):
     #############
 
     @abstractmethod
-    def build_packet(self):
+    def build_packet(self, data):
         pass
 
     @abstractmethod
-    def parse_packet(self):
+    def parse_packet(self, data):
         pass
 
     @abstractmethod
-    def validate_response(self):
+    def validate_response(self, response):
         pass
 
 
