@@ -15,7 +15,7 @@ class TemperatureChamber(DriverBase):
 
     driver_settings = [
         DriverSetting("host", str, "localhost", DriverSetting.CTRL_TEXT),
-        DriverSetting("port", int, 17000, DriverSetting.CTRL_TEXT),
+        DriverSetting("port", int, 51000, DriverSetting.CTRL_TEXT),
     ]
 
     channels = [
@@ -66,6 +66,11 @@ class TemperatureChamber(DriverBase):
 
         raise ValueError(f"Value type '{channel.response_type}' is not implemented in "
                          f"driver {self.get_class_name()}")
+
+    def test_driver(self):
+        response = self.process_channel("gid")
+        if response.lower() != "temperature chamber":
+            raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
 
 if __name__ == "__main__":
