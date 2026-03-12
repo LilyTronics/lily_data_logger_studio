@@ -155,6 +155,10 @@ class DriverBase(ABC):
     def parse_response(self, channel, response):
         pass
 
+    @abstractmethod
+    def test_driver(self):
+        pass
+
 
 if __name__ == "__main__":
 
