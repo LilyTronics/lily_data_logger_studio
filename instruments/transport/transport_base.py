@@ -44,7 +44,7 @@ class TransportBase(ABC):
             self.log_debug("Expecting response, waiting for response")
             t = time.time()
             t += self.transport_settings.get("timeout", self._DEFAULT_TIMEOUT)
-            while (time.time() < t):
+            while time.time() < t:
                 response += self.receive()
                 if validate_response(response):
                     break
@@ -68,7 +68,7 @@ class TransportBase(ABC):
         pass
 
     @abstractmethod
-    def send(self):
+    def send(self, data):
         pass
 
     @abstractmethod
