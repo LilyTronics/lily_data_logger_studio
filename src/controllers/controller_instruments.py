@@ -58,7 +58,8 @@ class ControllerInstruments:
             settings = self._dlg.get_settings()
             self._dlg.clear_console()
             driver_class = Drivers.get_driver(settings["driver"])
-            assert driver_class is not None, f"No driver found for '{settings["driver"]}'"
+            if driver_class is None:
+                raise ValueError(f"No driver found for '{settings['driver']}'")
             self._log_to_console(f"Test driver: {driver_class.name}")
             if driver_class.is_simulator:
                 start_simulators()
