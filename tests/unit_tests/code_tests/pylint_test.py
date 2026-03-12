@@ -17,12 +17,17 @@ from tests.lib.test_suite import TestSuite
 class TestSuiteTest(TestSuite):
 
     def test_pylint(self):
-        targets = [
-            os.path.join(AppData.APP_PATH, "src"),
-        ]
-        self.log.debug("Running pylint on targets:")
-        for target in targets:
-            self.log.debug(f"{target}")
+        targets = []
+        for current_path, sub_folders, filenames in os.walk(AppData.APP_PATH):
+            # Skip files in virtual environment
+            if current_path.startswith(os.path.join(AppData.APP_PATH, ".venv")):
+                continue
+
+            sub_folders.sort()
+            for filename in filenames:
+                if filename.endswith(".py"):
+                    targets.append(os.path.join(current_path, filename))
+        self.log.debug(f"Running pylint on {len(targets)} files")
 
         output = StringIO()  # Custom open stream
         Run([*targets], reporter=JSON2Reporter(output), exit=False)
@@ -33,12 +38,12 @@ class TestSuiteTest(TestSuite):
             self.log.debug(f"  - {message["message"]} ({message["symbol"]})")
             self.log.debug(f"  - line: {message["line"]}, column: {message["column"]}")
 
-        self.log.debug(f"Pylint results:")
+        self.log.debug("Pylint results:")
         for key, value in result["statistics"]["messageTypeCount"].items():
             self.log.debug(f"  - {key}: {value}")
         self.log.debug(f"  - modules: {result["statistics"]["modulesLinted"]}")
         self.log.debug(f"  - score: {result["statistics"]["score"]}")
-        self.fail_if(result["statistics"]["score"] < 10.0, f"Pylint score is below 10.0")
+        self.fail_if(result["statistics"]["score"] < 10.0, "Pylint score is below 10.0")
 
 
 if __name__ == "__main__":
