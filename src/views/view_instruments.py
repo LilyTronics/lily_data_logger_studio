@@ -109,7 +109,8 @@ class ViewInstruments(wx.Dialog):
         self._lst_instruments.DeleteAllItems()
         self._lst_instruments.id_map.clear()
         for instrument in sorted(instruments, key=lambda x: x["name"]):
-            index = self._lst_instruments.InsertItem(self._lst_instruments.GetItemCount(), instrument["name"])
+            index = self._lst_instruments.InsertItem(self._lst_instruments.GetItemCount(),
+                                                     instrument["name"])
             self._lst_instruments.id_map[index] = instrument["id"]
 
     def set_driver_names(self, driver_names):
