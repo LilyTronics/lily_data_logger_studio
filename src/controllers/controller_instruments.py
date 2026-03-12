@@ -42,16 +42,19 @@ class ControllerInstruments:
     ###########
 
     def _test_instrument(self):
-        settings = self._dlg.get_settings()
-        self._dlg.clear_console()
         try:
+            settings = self._dlg.get_settings()
+            self._logger.debug(f"Testing instrument with settings: {settings}")
+            self._dlg.clear_console()
             driver_class = Drivers.get_driver(settings["driver"])
             assert driver_class is not None, f"No driver found for '{settings["driver"]}'"
             self._dlg.add_console_message(f"Test driver: {driver_class.name}")
             if driver_class.is_simulator:
                 start_simulators()
             self._dlg.add_console_message("Initialize driver")
-            _driver = driver_class(settings["settings"])
+            driver = driver_class(settings["settings"], "DPT")
+            self._dlg.add_console_message("Run driver test")
+            driver.test_driver()
             self._dlg.add_console_message("Driver test finished (passed)")
         except Exception as e:
             self._dlg.add_console_message(f"Error: {e}")

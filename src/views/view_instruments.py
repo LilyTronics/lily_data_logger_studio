@@ -118,7 +118,7 @@ class ViewInstruments(wx.Dialog):
                 ctrl.SetValue(str(setting.default_value))
                 self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                 self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                self._settings_controls[setting.name] = ctrl
+                self._settings_controls[setting.name] = (ctrl, setting.type)
         except:
             # Restore layout
             self._settings_grid.Add(wx.Panel(self), (0, 0))
@@ -132,8 +132,17 @@ class ViewInstruments(wx.Dialog):
             "driver": self._cmb_drivers.GetValue(),
             "settings": {}
         }
-        for key, ctrl in self._settings_controls.items():
-            settings["settings"][key] = ctrl.GetValue().strip()
+        for key, (ctrl, ctrl_type) in self._settings_controls.items():
+            value = None
+            try:
+                value = ctrl.GetValue().strip()
+                settings["settings"][key] = ctrl_type(value)
+            except Exception as e:
+                raise ValueError(
+                    f"Invalid value for setting {key}: '{value}'. "
+                    f"Expected type: {ctrl_type.__name__}"
+                ) from e
+
         return settings
 
     def clear_console(self):
