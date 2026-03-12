@@ -33,12 +33,12 @@ class TransportUdp(TransportBase):
         self.socket.send(data)
 
     def receive(self):
-        rx_data = b""
+        data = b""
         try:
-            rx_data = self.socket.recv(self._BUFFER_SIZE)
+            data = self.socket.recv(self._BUFFER_SIZE)
         except:
             pass
-        return rx_data
+        return data
 
 
 if __name__ == "__main__":
