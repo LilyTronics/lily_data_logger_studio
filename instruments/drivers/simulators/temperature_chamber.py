@@ -41,33 +41,31 @@ class TemperatureChamber(DriverBase):
     is_simulator = True
 
     def build_command(self, channel, value):
-        if channel.channel_id == "gid":
-            return b"id?"
-        elif channel.channel_id == "gat":
-            return b"temp?"
-        elif channel.channel_id == "gts":
-            return b"tset?"
-        elif channel.channel_id == "sts":
-            return f"temp={value:.1f}".encode("utf-8")
-        elif channel.channel_id == "gps":
-            return b"pwr?"
-        elif channel.channel_id == "sps":
-            return f"pwr={value}".encode("utf-8")
-        else:
-            raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
-                             f"driver {self.get_class_name()}")
+        match channel.channel_id:
+            case "gid":
+                return b"id?"
+            case "gat":
+                return b"temp?"
+            case "gts":
+                return b"tset?"
+            case "sts":
+                return f"temp={value:.1f}".encode("utf-8")
+            case "gps":
+                return b"pwr?"
+            case "sps":
+                return f"pwr={value}".encode("utf-8")
+
+        raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
+                            f"driver {self.get_class_name()}")
 
     def parse_response(self, channel, response):
-        if channel.response_type is float:
-            response = float(response)
-        elif channel.response_type is int:
-            response = int(response)
-        elif channel.response_type is str:
-            response = response.decode("utf-8")
-        else:
-            raise ValueError(f"Value type '{channel.response_type}' is not implemented in "
-                             f"driver {self.get_class_name()}")
-        return response
+        if channel.response_type is str:
+            return response.decode("utf-8")
+        if channel.response_type in [float, int]:
+            return channel.response_type(response)
+
+        raise ValueError(f"Value type '{channel.response_type}' is not implemented in "
+                         f"driver {self.get_class_name()}")
 
 
 if __name__ == "__main__":
