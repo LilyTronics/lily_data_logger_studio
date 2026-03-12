@@ -22,6 +22,9 @@ class PylintTest(TestSuite):
             # Skip files in virtual environment
             if current_path.startswith(os.path.join(AppData.APP_PATH, ".venv")):
                 continue
+            # Skip files in the temp folder
+            if current_path.startswith(os.path.join(AppData.APP_PATH, "temp")):
+                continue
 
             sub_folders.sort()
             for filename in filenames:
