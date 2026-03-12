@@ -19,12 +19,15 @@ Release 1.0:
 * Edit process for controlling instruments
 * Start/stop data logger
 * Show measurements in the data table
+* Edit graphs in the configuration
 * Show measurements in one or more graphs
 * Write mearurement to a CSV file
 * Show live updates on the process
 
 For now the application is tested on Windows 11. But since it is all Python code, it could be
 running on other OS as well.
+
+Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
 ## Installation
 
@@ -46,3 +49,4 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
+
