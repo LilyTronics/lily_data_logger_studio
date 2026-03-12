@@ -25,7 +25,7 @@ class ControllerInstruments:
         self._dlg = ViewInstruments(parent_view)
         self._dlg.set_driver_names(driver_names)
 
-        self._dlg.Bind(wx.EVT_BUTTON, self._on_add, id=IdManager.ID_INSTRUMENT_ADD)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_new, id=IdManager.ID_INSTRUMENT_NEW)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_INSTRUMENT_DELETE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_test, id=IdManager.ID_INSTRUMENT_TEST)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_save, id=IdManager.ID_INSTRUMENT_SAVE)
@@ -76,7 +76,7 @@ class ControllerInstruments:
                                      "Select driver", wx.ICON_EXCLAMATION)
         event.Skip()
 
-    def _on_add(self, event):
+    def _on_new(self, event):
         event.Skip()
 
     def _on_delete(self, event):

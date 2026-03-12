@@ -36,7 +36,7 @@ class ViewInstruments(wx.Dialog):
 
     def _create_list(self):
         self._lst_instruments = wx.ListCtrl(self)
-        btn_add = wx.Button(self, IdManager.ID_INSTRUMENT_ADD, "Add")
+        btn_add = wx.Button(self, IdManager.ID_INSTRUMENT_NEW, "New")
         btn_delete = wx.Button(self, IdManager.ID_INSTRUMENT_DELETE,"Delete")
 
         grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
