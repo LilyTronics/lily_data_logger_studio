@@ -25,6 +25,6 @@ jobs:
 
     - name: Run tests
       shell: pwsh
-      run |
+      run: |
         python tests/run_all_unit_tests.py
         
