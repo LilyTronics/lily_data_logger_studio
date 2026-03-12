@@ -30,6 +30,7 @@ _sp = wx.StandardPaths.Get()
 
 SETTINGS_FILE = os.path.join(_sp.GetUserDataDir(), f"{EXE_NAME}.json")
 APP_LOG_FILE = os.path.join(_sp.GetUserDataDir(), f"{EXE_NAME}.log")
+TEST_CONFIGURATION = os.path.join(APP_PATH, "tests", "configurations","manual_test.json")
 
 
 if __name__ == "__main__":
@@ -40,3 +41,5 @@ if __name__ == "__main__":
     print("Drivers path    :", DRIVERS_PATH)
     print("Settings file   :", SETTINGS_FILE)
     print("App log file    :", APP_LOG_FILE)
+    print("App log file    :", APP_LOG_FILE)
+    print("Test config     :", TEST_CONFIGURATION)

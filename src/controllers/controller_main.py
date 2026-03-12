@@ -4,6 +4,7 @@ Main controller.
 
 import wx
 
+import src.app_data as AppData
 import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
@@ -82,6 +83,10 @@ class MainController:
                         id=IdManager.ID_TREE)
 
     def _process_test_options(self, test_options):
+        if test_options.load_test_configuration:
+            self._logger.debug("Test option: load test configuration")
+            self._configuration.load(AppData.TEST_CONFIGURATION)
+
         if test_options.show_view_settings:
             self._logger.debug("Test option: show view settings")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_SETTINGS)
