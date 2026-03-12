@@ -1,18 +1,17 @@
 {
   "settings": {
     "sample_time": 3,
-    "end_time": 300,
+    "end_time": 60,
     "continuous_mode": false
   },
   "instruments": [
     {
-      "id": "65d977b3-a363-4642-921a-b3324f86472d",
-      "name": "Temperature Chamber (sim)",
-      "driver": "TemperatureChamber",
+      "id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "name": "Temperature chamber (sim)",
+      "driver": "Temperature chamber simulator",
       "settings": {
         "host": "localhost",
-        "port": 17000,
-        "timeout": 0.2
+        "port": 51000
       }
     }
   ],
