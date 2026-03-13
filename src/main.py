@@ -2,6 +2,8 @@
 Run the data logger.
 """
 
+import wx
+
 import src.app_data as AppData
 
 from src.controllers.controller_main import MainController
@@ -14,8 +16,12 @@ def run_data_logger(options=TestOptions):
     log.info("Start application")
     log.info(f"Application path: {AppData.APP_PATH}")
     log.info(f"Instruments path: {AppData.INSTRUMENTS_PATH}")
+
+    app = wx.App(redirect=False)
+    app.SetAppName(AppData.EXE_NAME)
     MainController(f"{AppData.APP_NAME} V{AppData.VERSION}", log)
-    AppData.wxApp.MainLoop()
+    app.MainLoop()
+
     log.info("Application terminated")
     log.shut_down()
 
