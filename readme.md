@@ -1,4 +1,5 @@
 [![Windows test and build](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/windows_ci.yml/badge.svg)](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/windows_ci.yml)
+[![Ubuntu test and build](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/ubuntu_ci.yml/badge.svg)](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/ubuntu_ci.yml)
 
 # Lily Data Logger Studio
 
@@ -7,6 +8,7 @@ Log data and control electronics instruments.
 * Control electronic instruments (temperature chambers, power supplies, signal generators, etc.)
 * Output to table, graph and CSV file
 * Write your own drivers using Python for any instrument
+* Tested on Windows and Ubuntu (probably can run on others)
 
 ![main window](manual/images/main_window.png)
 
@@ -26,8 +28,7 @@ Release 1.0:
 * Write mearurement to a CSV file
 * Show live updates on the process
 
-For now the application is tested on Windows 11. But since it is all Python code, it could be
-running on other OS as well.
+The application is tested on Windows and Ubuntu.
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
