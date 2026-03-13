@@ -8,6 +8,8 @@ disable = attribute-defined-outside-init,
           missing-function-docstring,
           missing-class-docstring,
           too-few-public-methods,
+          too-many-arguments,
+          too-many-positional-arguments,
           too-many-branches,
           too-many-instance-attributes,
           too-many-locals
