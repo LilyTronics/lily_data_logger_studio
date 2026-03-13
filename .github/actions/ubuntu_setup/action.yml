@@ -8,7 +8,7 @@ runs:
       shell: bash
       run: |
         sudo apt-get update
-        sudo apt-get install libnotify4
+        sudo apt-get install libnotify4 libsdl2-2.0-0
 
     - name: Set up Python
       uses: actions/setup-python@v6
