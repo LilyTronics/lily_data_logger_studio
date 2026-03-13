@@ -30,4 +30,3 @@ def run_test_runner(path_to_tests):
 if __name__ == "__main__":
 
     run_test_runner("./unit_tests")
-
