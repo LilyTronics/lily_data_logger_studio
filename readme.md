@@ -28,6 +28,8 @@ running on other OS as well.
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
+[![Unit tests on Windows](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/test_windows.yml/badge.svg)](https://github.com/LilyTronics/lily_data_logger_studio/actions/workflows/test_windows.yml)
+
 ## Contributing
 
 If you find the Lily Data Logger Studio usefull and want to support it you can support in the following ways:
@@ -58,5 +60,6 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 cause bu this software.
+
 
 
