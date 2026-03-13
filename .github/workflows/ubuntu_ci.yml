@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         
-      - name: Setup windows environment
+      - name: Setup Ubuntu environment
         uses: ./.github/actions/ubuntu_setup
       
       - name: Run tests
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
         
-      - name: Setup windows environment
+      - name: Setup Ubuntu environment
         uses: ./.github/actions/ubuntu_setup
       
       - name: Build
