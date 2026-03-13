@@ -1,0 +1,25 @@
+name: Windows test and build
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: windows-latest
+  
+    steps:
+      - name: Setup windows environment
+        uses: ./.github/acions/windows_setup
+      
+      - name: Run tests
+        shell: pwsh
+        run: |
+          python tests/run_all_unit_tests.py
+      
+      - name: Upload test report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestRunnerReport-${{ github.run_id }}
+          path: tests/test_reports/**
+          retention-days: 30
