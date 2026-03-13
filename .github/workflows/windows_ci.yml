@@ -9,7 +9,7 @@ jobs:
   
     steps:
       - name: Setup windows environment
-        uses: ./.github/actions/windows_setup.yml
+        uses: ./.github/actions/windows_setup
       
       - name: Run tests
         shell: pwsh
