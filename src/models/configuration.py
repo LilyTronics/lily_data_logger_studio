@@ -39,6 +39,16 @@ class Configuration:
         "settings": {}
     }
 
+    _MEASUREMENT = {
+        "id": "",
+        "name": "",
+        "instrument_id": "",
+        "channel_id": "",
+        "unit": "",
+        "gain": 1.0,
+        "offset": 0.0
+    }
+
     def __init__(self):
         self._filename = None
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
@@ -68,6 +78,12 @@ class Configuration:
             if self._configuration["instruments"][i]["id"] == instrument_id:
                 return i
         raise Exception("No instrument found for this ID")
+
+    def _get_index_of_measurement(self, measurement_id):
+        for i in range(len(self._configuration["measurements"])):
+            if self._configuration["measurements"][i]["id"] == measurement_id:
+                return i
+        raise Exception("No measurement found for this ID")
 
     ##########
     # Public #
@@ -165,6 +181,53 @@ class Configuration:
     def delete_instrument(self, instrument_id):
         i = self._get_index_of_instrument(instrument_id)
         self._configuration["instruments"].pop(i)
+
+    ################
+    # Measurements #
+    ################
+
+    def get_new_measurement(self):
+        return deepcopy(self._MEASUREMENT)
+
+    def get_measurements(self):
+        return deepcopy(self._configuration["measurements"])
+
+    def get_measurement(self, query):
+        # Query can be name or ID. Prio = ID
+        matches = [x for x in self.get_measurements() if x["id"] == query]
+        if len(matches) == 0:
+            matches = [x for x in self.get_measurements() if x["name"] == query]
+        return None if len(matches) != 1 else deepcopy(matches[0])
+
+    def add_measurement(self, name, instrument_id, channel_id, unit, gain, offset):
+        if self.get_measurement(name) is not None:
+            raise Exception("A measurement with this name already exists")
+        measurement = deepcopy(self._MEASUREMENT)
+        measurement["id"] = self._generate_id()
+        measurement["name"] = name
+        measurement["instrument_id"] = instrument_id
+        measurement["channel_id"] = channel_id
+        measurement["unit"] = unit
+        measurement["gain"] = gain
+        measurement["offset"] = offset
+        self._configuration["measurements"].append(measurement)
+
+    def update_measurement(self, measurement_id, name, instrument_id, channel_id, unit, gain,
+                           offset):
+        i = self._get_index_of_measurement(measurement_id)
+        measurement = self.get_measurement(name)
+        if measurement is not None and measurement["id"] != measurement_id:
+            raise Exception("A measurement with this name already exists")
+        self._configuration["measurements"][i]["name"] = name
+        self._configuration["measurements"][i]["instrument_id"] = instrument_id
+        self._configuration["measurements"][i]["channel_id"] = channel_id
+        self._configuration["measurements"][i]["unit"] = unit
+        self._configuration["measurements"][i]["gain"] = gain
+        self._configuration["measurements"][i]["offset"] = offset
+
+    def delete_measurement(self, measurement_id):
+        i = self._get_index_of_measurement(measurement_id)
+        self._configuration["measurements"].pop(i)
 
 
 if __name__ == "__main__":

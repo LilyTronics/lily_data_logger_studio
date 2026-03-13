@@ -134,6 +134,109 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "No instrument found for this ID",
                          "Invalid exception message")
 
+    ################
+    # Measurements #
+    ################
+
+    def test_add_measurement(self):
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != 0, "There should be no measurements")
+
+        self.log.debug("Add measurement")
+        self._configuration.add_measurement("test measurement 1", "instr-1234", "ch-1",
+                                            "V", 1.0, 0.0)
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != 1, "Measurement was not added")
+
+        self.log.debug("Add measurement with same name")
+        try:
+            self._configuration.add_measurement("test measurement 1", "instr-1234", "ch-1",
+                                                "V", 1.0, 0.0)
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A measurement with this name already exists",
+                         "Invalid exception message")
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != 1, "There should be one measurement")
+
+    def test_edit_measurements(self):
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != 1, "There should be one measurement")
+
+        self.log.debug("Add another measurement")
+        self._configuration.add_measurement("test measurement 2", "instr-1234", "ch-2",
+                                            "V", 1.0, 0.0)
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != 2, "Measurement was not added")
+
+        self.log.debug("Update measurement name")
+        measurement = measurements[0]
+        self._configuration.update_measurement(measurement["id"], "Test measurement 3",
+                                               measurement["instrument_id"],
+                                               measurement["channel_id"], measurement["unit"],
+                                               measurement["gain"], measurement["offset"])
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+
+        self.log.debug("Update with an existing name")
+        measurement = measurements[0]
+        try:
+            self._configuration.update_measurement(measurement["id"], measurements[1]["name"],
+                                                   measurement["instrument_id"],
+                                                   measurement["channel_id"], measurement["unit"],
+                                                   measurement["gain"], measurement["offset"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A measurement with this name already exists",
+                         "Invalid exception message")
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+
+        self.log.debug("Update with an invallid ID")
+        measurement = measurements[0]
+        try:
+            self._configuration.update_measurement("invalid ID", measurement["name"],
+                                                   measurement["instrument_id"],
+                                                   measurement["channel_id"], measurement["unit"],
+                                                   measurement["gain"], measurement["offset"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "No measurement found for this ID",
+                         "Invalid exception message")
+
+    def test_delete_measurement(self):
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        n_measurements = len(measurements)
+        self.fail_if(n_measurements < 1, "There should be at least one measurement")
+
+        self.log.debug("Delete measurement")
+        self._configuration.delete_measurement(measurements[0]["id"])
+        measurements = self._configuration.get_measurements()
+        self.log.debug(f"Measurements: {measurements}")
+        self.fail_if(len(measurements) != n_measurements - 1, "Measurement was not deleted")
+
+        self.log.debug("Delete measurement with invalid ID")
+        try:
+            self._configuration.delete_measurement("invalid ID")
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "No measurement found for this ID",
+                         "Invalid exception message")
+
 
 if __name__ == "__main__":
 
