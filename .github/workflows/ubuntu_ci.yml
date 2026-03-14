@@ -1,0 +1,51 @@
+name: Ubuntu test and build
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Ubuntu environment
+        uses: ./.github/actions/ubuntu_setup
+
+      - name: Run tests
+        shell: bash
+        run: |
+          python tests/run_all_unit_tests.py
+
+      - name: Upload test report artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: TestRunnerReport-${{ github.run_id }}
+          path: tests/test_reports/
+          retention-days: 30
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Ubuntu environment
+        uses: ./.github/actions/ubuntu_setup
+
+      - name: Build
+        shell: bash
+        run: |
+          python build/create_deployment.py
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: BuildOutput-${{ github.run_id }}
+          path: build/build_output/dist/LilyDataLoggerStudio/
+          retention-days: 30

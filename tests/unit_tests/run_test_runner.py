@@ -24,7 +24,7 @@ def run_test_runner(path_to_tests):
         "no_log_files": True,
         "exclude_test_suites": exclude_tests
     }
-    TestRunner.run(path_to_tests, options)
+    return TestRunner.run(path_to_tests, options)
 
 
 if __name__ == "__main__":

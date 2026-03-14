@@ -4,10 +4,9 @@ Application data.
 
 import os
 import sys
-import wx
 
+from src.models.os_specifics import get_user_data_dir
 
-wxApp = wx.App(redirect=False)
 
 APP_NAME = "Lily Data Logger Studio\u2122"   # \u2122 is the trademark symbol
 VERSION = "0.2"
@@ -24,12 +23,8 @@ else:
 
 INSTRUMENTS_PATH = os.path.join(APP_PATH, "instruments")
 DRIVERS_PATH = os.path.join(INSTRUMENTS_PATH, "drivers")
-
-wxApp.SetAppName(EXE_NAME)
-_sp = wx.StandardPaths.Get()
-
-SETTINGS_FILE = os.path.join(_sp.GetUserDataDir(), f"{EXE_NAME}.json")
-APP_LOG_FILE = os.path.join(_sp.GetUserDataDir(), f"{EXE_NAME}.log")
+SETTINGS_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.json")
+APP_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.log")
 TEST_CONFIGURATION = os.path.join(APP_PATH, "tests", "configurations","manual_test.json")
 
 
