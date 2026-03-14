@@ -27,6 +27,7 @@ Release 1.0:
 * Show measurements in one or more graphs
 * Write mearurement to a CSV file
 * Show live updates on the process
+* Multiple Document Interface (MDI) is not available on Ubuntu. Change to AUI (dockable windows)
 
 The application is tested on Windows and Ubuntu.
 
