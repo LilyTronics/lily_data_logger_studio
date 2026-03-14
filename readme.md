@@ -29,8 +29,6 @@ Release 1.0:
 * Show live updates on the process
 * Multiple Document Interface (MDI) is not available on Ubuntu. Change to AUI (dockable windows)
 
-The application is tested on Windows and Ubuntu.
-
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
 ## Contributing
