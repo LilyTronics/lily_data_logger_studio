@@ -3,7 +3,8 @@ Main view
 """
 
 import wx.adv
-import wx.aui
+
+from wx.lib.agw import aui
 
 import src.models.id_manager as IdManager
 import src.models.images as Images
@@ -24,8 +25,7 @@ class ViewFrameMain(wx.Frame):
     _ID_WINDOW_LEFT = wx.NewIdRef()
     _DEFAULT_TREE_WIDTH = 250
     _DEFAULT_LOG_HEIGHT = 80
-    _AUI_MANAGER_FLAGS = (wx.aui.AUI_MGR_ALLOW_FLOATING | wx.aui.AUI_MGR_VENETIAN_BLINDS_HINT |
-                          wx.aui.AUI_MGR_LIVE_RESIZE)
+    _AUI_MANAGER_FLAGS = (aui.AUI_MGR_ALLOW_FLOATING | aui.AUI_MGR_LIVE_RESIZE)
 
     _DOCK_CONSTRAINTS = (0.7, 0.7)
     _DOCK_MIN_SIZE = (200, 100)
@@ -130,19 +130,22 @@ class ViewFrameMain(wx.Frame):
         self._main_win = wx.Panel(self, wx.ID_ANY)
 
     def _create_panes(self):
-        self._aui_manager = wx.aui.AuiManager()
+        self._aui_manager = aui.AuiManager()
         self._aui_manager.SetDockSizeConstraint(*self._DOCK_CONSTRAINTS)
         self._aui_manager.SetManagedWindow(self._main_win)
-        self._aui_manager.SetFlags(self._AUI_MANAGER_FLAGS)
+        self._aui_manager.SetAGWFlags(self._AUI_MANAGER_FLAGS)
         art = self._aui_manager.GetArtProvider()
-        art.SetMetric(wx.aui.AUI_DOCKART_GRADIENT_TYPE, wx.aui.AUI_GRADIENT_NONE)
+        art.SetMetric(aui.AUI_DOCKART_GRADIENT_TYPE, aui.AUI_GRADIENT_NONE)
 
         self._aui_manager.AddPane(
             ViewPanelDataTable(self._main_win),
-            wx.aui.AuiPaneInfo()
+            aui.AuiPaneInfo()
                 .Name("data_table")
                 .Caption("Data Table")
                 .CloseButton(False)
+                .Dockable(True)
+                .Floatable(True)
+                .Movable(True)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize((self._DEFAULT_TABLE_WIDTH, -1))
                 .Right()
@@ -150,10 +153,13 @@ class ViewFrameMain(wx.Frame):
         )
         self._aui_manager.AddPane(
             ViewPanelGraphs(self._main_win),
-            wx.aui.AuiPaneInfo()
+            aui.AuiPaneInfo()
                 .Name("graphs")
                 .Caption("Graphs")
                 .CloseButton(False)
+                .Dockable(True)
+                .Floatable(True)
+                .Movable(True)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize((-1, self._DEFAULT_GRAPH_HEIGHT))
                 .Top()
@@ -161,12 +167,15 @@ class ViewFrameMain(wx.Frame):
         )
         self._aui_manager.AddPane(
             ViewPanelProcess(self._main_win),
-            wx.aui.AuiPaneInfo()
+            aui.AuiPaneInfo()
                 .Name("process")
                 .Caption("Process")
                 .CloseButton(False)
+                .Dockable(True)
+                .Floatable(True)
+                .Movable(True)
                 .MinSize(self._DOCK_MIN_SIZE)
-                .CenterPane()
+                .Bottom()
                 .CaptionVisible(True)
                 .Layer(0)
         )
