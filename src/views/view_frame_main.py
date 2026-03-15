@@ -25,7 +25,8 @@ class ViewFrameMain(wx.Frame):
     _ID_WINDOW_LEFT = wx.NewIdRef()
     _DEFAULT_TREE_WIDTH = 250
     _DEFAULT_LOG_HEIGHT = 80
-    _AUI_MANAGER_FLAGS = aui.AUI_MGR_ALLOW_FLOATING | aui.AUI_MGR_LIVE_RESIZE
+    _AUI_MANAGER_FLAGS = (aui.AUI_MGR_ALLOW_FLOATING | aui.AUI_MGR_LIVE_RESIZE |
+                          aui.AUI_MGR_USE_NATIVE_MINIFRAMES | aui.AUI_MGR_AERO_DOCKING_GUIDES)
 
     _DOCK_CONSTRAINTS = (0.7, 0.7)
     _DOCK_MIN_SIZE = (200, 100)
@@ -131,10 +132,15 @@ class ViewFrameMain(wx.Frame):
         self._main_win = wx.Panel(self, wx.ID_ANY)
 
     def _create_panes(self):
+        flags = self._AUI_MANAGER_FLAGS
+        if not self._allow_docking:
+            flags &= ~aui.AUI_MGR_ALLOW_FLOATING
+            flags &= ~aui.AUI_MGR_ALLOW_ACTIVE_PANE
+
         self._aui_manager = aui.AuiManager()
         self._aui_manager.SetDockSizeConstraint(*self._DOCK_CONSTRAINTS)
         self._aui_manager.SetManagedWindow(self._main_win)
-        self._aui_manager.SetAGWFlags(self._AUI_MANAGER_FLAGS)
+        self._aui_manager.SetAGWFlags(flags)
         art = self._aui_manager.GetArtProvider()
         art.SetMetric(aui.AUI_DOCKART_GRADIENT_TYPE, aui.AUI_GRADIENT_NONE)
 
@@ -144,6 +150,7 @@ class ViewFrameMain(wx.Frame):
                 .Name("data_table")
                 .Caption("Data Table")
                 .CloseButton(False)
+                .MaximizeButton(True)
                 .Dockable(self._allow_docking)
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
@@ -158,6 +165,7 @@ class ViewFrameMain(wx.Frame):
                 .Name("graphs")
                 .Caption("Graphs")
                 .CloseButton(False)
+                .MaximizeButton(True)
                 .Dockable(self._allow_docking)
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
@@ -172,6 +180,7 @@ class ViewFrameMain(wx.Frame):
                 .Name("process")
                 .Caption("Process")
                 .CloseButton(False)
+                .MaximizeButton(True)
                 .Dockable(self._allow_docking)
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
