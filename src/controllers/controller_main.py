@@ -9,16 +9,13 @@ import src.models.id_manager as IdManager
 
 from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_data_logger import ControllerDataLogger
-from src.controllers.controller_data_table import ControllerDataTable
 from src.controllers.controller_drivers import ControllerDrivers
-from src.controllers.controller_graphs import ControllerGraphs
-from src.controllers.controller_instruments import ControllerInstruments
-from src.controllers.controller_process import ControllerProcess
-from src.controllers.controller_settings import ControllerSettings
+from src.controllers.controller_edit_instruments import ControllerEditInstruments
+from src.controllers.controller_edit_settings import ControllerEditSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
 from src.models.test_options import TestOptions
-from src.views.view_main import MainView
+from src.views.view_frame_main import ViewFrameMain
 
 
 class MainController:
@@ -31,7 +28,7 @@ class MainController:
         self._view_progress = None
 
         self._logger.debug("Load main view")
-        self._view = MainView(title)
+        self._view = ViewFrameMain(title)
         self._prepare_view()
         self._logger.debug("Show main view")
         self._view.Show()
@@ -71,16 +68,11 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_reload_drivers, id=IdManager.ID_RELOAD_DRIVERS)
-        self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_SETTINGS)
-        self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_INSTRUMENTS)
-        self._view.Bind(wx.EVT_TOOL, self._show_process, id=IdManager.ID_SHOW_PROCESS)
-        self._view.Bind(wx.EVT_TOOL, self._show_data_table, id=IdManager.ID_SHOW_DATA_TABLE)
-        self._view.Bind(wx.EVT_TOOL, self._show_graphs, id=IdManager.ID_SHOW_GRAPHS)
+        self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_EDIT_SETTINGS)
+        self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
-        self._view.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self._on_tree_item_activated,
-                        id=IdManager.ID_TREE)
 
     def _process_test_options(self, test_options):
         if test_options.load_test_configuration:
@@ -89,49 +81,22 @@ class MainController:
 
         if test_options.show_view_settings:
             self._logger.debug("Test option: show view settings")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_SETTINGS)
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_SETTINGS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
         if test_options.show_view_instruments:
             self._logger.debug("Test option: show view instruments")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_INSTRUMENTS)
-            wx.PostEvent(self._view.GetEventHandler(), event)
-
-        if test_options.show_view_process:
-            self._logger.debug("Test option: show view process")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_PROCESS)
-            wx.PostEvent(self._view.GetEventHandler(), event)
-
-        if test_options.show_view_data_table:
-            self._logger.debug("Test option: show view data table")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
-            wx.PostEvent(self._view.GetEventHandler(), event)
-
-        if test_options.show_view_graphs:
-            self._logger.debug("Test option: show view graphs")
-            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPHS)
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_INSTRUMENTS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
     def _show_settings(self, event):
-        ControllerSettings(self._view, self._configuration, self._logger)
+        ControllerEditSettings(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _show_instruments(self, event):
-        ControllerInstruments(self._view, self._logger, self._configuration)
+        ControllerEditInstruments(self._view, self._logger, self._configuration)
         self._view.update_configuration(self._configuration)
-        event.Skip()
-
-    def _show_process(self, event):
-        ControllerProcess(self._view, self._logger)
-        event.Skip()
-
-    def _show_data_table(self, event):
-        ControllerDataTable(self._view, self._logger)
-        event.Skip()
-
-    def _show_graphs(self, event):
-        ControllerGraphs(self._view, self._logger)
         event.Skip()
 
     ##################
@@ -155,29 +120,6 @@ class MainController:
     def _on_save_config(self, event):
         ControllerConfiguration.save(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
-        event.Skip()
-
-    def _on_tree_item_activated(self, event):
-        tree = event.GetEventObject()
-        item = event.GetItem()
-        if item.IsOk():
-            item_text = tree.GetItemText(item)
-            if item_text == "settings":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_SETTINGS)
-                wx.PostEvent(self._view.GetEventHandler(), post_event)
-            if item_text == "instruments":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_INSTRUMENTS)
-                wx.PostEvent(self._view.GetEventHandler(), post_event)
-            if item_text == "process":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_PROCESS)
-                wx.PostEvent(self._view.GetEventHandler(), post_event)
-            if item_text == "measurements":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_DATA_TABLE)
-                wx.PostEvent(self._view.GetEventHandler(), post_event)
-            if item_text == "graphs":
-                post_event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_GRAPHS)
-                wx.PostEvent(self._view.GetEventHandler(), post_event)
-
         event.Skip()
 
     def _on_data_logger_start(self, event):

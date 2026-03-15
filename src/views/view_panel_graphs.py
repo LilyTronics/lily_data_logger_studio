@@ -5,10 +5,10 @@ Maximum of 12 graphs are supported.
 
 import wx
 
-from src.views.view_plot import ViewPlot
+from src.views.view_plot_canvas import ViewPlotCanvas
 
 
-class ViewGraphsPanel(wx.Panel):
+class ViewPanelGraphs(wx.Panel):
 
     _SPACING = 2
 
@@ -51,7 +51,7 @@ class ViewGraphsPanel(wx.Panel):
         self.Layout()
 
     def add_graph(self, graph_name):
-        self._graphs.append(ViewPlot(self, graph_name))
+        self._graphs.append(ViewPlotCanvas(self, graph_name))
         self._show_graphs()
 
     def remove_graph(self, graph_name):
@@ -67,12 +67,12 @@ if __name__ == "__main__":
 
     class TestFrame(wx.Frame):
         def __init__(self):
-            super().__init__(None, title="Test ViewGraphs", size=(800, 600))
+            super().__init__(None, title="Test ViewPanelGraphs", size=(800, 600))
             panel = wx.Panel(self)
 
             self._n_graphs = 0
             self.spin_count = wx.SpinCtrl(panel, value="0", min=0, max=12)
-            self.graphs_view = ViewGraphsPanel(panel)
+            self.graphs_view = ViewPanelGraphs(panel)
 
             grid = wx.GridBagSizer(5, 5)
             grid.Add(wx.StaticText(panel, label="Number of Graphs:"), (0, 0),

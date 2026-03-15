@@ -5,7 +5,7 @@ Progress dialog.
 import wx
 
 
-class ViewProgressDialog(wx.GenericProgressDialog):
+class ViewDialogProgress(wx.GenericProgressDialog):
 
     _TIMER_INTERVAL = 100
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     app = wx.App(redirect=False)
 
-    dlg = ViewProgressDialog(None, "Test progress", 100)
+    dlg = ViewDialogProgress(None, "Test progress", 100)
 
     for i in range(1, 51):
         if not dlg.update(i, f"item {i}"):

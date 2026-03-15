@@ -6,10 +6,10 @@ import wx
 
 import src.models.id_manager as IdManager
 import src.models.images as Images
-import src.views.view_sizes as ViewSizes
+import src.views.gui_sizes as ViewSizes
 
 
-class ViewInstruments(wx.Dialog):
+class ViewEditInstruments(wx.Dialog):
 
     _TITLE = "Instruments"
     _WINDOW_SIZE = (800, 500)

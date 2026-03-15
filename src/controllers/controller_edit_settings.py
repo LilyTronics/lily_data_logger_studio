@@ -4,17 +4,17 @@ Controller for editing the settings.
 
 import wx
 
-from src.views.view_settings import ViewSettings
+from src.views.view_edit_settings import ViewEditSettings
 from src.views.view_dialogs import ViewDialogs
 
 
-class ControllerSettings:
+class ControllerEditSettings:
 
     def __init__(self, parent_view, configuration, logger):
         logger.info("Edit settings")
         settings = configuration.get_settings()
         logger.debug(f"Current settings: {settings}")
-        dlg = ViewSettings(parent_view, settings)
+        dlg = ViewEditSettings(parent_view, settings)
         if dlg.ShowModal() == wx.ID_OK:
             try:
                 settings = dlg.get_settings()

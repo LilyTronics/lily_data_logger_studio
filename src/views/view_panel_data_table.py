@@ -4,19 +4,11 @@ View for the data table.
 
 import wx.grid
 
-import src.models.images as Images
 
-
-class ViewDataTable(wx.MDIChildFrame):
-
-    _TITLE = "Data table"
+class ViewPanelDataTable(wx.Panel):
 
     def __init__(self, parent):
-        super().__init__(parent, title=self._TITLE)
-
-        icon = wx.Icon()
-        icon.CopyFromBitmap(Images.data_table_24.GetBitmap())
-        self.SetIcon(icon)
+        super().__init__(parent)
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self._create_data_table(), 1, wx.EXPAND | wx.ALL, 1)
@@ -39,6 +31,5 @@ if __name__ == "__main__":
     from src.models.test_options import TestOptions
 
     TestOptions.log_to_stdout = True
-    TestOptions.show_view_data_table = True
 
     run_data_logger(TestOptions)

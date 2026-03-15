@@ -13,18 +13,15 @@ ID_MENU_EXIT = wx.NewIdRef()
 ID_OPEN_CONFIG = wx.NewIdRef()
 ID_SAVE_CONFIG = wx.NewIdRef()
 ID_RELOAD_DRIVERS = wx.NewIdRef()
-ID_SHOW_SETTINGS = wx.NewIdRef()
-ID_SHOW_INSTRUMENTS = wx.NewIdRef()
-ID_SHOW_PROCESS = wx.NewIdRef()
-ID_SHOW_DATA_TABLE = wx.NewIdRef()
-ID_SHOW_GRAPHS = wx.NewIdRef()
+ID_SHOW_EDIT_SETTINGS = wx.NewIdRef()
+ID_SHOW_EDIT_INSTRUMENTS = wx.NewIdRef()
+ID_SHOW_EDIT_PROCESS = wx.NewIdRef()
+ID_SHOW_EDIT_MEASUREMENTS = wx.NewIdRef()
+ID_SHOW_EDIT_GRAPHS = wx.NewIdRef()
 ID_START_LOGGER = wx.NewIdRef()
 ID_STOP_LOGGER = wx.NewIdRef()
 
-# Tree view
-ID_TREE = wx.NewIdRef()
-
-# Instruments view
+# Edit instruments view
 ID_INSTRUMENT_LIST = wx.NewIdRef()
 ID_INSTRUMENT_DRIVER = wx.NewIdRef()
 ID_INSTRUMENT_NEW = wx.NewIdRef()
@@ -33,22 +30,6 @@ ID_INSTRUMENT_TEST = wx.NewIdRef()
 ID_INSTRUMENT_SAVE = wx.NewIdRef()
 ID_INSTRUMENT_CANCEL = wx.NewIdRef()
 ID_INSTRUMENT_CLOSE = wx.NewIdRef()
-
-# Process window
-ID_PROCESS_ADD = wx.NewIdRef()
-ID_PROCESS_INSERT = wx.NewIdRef()
-ID_PROCESS_EDIT = wx.NewIdRef()
-ID_PROCESS_UP = wx.NewIdRef()
-ID_PROCESS_DOWN = wx.NewIdRef()
-ID_PROCESS_DELETE = wx.NewIdRef()
-
-# Graph window
-ID_GRAPH_ADD = wx.NewIdRef()
-ID_GRAPH_INSERT = wx.NewIdRef()
-ID_GRAPH_EDIT = wx.NewIdRef()
-ID_GRAPH_UP = wx.NewIdRef()
-ID_GRAPH_DOWN = wx.NewIdRef()
-ID_GRAPH_DELETE = wx.NewIdRef()
 
 
 if __name__ == "__main__":

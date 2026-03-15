@@ -5,7 +5,7 @@ Plot view.
 import wx.lib.plot
 
 
-class ViewPlot(wx.lib.plot.PlotCanvas):
+class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
 
     def __init__(self, parent, title):
         self.title = title
@@ -31,6 +31,6 @@ if __name__ == "__main__":
 
     app = wx.App(False)
     frame = wx.Frame(None, title="Test ViewPlot", size=(800, 600))
-    plot_view = ViewPlot(frame, "Sample Plot")
+    plot_view = ViewPlotCanvas(frame, "Sample Plot")
     frame.Show()
     app.MainLoop()

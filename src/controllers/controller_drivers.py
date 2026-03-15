@@ -6,7 +6,7 @@ import wx
 
 from src.models.drivers import Drivers
 from src.views.view_dialogs import ViewDialogs
-from src.views.view_progress_dialog import ViewProgressDialog
+from src.views.view_dialog_progress import ViewDialogProgress
 
 
 class ControllerDrivers:
@@ -43,7 +43,7 @@ class ControllerDrivers:
     def load(self):
         dlg_title = "Load drivers"
         if not self._suppress_loading_drivers:
-            self._view_progress = ViewProgressDialog(self._parent_view, dlg_title, 1, 500)
+            self._view_progress = ViewDialogProgress(self._parent_view, dlg_title, 1, 500)
             wx.Yield()
         try:
             Drivers.load(self._update_view_progress)

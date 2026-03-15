@@ -10,7 +10,7 @@ import src.app_data as AppData
 from src.models.logger import Logger
 
 
-class ViewLogMessages(wx.TextCtrl):
+class ViewPanelLogMessages(wx.Panel):
 
     _UPDATE_TIME = 250
     _COLOR_DEFAULT = "#000"
@@ -23,15 +23,20 @@ class ViewLogMessages(wx.TextCtrl):
     }
 
     def __init__(self, parent):
-        super().__init__(parent, style=wx.TE_MULTILINE | wx.TE_DONTWRAP | wx.TE_READONLY |
-                         wx.TE_RICH)
+        super().__init__(parent, wx.ID_ANY)
 
-        self.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL,
-                             wx.FONTWEIGHT_NORMAL, False))
+        self._console = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_DONTWRAP | wx.TE_READONLY |
+                                    wx.TE_RICH)
+        self._console.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL,
+                                     wx.FONTWEIGHT_NORMAL, False))
 
         self._update_timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self._on_update_timer, self._update_timer)
         self._update_timer.Start(self._UPDATE_TIME)
+
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(self._console, 1, wx.EXPAND)
+        self.SetSizer(box)
 
         wx.CallAfter(self._show_messages)
 
@@ -43,15 +48,15 @@ class ViewLogMessages(wx.TextCtrl):
         with open(AppData.APP_LOG_FILE, "r", encoding="utf-8") as fp:
             lines = fp.readlines()
 
-        content = self.GetValue()
+        content = self._console.GetValue()
         for line in filter(lambda x: x not in content, lines):
             for key, value in self._TEXT_COLORS.items():
                 if f" | {key:6} | " in line:
-                    self.SetDefaultStyle(wx.TextAttr(value))
+                    self._console.SetDefaultStyle(wx.TextAttr(value))
                     break
             else:
-                self.SetDefaultStyle(wx.TextAttr(self._COLOR_DEFAULT))
-            self.AppendText(line)
+                self._console.SetDefaultStyle(wx.TextAttr(self._COLOR_DEFAULT))
+            self._console.AppendText(line)
 
     ##################
     # Event handlers #
@@ -67,6 +72,6 @@ if __name__ == "__main__":
     app = wx.App(redirect=False)
     f = wx.Frame(None, title="Log messages")
     f.SetInitialSize((800, 600))
-    log = ViewLogMessages(f)
+    log = ViewPanelLogMessages(f)
     f.Show()
     app.MainLoop()

@@ -10,10 +10,10 @@ from src.models.drivers import Drivers
 from src.simulators.run_simulators import start_simulators
 from src.simulators.run_simulators import stop_simulators
 from src.views.view_dialogs import ViewDialogs
-from src.views.view_instruments import ViewInstruments
+from src.views.view_edit_instruments import ViewEditInstruments
 
 
-class ControllerInstruments:
+class ControllerEditInstruments:
 
     def __init__(self, parent_view, logger, configuration):
         self._logger = logger
@@ -22,7 +22,7 @@ class ControllerInstruments:
         driver_names = [x.name for x in Drivers.get_drivers()]
         self._selected_id = None
 
-        self._dlg = ViewInstruments(parent_view)
+        self._dlg = ViewEditInstruments(parent_view)
         self._dlg.set_driver_names(driver_names)
         self._update_instruments()
 

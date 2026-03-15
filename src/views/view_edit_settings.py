@@ -5,12 +5,12 @@ View for the settings.
 import wx
 
 import src.models.images as Images
-import src.views.view_sizes as ViewSizes
+import src.views.gui_sizes as ViewSizes
 
 from src.models.time_converter import TimeConverter
 
 
-class ViewSettings(wx.Dialog):
+class ViewEditSettings(wx.Dialog):
 
     _TITLE = "Settings"
     _WINDOW_SIZE = (500, -1)
