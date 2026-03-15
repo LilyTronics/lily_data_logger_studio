@@ -29,7 +29,8 @@ def get_display_session_type():
             return (os.environ.get("XDG_SESSION_TYPE") or "Unknown display session type")
 
 def get_platform_info():
-    return f"{sys.platform}, {get_display_session_type()}"
+    valid = "valid" if is_valid_display_session() else "not valid"
+    return f"{sys.platform}, {get_display_session_type()} ({valid})"
 
 def is_valid_display_session():
     return get_display_session_type().lower != "wayland"
