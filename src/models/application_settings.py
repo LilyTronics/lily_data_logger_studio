@@ -47,6 +47,16 @@ class ApplicationSettings:
         d[main_key][sub_key] = value
         self._write_settings(d)
 
+    ####################
+    # General settings #
+    ####################
+
+    def get_check_display_session(self):
+        return self._get_property("general", "check_display_session", True)
+
+    def store_check_display_session(self, do_check):
+        self._store_property("general", "check_display_session", do_check)
+
     ########################
     # Main window settings #
     ########################

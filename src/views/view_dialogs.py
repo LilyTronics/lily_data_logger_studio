@@ -8,14 +8,20 @@ import wx
 class ViewDialogs:
 
     @staticmethod
-    def show_message(parent, message, title, icon=wx.ICON_INFORMATION):
-        dlg = wx.MessageDialog(parent, message, title, wx.OK | icon)
+    def show_message(parent, message, title, icon=wx.ICON_INFORMATION, check_box_text=""):
+        ret_value = None
+        dlg = wx.RichMessageDialog(parent, message, title, wx.OK | icon)
+        if check_box_text != "":
+            dlg.ShowCheckBox(check_box_text)
         dlg.ShowModal()
+        if check_box_text != "":
+            ret_value = dlg.IsCheckBoxChecked()
         dlg.Destroy()
+        return ret_value
 
     @staticmethod
     def show_confirm(parent, message, title, buttons=wx.YES | wx.NO):
-        dlg = wx.MessageDialog(parent, message, title, buttons | wx.ICON_QUESTION)
+        dlg = wx.RichMessageDialog(parent, message, title, buttons | wx.ICON_QUESTION)
         button = dlg.ShowModal()
         dlg.Destroy()
         return button
@@ -48,7 +54,8 @@ if __name__ == "__main__":
     app = wx.App(redirect=False)
 
     filename = ViewDialogs.show_save_file(None, "Save file")
-    ViewDialogs.show_message(None, f"Save to: {filename}", "Test")
+    print(ViewDialogs.show_message(None, f"Save to: {filename}", "Test",
+                                   check_box_text="Don't show again"))
     filename = ViewDialogs.show_open_file(None, "Open file")
     ViewDialogs.show_confirm(None, f"Did you just opened: {filename}?", "Test")
 

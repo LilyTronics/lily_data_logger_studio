@@ -14,8 +14,11 @@ from src.controllers.controller_edit_instruments import ControllerEditInstrument
 from src.controllers.controller_edit_settings import ControllerEditSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
+from src.models.os_specifics import get_platform_info
+from src.models.os_specifics import is_valid_display_session
 from src.models.test_options import TestOptions
 from src.views.view_frame_main import ViewFrameMain
+from src.views.view_dialogs import ViewDialogs
 
 
 class MainController:
@@ -28,10 +31,12 @@ class MainController:
         self._view_progress = None
 
         self._logger.debug("Load main view")
-        self._view = ViewFrameMain(title)
+        self._view = ViewFrameMain(title, is_valid_display_session)
         self._prepare_view()
         self._logger.debug("Show main view")
         self._view.Show()
+
+        self._check_display_session()
 
         self._controller_drivers = ControllerDrivers(self._view, self._logger,
                                                      TestOptions.suppress_loading_drivers)
@@ -49,6 +54,21 @@ class MainController:
     ###########
     # Private #
     ###########
+
+    def _check_display_session(self):
+        if not self._app_settings.get_check_display_session() or is_valid_display_session():
+            return
+
+        msg = (
+            f"You are running on: {get_platform_info()}.\n"
+            "Some window docking/undocking features (AUI panes) may not work reliably "
+            "unless you are using Xorg (X11).\n"
+            "You can continue, but docking will be switched off."
+        )
+        is_checked = ViewDialogs.show_message(self._view, msg, "Display session notice",
+                                              wx.ICON_WARNING, "Don't show this again")
+        self._app_settings.store_check_display_session(not is_checked)
+
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()

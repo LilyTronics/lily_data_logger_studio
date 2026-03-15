@@ -37,9 +37,10 @@ class ViewFrameMain(wx.Frame):
     _COLOR_LED_ON = "#0f0"
     _BLINK_SPEED = 500
 
-    def __init__(self, title):
+    def __init__(self, title, allow_docking):
         self._title = title
         super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
+        self._allow_docking = allow_docking
         self._default_layout = ""
 
         icon = wx.Icon()
@@ -143,13 +144,13 @@ class ViewFrameMain(wx.Frame):
                 .Name("data_table")
                 .Caption("Data Table")
                 .CloseButton(False)
-                .Dockable(True)
-                .Floatable(True)
-                .Movable(True)
+                .Dockable(self._allow_docking)
+                .Floatable(self._allow_docking)
+                .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize((self._DEFAULT_TABLE_WIDTH, -1))
                 .Right()
-                .Layer(1)
+                .Layer(2)
         )
         self._aui_manager.AddPane(
             ViewPanelGraphs(self._main_win),
@@ -157,13 +158,13 @@ class ViewFrameMain(wx.Frame):
                 .Name("graphs")
                 .Caption("Graphs")
                 .CloseButton(False)
-                .Dockable(True)
-                .Floatable(True)
-                .Movable(True)
+                .Dockable(self._allow_docking)
+                .Floatable(self._allow_docking)
+                .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize((-1, self._DEFAULT_GRAPH_HEIGHT))
                 .Top()
-                .Layer(0)
+                .Layer(1)
         )
         self._aui_manager.AddPane(
             ViewPanelProcess(self._main_win),
@@ -171,11 +172,11 @@ class ViewFrameMain(wx.Frame):
                 .Name("process")
                 .Caption("Process")
                 .CloseButton(False)
-                .Dockable(True)
-                .Floatable(True)
-                .Movable(True)
+                .Dockable(self._allow_docking)
+                .Floatable(self._allow_docking)
+                .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
-                .Bottom()
+                .Top()
                 .CaptionVisible(True)
                 .Layer(0)
         )

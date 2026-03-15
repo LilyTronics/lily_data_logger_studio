@@ -31,7 +31,11 @@ def get_display_session_type():
 def get_platform_info():
     return f"{sys.platform}, {get_display_session_type()}"
 
+def is_valid_display_session():
+    return get_display_session_type().lower != "wayland"
+
 
 if __name__ =="__main__":
     print("User data dir:", get_user_data_dir())
     print("Platform info:", get_platform_info())
+    print("Valid display session:", is_valid_display_session())
