@@ -7,7 +7,8 @@ Color: #325c81
 Tree: 16px
 Toolbar: 24px
 
-image name        icon name
+image name      : icon name
+configuration   : settings 4
 data table      : grid
 graph           : use graphs, remove bottom line, center top line
 graphs          : line

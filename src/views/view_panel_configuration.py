@@ -32,7 +32,7 @@ class ViewPanelConfiguration(wx.Panel):
         image_list.Add(Images.instrument_16.GetBitmap())
         image_list.Add(Images.measurement_16.GetBitmap())
         image_list.Add(Images.graph_16.GetBitmap())
-        image_list.Add(Images.settings_16.GetBitmap())
+        image_list.Add(Images.configuration_16.GetBitmap())
 
         self._tree = wx.TreeCtrl(self, wx.ID_ANY, style=wx.TR_HAS_BUTTONS)
         self._tree.AssignImageList(image_list)
