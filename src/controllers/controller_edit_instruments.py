@@ -174,6 +174,6 @@ if __name__ == "__main__":
     TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
     TestOptions.suppress_loading_drivers = True
-    TestOptions.show_view_instruments = True
+    TestOptions.show_edit_instruments = True
 
     run_data_logger(TestOptions)

@@ -86,8 +86,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_reload_drivers, id=IdManager.ID_RELOAD_DRIVERS)
-        self._view.Bind(wx.EVT_TOOL, self._show_settings, id=IdManager.ID_SHOW_EDIT_SETTINGS)
-        self._view.Bind(wx.EVT_TOOL, self._show_instruments, id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_settings, id=IdManager.ID_SHOW_EDIT_SETTINGS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_instruments, id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -97,22 +97,22 @@ class MainController:
             self._logger.debug("Test option: load test configuration")
             self._configuration.load(AppData.TEST_CONFIGURATION)
 
-        if test_options.show_view_settings:
+        if test_options.show_edit_settings:
             self._logger.debug("Test option: show view settings")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_SETTINGS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-        if test_options.show_view_instruments:
+        if test_options.show_edit_instruments:
             self._logger.debug("Test option: show view instruments")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_INSTRUMENTS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-    def _show_settings(self, event):
+    def _show_edit_settings(self, event):
         ControllerEditSettings(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
-    def _show_instruments(self, event):
+    def _show_edit_instruments(self, event):
         ControllerEditInstruments(self._view, self._logger, self._configuration)
         self._view.update_configuration(self._configuration)
         event.Skip()

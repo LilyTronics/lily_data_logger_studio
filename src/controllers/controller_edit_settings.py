@@ -33,6 +33,6 @@ if __name__ == "__main__":
     from src.models.test_options import TestOptions
 
     TestOptions.log_to_stdout = True
-    TestOptions.show_view_settings = True
+    TestOptions.show_edit_settings = True
 
     run_data_logger(TestOptions)
