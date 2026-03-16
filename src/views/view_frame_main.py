@@ -30,9 +30,9 @@ class ViewFrameMain(wx.Frame):
 
     _DOCK_CONSTRAINTS = (0.7, 0.7)
     _DOCK_MIN_SIZE = (200, 100)
-    _DEFAULT_GRAPH_SIZE = (600, 300)
+    _DEFAULT_GRAPH_SIZE = (600, 400)
     _DEFAULT_TABLE_SIZE = (300, 200)
-    _DEFAULT_PROCESS_SIZE = (500, 300)
+    _DEFAULT_PROCESS_SIZE = (500, 200)
     _STATUS_SIZE = 170
     _LED_SIZE = (16, 16)
     _COLOR_LED_OFF = "#060"
@@ -85,10 +85,10 @@ class ViewFrameMain(wx.Frame):
                    "Edit settings")
         tb.AddTool(IdManager.ID_SHOW_EDIT_INSTRUMENTS, "", Images.instruments_24.GetBitmap(),
                    "Edit instruments")
-        tb.AddTool(IdManager.ID_SHOW_EDIT_PROCESS, "", Images.process_24.GetBitmap(),
-                   "Edit process")
         tb.AddTool(IdManager.ID_SHOW_EDIT_MEASUREMENTS, "", Images.data_table_24.GetBitmap(),
                    "Edit measurements")
+        tb.AddTool(IdManager.ID_SHOW_EDIT_PROCESS, "", Images.process_24.GetBitmap(),
+                   "Edit process")
         tb.AddTool(IdManager.ID_SHOW_EDIT_GRAPHS, "", Images.graphs_24.GetBitmap(),
                    "Edit graphs")
         tb.AddSeparator()
