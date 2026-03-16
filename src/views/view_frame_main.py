@@ -242,7 +242,6 @@ class ViewFrameMain(wx.Frame):
 
     def _on_restore_layout(self, event):
         self._aui_manager.LoadPerspective(self._default_layout)
-        self._update_layout()
         event.Skip()
 
     ##########
