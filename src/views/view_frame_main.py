@@ -26,12 +26,13 @@ class ViewFrameMain(wx.Frame):
     _DEFAULT_TREE_WIDTH = 250
     _DEFAULT_LOG_HEIGHT = 80
     _AUI_MANAGER_FLAGS = (aui.AUI_MGR_ALLOW_FLOATING | aui.AUI_MGR_LIVE_RESIZE |
-                          aui.AUI_MGR_USE_NATIVE_MINIFRAMES | aui.AUI_MGR_AERO_DOCKING_GUIDES)
+                          aui.AUI_MGR_USE_NATIVE_MINIFRAMES)
 
     _DOCK_CONSTRAINTS = (0.7, 0.7)
     _DOCK_MIN_SIZE = (200, 100)
-    _DEFAULT_GRAPH_HEIGHT = 600
-    _DEFAULT_TABLE_WIDTH = 300
+    _DEFAULT_GRAPH_SIZE = (600, 300)
+    _DEFAULT_TABLE_SIZE = (300, 200)
+    _DEFAULT_PROCESS_SIZE = (500, 300)
     _STATUS_SIZE = 170
     _LED_SIZE = (16, 16)
     _COLOR_LED_OFF = "#060"
@@ -155,7 +156,7 @@ class ViewFrameMain(wx.Frame):
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize((self._DEFAULT_TABLE_WIDTH, -1))
+                .BestSize(self._DEFAULT_TABLE_SIZE)
                 .Right()
                 .Layer(2)
         )
@@ -170,7 +171,7 @@ class ViewFrameMain(wx.Frame):
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize((-1, self._DEFAULT_GRAPH_HEIGHT))
+                .BestSize(self._DEFAULT_GRAPH_SIZE)
                 .Top()
                 .Layer(1)
         )
@@ -185,6 +186,7 @@ class ViewFrameMain(wx.Frame):
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
+                .BestSize(self._DEFAULT_PROCESS_SIZE)
                 .Top()
                 .CaptionVisible(True)
                 .Layer(0)
