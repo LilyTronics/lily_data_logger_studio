@@ -7,23 +7,24 @@ Color: #325c81
 Tree: 16px
 Toolbar: 24px
 
-image name      : icon name
-configuration   : settings 4
-data table      : grid
-graph           : use graphs, remove bottom line, center top line
-graphs          : line
-instrument      : chip 2 (make it solid, and add pin 1 mark from processor)
-instruments     : processor
-measurement     : speedometer (remove small bar)
-open            : folder 3
-process         : network
-refresh         : refresh
-save            : save
-settings        : settings 12
-start           : play
-stop            : stop
-switch          : switch 3
-time            : time
+image name        : icon name
+configuration     : settings 4
+data table        : grid
+graph             : use graphs, remove bottom line, center top line
+graphs            : line
+instrument        : chip 2 (make it solid, and add pin 1 mark from processor)
+instruments       : processor
+measurement       : speedometer (remove small bar)
+new configuration : file
+open              : folder 3
+process           : network
+refresh           : refresh
+save              : save
+settings          : settings 12
+start             : play
+stop              : stop
+switch            : switch 3
+time              : time
 
 """
 

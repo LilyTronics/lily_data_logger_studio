@@ -5,11 +5,8 @@ ID manager for the controls
 import wx
 
 
-# Menu
-ID_MENU_NEW_CONFIG = wx.NewIdRef()
-ID_MENU_EXIT = wx.NewIdRef()
-
 # Toolbar icons
+ID_NEW_CONFIG = wx.NewIdRef()
 ID_OPEN_CONFIG = wx.NewIdRef()
 ID_SAVE_CONFIG = wx.NewIdRef()
 ID_RELOAD_DRIVERS = wx.NewIdRef()

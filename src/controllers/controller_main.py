@@ -82,9 +82,7 @@ class MainController:
         self._view.set_log_height(self._app_settings.get_main_window_log_height())
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
-        self._view.Bind(wx.EVT_MENU, self._on_menu_new_config, id=IdManager.ID_MENU_NEW_CONFIG)
-        self._view.Bind(wx.EVT_MENU, self._on_menu_exit, id=IdManager.ID_MENU_EXIT)
-
+        self._view.Bind(wx.EVT_TOOL, self._on_new_config, id=IdManager.ID_NEW_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_open_config, id=IdManager.ID_OPEN_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_reload_drivers, id=IdManager.ID_RELOAD_DRIVERS)
@@ -127,7 +125,7 @@ class MainController:
         self._controller_drivers.load()
         event.Skip()
 
-    def _on_menu_new_config(self, event):
+    def _on_new_config(self, event):
         self._configuration = ControllerConfiguration.new(self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()

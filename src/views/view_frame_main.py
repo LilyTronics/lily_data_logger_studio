@@ -70,6 +70,8 @@ class ViewFrameMain(wx.Frame):
 
     def _create_toolbar(self):
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
+        tb.AddTool(IdManager.ID_NEW_CONFIG, "", Images.new_24.GetBitmap(),
+                   "New configuration")
         tb.AddTool(IdManager.ID_OPEN_CONFIG, "", Images.open_24.GetBitmap(),
                    "Open configuration")
         tb.AddTool(IdManager.ID_SAVE_CONFIG, "", Images.save_24.GetBitmap(),
