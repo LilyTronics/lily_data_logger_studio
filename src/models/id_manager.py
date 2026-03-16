@@ -17,6 +17,7 @@ ID_SHOW_EDIT_MEASUREMENTS = wx.NewIdRef()
 ID_SHOW_EDIT_GRAPHS = wx.NewIdRef()
 ID_START_LOGGER = wx.NewIdRef()
 ID_STOP_LOGGER = wx.NewIdRef()
+ID_RESTORE_LAYOUT = wx.NewIdRef()
 
 # Edit instruments view
 ID_INSTRUMENT_LIST = wx.NewIdRef()

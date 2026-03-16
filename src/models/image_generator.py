@@ -19,6 +19,7 @@ new configuration : file
 open              : folder 3
 process           : network
 refresh           : refresh
+restore layout    : combine undo 4 with window layout
 save              : save
 settings          : settings 12
 start             : play

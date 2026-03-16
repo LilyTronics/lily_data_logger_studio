@@ -58,6 +58,7 @@ class ViewFrameMain(wx.Frame):
         self.Bind(wx.adv.EVT_SASH_DRAGGED_RANGE, self._on_sash_drag)
         self.Bind(wx.EVT_SIZE, self._on_size)
         self.Bind(wx.EVT_TIMER, self._on_blink_timer, self._blink_timer)
+        self.Bind(wx.EVT_TOOL, self._on_restore_layout, id=IdManager.ID_RESTORE_LAYOUT)
 
         self.SetInitialSize(self._MIN_WINDOW_SIZE)
 
@@ -95,6 +96,9 @@ class ViewFrameMain(wx.Frame):
                    "Start data logger")
         tb.AddTool(IdManager.ID_STOP_LOGGER, "", Images.stop_24.GetBitmap(),
                    "Stop data logger")
+        tb.AddSeparator()
+        tb.AddTool(IdManager.ID_RESTORE_LAYOUT, "", Images.restore_layout_24.GetBitmap(),
+                   "Restore layout")
         tb.Realize()
 
     def _create_status_bar(self):
@@ -234,6 +238,11 @@ class ViewFrameMain(wx.Frame):
         else:
             self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
         self._activity_led.Refresh()
+        event.Skip()
+
+    def _on_restore_layout(self, event):
+        self._aui_manager.LoadPerspective(self._default_layout)
+        self._update_layout()
         event.Skip()
 
     ##########
