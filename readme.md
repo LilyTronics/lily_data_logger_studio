@@ -27,7 +27,6 @@ Release 1.0:
 * Show measurements in one or more graphs
 * Write mearurement to a CSV file
 * Show live updates on the process
-* Multiple Document Interface (MDI) is not available on Ubuntu. Change to AUI (dockable windows)
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
@@ -61,4 +60,3 @@ This way any instrument can be integrated with the application even after instal
 
 This software is provided as is. LilyTronics is not accepting any liabilites for damages that may be
 caused by this software.
-
