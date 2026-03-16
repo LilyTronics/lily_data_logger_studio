@@ -27,8 +27,8 @@ class Configuration:
             "continuous_mode": False
         },
         "instruments": [],
-        "process": [],
         "measurements": [],
+        "process": [],
         "graphs": []
     }
 
