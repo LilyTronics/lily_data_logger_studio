@@ -112,6 +112,17 @@ class DriverBase(ABC):
                 f"Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
             )
 
+    ###########
+    # Private #
+    ###########
+
+    @classmethod
+    def _get_channels(cls, direction):
+        channels = []
+        if cls.channels is not None:
+            channels = [x for x in cls.channels if x.direction == direction]
+        return channels
+
     ##########
     # Public #
     ##########
@@ -125,6 +136,16 @@ class DriverBase(ABC):
     def log_debug(self, message):
         if "D" in self.debug:
             print(f"({self.get_class_name()})", message)
+
+    @classmethod
+    @final
+    def get_input_channels(cls):
+        return cls._get_channels(DriverChannel.DIR_INPUT)
+
+    @classmethod
+    @final
+    def get_output_channels(cls):
+        return cls._get_channels(DriverChannel.DIR_OUTPUT)
 
     @final
     def process_channel(self, channel_query, value=None):
