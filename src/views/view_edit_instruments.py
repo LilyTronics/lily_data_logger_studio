@@ -116,6 +116,7 @@ class ViewEditInstruments(wx.Dialog):
 
     def set_driver_names(self, driver_names):
         self._cmb_drivers.SetItems(driver_names)
+        self.Layout()
 
     def show_driver_settings(self, settings):
         self._settings_controls.clear()
@@ -135,8 +136,8 @@ class ViewEditInstruments(wx.Dialog):
             except:
                 # Restore layout
                 self._settings_grid.Add(wx.Panel(self), (0, 0))
+                self.Layout()
                 raise
-
         self.Layout()
 
     def show_instrument(self, instrument, driver_settings):
@@ -167,7 +168,6 @@ class ViewEditInstruments(wx.Dialog):
                     f"Invalid value for setting {key}: '{value}'. "
                     f"Expected type: {ctrl_type.__name__}"
                 ) from e
-
         return settings
 
     def clear_console(self):
