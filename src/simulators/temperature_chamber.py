@@ -15,8 +15,7 @@ class TemperatureChamber(SimulatorBase):
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = b"\n"
     _SPEED = 0.5    # Degrees per 0.1 seconds (loop interval)
-    _TIMEOUT = 0.5
-    _NOISE = 0.1
+    _TIMEOUT = 0.1
     _OFF_TEMPERATURE = 20.0
 
     def __init__(self):
