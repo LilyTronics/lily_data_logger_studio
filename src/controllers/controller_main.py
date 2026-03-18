@@ -87,7 +87,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._on_save_config, id=IdManager.ID_SAVE_CONFIG)
         self._view.Bind(wx.EVT_TOOL, self._on_reload_drivers, id=IdManager.ID_RELOAD_DRIVERS)
         self._view.Bind(wx.EVT_TOOL, self._show_edit_settings, id=IdManager.ID_SHOW_EDIT_SETTINGS)
-        self._view.Bind(wx.EVT_TOOL, self._show_edit_instruments, id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_instruments,
+                        id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
