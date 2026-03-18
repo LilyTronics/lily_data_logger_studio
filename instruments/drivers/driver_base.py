@@ -40,7 +40,7 @@ class DriverBase(ABC):
         # Driver ID
         if cls.id is None:
             raise ValueError(
-                f"Driver ID is not set in driver {cls.__name__}"
+                f"(Driver) Driver ID is not set in driver {cls.__name__}"
             )
         try:
             uid = uuid.UUID(cls.id)
@@ -48,49 +48,49 @@ class DriverBase(ABC):
                 raise Exception()
         except Exception as e:
             raise ValueError(
-                f"Driver ID is not a valid UUID V4 in driver {cls.__name__}"
+                f"(Driver) Driver ID is not a valid UUID V4 in driver {cls.__name__}"
             ) from e
         # Driver name
         if cls.name is DriverBase.name or not cls.name:
             raise ValueError(
-                f"Driver name is not set in driver {cls.__name__}"
+                f"(Driver) Driver name is not set in driver {cls.__name__}"
             )
         # Driver settings
         if cls.driver_settings is None:
             raise ValueError(
-                f"Driver_settings is not set in driver {cls.__name__}"
+                f"(Driver) Driver_settings is not set in driver {cls.__name__}"
             )
         if not isinstance(cls.driver_settings, list):
             raise TypeError(
-                f"Driver_settings must be a list in driver {cls.__name__}"
+                f"(Driver) Driver_settings must be a list in driver {cls.__name__}"
             )
         if not cls.driver_settings:
             raise ValueError(
-                f"Driver_settings is empty in driver {cls.__name__}"
+                f"(Driver) Driver_settings is empty in driver {cls.__name__}"
             )
         for setting in cls.driver_settings:
             if not isinstance(setting, DriverSetting):
                 raise TypeError(
-                    f"Driver_settings must contain only DriverSetting instances "
+                    f"(Driver) Driver_settings must contain only DriverSetting instances "
                     f"in driver {cls.__name__}"
                 )
         # Channels
         if cls.channels is None:
             raise ValueError(
-                f"Channels is not set in driver {cls.__name__}"
+                f"(Driver) Channels is not set in driver {cls.__name__}"
             )
         if not isinstance(cls.channels, list):
             raise TypeError(
-                f"Channels must be a list in driver {cls.__name__}"
+                f"(Driver) Channels must be a list in driver {cls.__name__}"
             )
         if not cls.channels:
             raise ValueError(
-                f"Channels is empty in driver {cls.__name__}"
+                f"(Driver) Channels is empty in driver {cls.__name__}"
             )
         for channel in cls.channels:
             if not isinstance(channel, DriverChannel):
                 raise TypeError(
-                    f"Channels must contain only DriverChannel instances "
+                    f"(Driver) Channels must contain only DriverChannel instances "
                     f"in driver {cls.__name__}"
                 )
         # Transport
@@ -100,16 +100,16 @@ class DriverBase(ABC):
             )
         if TransportBase not in inspect.getmro(cls.transport):
             raise TypeError(
-                f"Transport must be a subclass of TransportBase in driver {cls.__name__}"
+                f"(Driver) Transport must be a subclass of TransportBase in driver {cls.__name__}"
             )
         # Protocol
         if cls.protocol is None:
             raise ValueError(
-                f"Protocol is not set in driver {cls.__name__}"
+                f"(Driver) Protocol is not set in driver {cls.__name__}"
             )
         if ProtocolBase not in inspect.getmro(cls.protocol):
             raise TypeError(
-                f"Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
+                f"(Driver) Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
             )
 
     ###########
@@ -158,17 +158,17 @@ class DriverBase(ABC):
         ]
         if len(matches) == 0:
             raise LookupError(
-                f"Channel '{channel_query}' not found in driver {self.get_class_name()}"
+                f"(Driver) Channel '{channel_query}' not found in driver {self.get_class_name()}"
             )
         if len(matches) > 1:
             raise LookupError(
-                f"Channel '{channel_query}' is ambiguous in driver {self.get_class_name()}"
+                f"(Driver) Channel '{channel_query}' is ambiguous in driver {self.get_class_name()}"
             )
         channel = matches[0]
         self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
         command = self.build_command(channel, value)
         if not isinstance(command, bytes):
-            raise TypeError("Command must be of type bytes")
+            raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
         response = self.protocol.process_command(channel, command)
         if channel.expect_response:

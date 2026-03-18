@@ -12,15 +12,15 @@ class DriverSetting:
     def __init__(self, name, setting_type, default_value, gui_control):
         if setting_type not in self._VALID_TYPES:
             raise ValueError(
-                f"Setting type {setting_type} for '{name}' is not supported"
+                f"(Settings) Setting type {setting_type} for '{name}' is not supported"
             )
         if not isinstance(default_value, setting_type):
             raise TypeError(
-                f"Default value for '{name}' must be of type {setting_type.__name__}"
+                f"(Settings) Default value for '{name}' must be of type {setting_type.__name__}"
             )
         if gui_control not in self._VALID_CONTROLS:
             raise ValueError(
-                f"GUI control '{gui_control}' for '{name}' is not supported"
+                f"(Settings) GUI control '{gui_control}' for '{name}' is not supported"
             )
 
         self.name = name

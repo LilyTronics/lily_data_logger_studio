@@ -41,21 +41,20 @@ class TransportBase(ABC):
         self.log_debug(f"Connection ready: {self.is_connection_ready()}")
         if not self.is_connection_ready():
             self.log_debug("Connect to instrument")
-            raise ConnectionError("No connection could be established")
+            raise ConnectionError("(Transport) No connection could be established")
         self.log_debug(f"Send packet: {tx_packet}")
         self.send(tx_packet)
         response = None
         if channel.expect_response:
             response = b""
             self.log_debug("Expecting response, waiting for response")
-            t = time.time()
-            t += self.transport_settings.get("timeout", self._DEFAULT_TIMEOUT)
+            t = time.time() + self.transport_settings.get("timeout", self._DEFAULT_TIMEOUT)
             while time.time() < t:
                 response += self.receive()
                 if validate_response(response):
                     break
             else:
-                raise TimeoutError("Timout while waiting for response")
+                raise TimeoutError("(Transport) Timout while waiting for response")
             self.log_debug(f"Response: {response}")
         else:
             self.log_debug(f"No response expected ({response})")
