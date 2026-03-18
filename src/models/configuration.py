@@ -35,7 +35,7 @@ class Configuration:
     _INSTRUMENT = {
         "id": "",
         "name": "",
-        "driver": "",
+        "driver_id": "",
         "settings": {}
     }
 
@@ -159,23 +159,23 @@ class Configuration:
             matches = [x for x in self.get_instruments() if x["name"] == query]
         return None if len(matches) != 1 else deepcopy(matches[0])
 
-    def add_instrument(self, name, driver, settings):
+    def add_instrument(self, name, driver_id, settings):
         if self.get_instrument(name) is not None:
             raise Exception("An instrument with this name already exists")
         instrument = deepcopy(self._INSTRUMENT)
         instrument["id"] = self._generate_id()
         instrument["name"] = name
-        instrument["driver"] = driver
+        instrument["driver_id"] = driver_id
         instrument["settings"] = deepcopy(settings)
         self._configuration["instruments"].append(instrument)
 
-    def update_instrument(self, instrument_id, name, driver, settings):
+    def update_instrument(self, instrument_id, name, driver_id, settings):
         i = self._get_index_of_instrument(instrument_id)
         instrument = self.get_instrument(name)
         if instrument is not None and instrument["id"] != instrument_id:
             raise Exception("An instrument with this name already exists")
         self._configuration["instruments"][i]["name"] = name
-        self._configuration["instruments"][i]["driver"] = driver
+        self._configuration["instruments"][i]["driver_id"] = driver_id
         self._configuration["instruments"][i]["settings"] = settings
 
     def delete_instrument(self, instrument_id):

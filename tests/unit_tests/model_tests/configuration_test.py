@@ -32,21 +32,21 @@ class ConfigurationTest(TestSuite):
 
     def test_add_instrument(self):
         drivers = Drivers.get_drivers()
-        driver_name = drivers[0].get_class_name()
+        driver_id = drivers[0].id
         settings = {"ip": "1.2.3.4"}
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
         self.fail_if(len(instruments) != 0, "There should be no instruments")
 
         self.log.debug("Add instrument")
-        self._configuration.add_instrument("test instrument 1", driver_name, settings)
+        self._configuration.add_instrument("test instrument 1", driver_id, settings)
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
         self.fail_if(len(instruments) != 1, "Instrument was not added")
 
         self.log.debug("Add instrument with same name")
         try:
-            self._configuration.add_instrument("test instrument 1", driver_name, settings)
+            self._configuration.add_instrument("test instrument 1", driver_id, settings)
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
@@ -59,14 +59,14 @@ class ConfigurationTest(TestSuite):
 
     def test_edit_instrument(self):
         drivers = Drivers.get_drivers()
-        driver_name = drivers[0].get_class_name()
+        driver_id = drivers[0].id
         settings = {"ip": "1.2.3.4"}
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
         self.fail_if(len(instruments) != 1, "There should be one instrument")
 
         self.log.debug("Add another instrument")
-        self._configuration.add_instrument("test instrument 2", driver_name, settings)
+        self._configuration.add_instrument("test instrument 2", driver_id, settings)
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
         self.fail_if(len(instruments) != 2, "Instrument was not added")
@@ -74,7 +74,7 @@ class ConfigurationTest(TestSuite):
         self.log.debug("Update instrument name")
         instrument = instruments[0]
         self._configuration.update_instrument(instrument["id"], "Test instrument 3",
-                                              instrument["driver"], instrument["settings"])
+                                              instrument["driver_id"], instrument["settings"])
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
 
@@ -82,7 +82,7 @@ class ConfigurationTest(TestSuite):
         instrument = instruments[0]
         settings = {"ip": "5.6.7.8"}
         self._configuration.update_instrument(instrument["id"], instrument["name"],
-                                              instrument["driver"], settings)
+                                              instrument["driver_id"], settings)
         instruments = self._configuration.get_instruments()
         self.log.debug(f"Instruments: {instruments}")
 
@@ -90,7 +90,7 @@ class ConfigurationTest(TestSuite):
         instrument = instruments[0]
         try:
             self._configuration.update_instrument(instrument["id"], instruments[1]["name"],
-                                                instrument["driver"], instrument["settings"])
+                                                instrument["driver_id"], instrument["settings"])
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
@@ -104,7 +104,7 @@ class ConfigurationTest(TestSuite):
         instrument = instruments[0]
         try:
             self._configuration.update_instrument("invalid ID", instrument["name"],
-                                                instrument["driver"], instrument["settings"])
+                                                instrument["driver_id"], instrument["settings"])
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
