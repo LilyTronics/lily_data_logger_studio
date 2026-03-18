@@ -3,6 +3,7 @@ Base class for all driver classes.
 """
 
 import inspect
+import uuid
 
 from abc import ABC
 from abc import abstractmethod
@@ -16,6 +17,7 @@ from instruments.transport.transport_base import TransportBase
 
 class DriverBase(ABC):
 
+    id = None
     name = "base class"
     driver_settings = None
     channels = None
@@ -35,6 +37,19 @@ class DriverBase(ABC):
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
+        # Driver ID
+        if cls.id is None:
+            raise ValueError(
+                f"Driver ID is not set in driver {cls.__name__}"
+            )
+        try:
+            uid = uuid.UUID(cls.id)
+            if uid.version != 4:
+                raise Exception()
+        except Exception as e:
+            raise ValueError(
+                f"Driver ID is not a valid UUID V4 in driver {cls.__name__}"
+            ) from e
         # Driver name
         if cls.name is DriverBase.name or not cls.name:
             raise ValueError(

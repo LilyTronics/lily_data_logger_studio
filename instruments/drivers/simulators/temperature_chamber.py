@@ -11,6 +11,7 @@ from instruments.transport.transport_udp import TransportUdp
 
 class TemperatureChamber(DriverBase):
 
+    id = "e5662459-c10d-4616-aa97-978024a825d0"
     name = "Temperature chamber simulator"
 
     driver_settings = [
