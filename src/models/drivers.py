@@ -73,18 +73,22 @@ class Drivers:
         return cls._drivers
 
     @classmethod
-    def get_settings(cls, driver_name):
-        matches = [x for x in cls._drivers if x.name == driver_name]
-        if len(matches) != 1:
-            raise Exception(f"No driver matching '{driver_name}'")
-        return matches[0].driver_settings
+    def get_settings(cls, query):
+        driver = cls.get_driver(query)
+        if driver is None:
+            raise Exception(f"No driver matching '{query}'")
+        return driver.driver_settings
 
     @classmethod
     def get_driver(cls, query):
-        # Query can be class name or driver name
-        # Prio is class name
-        matches = [x for x in cls._drivers if x.get_class_name() == query]
+        # Query can be ID, class name or driver name
+        # Prio is ID
+        matches = [x for x in cls._drivers if x.id == query]
         if len(matches) == 0:
+            # Next search class name
+            matches = [x for x in cls._drivers if x.get_class_name() == query]
+        if len(matches) == 0:
+            # Next search driver name
             matches = [x for x in cls._drivers if x.name == query]
         return None if len(matches) != 1 else matches[0]
 
