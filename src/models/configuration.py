@@ -229,6 +229,13 @@ class Configuration:
         i = self._get_index_of_measurement(measurement_id)
         self._configuration["measurements"].pop(i)
 
+    #################
+    # Process steps #
+    #################
+
+    def get_process_steps(self):
+        return deepcopy(self._configuration["process"])
+
 
 if __name__ == "__main__":
 
