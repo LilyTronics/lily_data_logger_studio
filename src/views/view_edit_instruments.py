@@ -142,8 +142,8 @@ class ViewEditInstruments(wx.Dialog):
 
     def show_instrument(self, instrument, driver_settings):
         self._txt_name.SetValue(instrument["name"])
-        if instrument["driver"] in self._cmb_drivers.GetItems():
-            self._cmb_drivers.SetValue(instrument["driver"])
+        if instrument["driver_name"] in self._cmb_drivers.GetItems():
+            self._cmb_drivers.SetValue(instrument["driver_name"])
         else:
             self._cmb_drivers.SetSelection(wx.NOT_FOUND)
         self.show_driver_settings(driver_settings)
@@ -155,7 +155,7 @@ class ViewEditInstruments(wx.Dialog):
     def get_settings(self):
         settings = {
             "name": self._txt_name.GetValue().strip(),
-            "driver": self._cmb_drivers.GetValue(),
+            "driver_name": self._cmb_drivers.GetValue(),
             "settings": {}
         }
         for key, (ctrl, ctrl_type) in self._settings_controls.items():

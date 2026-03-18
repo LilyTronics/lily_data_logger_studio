@@ -57,9 +57,9 @@ class ControllerEditInstruments:
         try:
             settings = self._dlg.get_settings()
             self._dlg.clear_console()
-            driver_class = Drivers.get_driver(settings["driver"])
+            driver_class = Drivers.get_driver(settings["driver_name"])
             if driver_class is None:
-                raise ValueError(f"No driver found for '{settings['driver']}'")
+                raise ValueError(f"No driver found for '{settings['driver_name']}'")
             self._log_to_console(f"Test driver: {driver_class.name}")
             if driver_class.is_simulator:
                 start_simulators()
@@ -77,10 +77,13 @@ class ControllerEditInstruments:
 
     def _get_instrument_from_view(self):
         settings = self._dlg.get_settings()
+        driver_class = Drivers.get_driver(settings["driver_name"])
+        if driver_class is None:
+            raise Exception(f"Driver {settings["driver_name"]} is not found")
         instrument = self._configuration.get_new_instrument()
         instrument["id"] = self._selected_id
         instrument["name"] = settings["name"]
-        instrument["driver"] = settings["driver"]
+        instrument["driver_id"] = driver_class.id
         instrument["settings"] = settings["settings"]
         if instrument["name"] == "":
             raise Exception("Name cannot be empty")
@@ -88,8 +91,9 @@ class ControllerEditInstruments:
 
     def _show_instrument(self):
         instrument = self._configuration.get_instrument(self._selected_id)
-        settings = Drivers.get_settings(instrument["driver"])
-        self._dlg.show_instrument(instrument, settings)
+        driver_class = Drivers.get_driver(instrument["driver_id"])
+        instrument["driver_name"] = driver_class.name
+        self._dlg.show_instrument(instrument, driver_class.driver_settings)
 
     ##################
     # Event handlers #
@@ -144,11 +148,12 @@ class ControllerEditInstruments:
             instrument = self._get_instrument_from_view()
             self._logger.debug(f"Save instrument: {instrument}")
             if self._selected_id is None:
-                self._configuration.add_instrument(instrument["name"], instrument["driver"],
-                                                instrument["settings"])
+                self._configuration.add_instrument(instrument["name"], instrument["driver_id"],
+                                                   instrument["settings"])
             else:
                 self._configuration.update_instrument(instrument["id"], instrument["name"],
-                                                    instrument["driver"], instrument["settings"])
+                                                      instrument["driver_id"],
+                                                      instrument["settings"])
         except Exception as e:
             self._logger.error(f"Error saving instrument: {e}")
             ViewDialogs.show_message(self._dlg, f"Error saving instrument: {e}",
