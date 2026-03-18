@@ -17,7 +17,7 @@ class TestSuite(lily_unit_test.TestSuite):
 
     def __init__(self, *args):
         super().__init__(*args)
-        self.test_logger = self._TestLogger(self.log)
+        self.app_test_logger = self._TestLogger(self.log)
 
 
 if __name__ == "__main__":
