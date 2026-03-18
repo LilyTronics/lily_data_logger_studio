@@ -25,7 +25,8 @@ INSTRUMENTS_PATH = os.path.join(APP_PATH, "instruments")
 DRIVERS_PATH = os.path.join(INSTRUMENTS_PATH, "drivers")
 SETTINGS_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.json")
 APP_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.log")
-TEST_CONFIGURATION = os.path.join(APP_PATH, "tests", "configurations","manual_test.json")
+TEST_CONFIG_PATH = os.path.join(APP_PATH, "tests", "configurations")
+TEST_CONFIGURATION = os.path.join(TEST_CONFIG_PATH, "manual_test.json")
 
 
 if __name__ == "__main__":
