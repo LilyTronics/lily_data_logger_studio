@@ -24,8 +24,8 @@ class ViewPanelConfiguration(wx.Panel):
         image_list = wx.ImageList(16, 16)
         image_list.Add(Images.settings_16.GetBitmap())
         image_list.Add(Images.instruments_16.GetBitmap())
-        image_list.Add(Images.process_16.GetBitmap())
         image_list.Add(Images.data_table_16.GetBitmap())
+        image_list.Add(Images.process_16.GetBitmap())
         image_list.Add(Images.graphs_16.GetBitmap())
         image_list.Add(Images.time_16.GetBitmap())
         image_list.Add(Images.switch_16.GetBitmap())
@@ -58,6 +58,8 @@ class ViewPanelConfiguration(wx.Panel):
                         image_index = 6
                 elif main_group == "instruments":
                     image_index = 7
+                elif main_group == "measurements":
+                    image_index = 8
                 self._tree.AppendItem(main_item, sub_item, image_index)
         self._tree.ExpandAll()
 
