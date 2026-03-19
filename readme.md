@@ -19,8 +19,8 @@ Release 1.0:
 * Change configuration settings ✅
 * Load and reload drivers from the instruments package ✅
 * Edit instruments in the configuration ✅
+* Edit measurements ✅
 * Edit process for controlling instruments
-* Edit measurements to be logged
 * Start/stop data logger
 * Show measurements in the data table
 * Edit graphs in the configuration
