@@ -111,7 +111,7 @@ class Configuration:
         return self._is_changed
 
     def get_main_groups(self):
-        return self._configuration.keys()
+        return self._DEFAULT_CONFIGURATION.keys()
 
     def get_sub_items(self, main_group):
         sub_items = []
@@ -125,7 +125,7 @@ class Configuration:
                     value = "yes" if value else "no"
                 key = key.replace("_", " ")
                 sub_items.append(f"{key}: {value}")
-        elif main_group == "instruments":
+        elif main_group in ["instruments", "measurements"]:
             for item in collection:
                 sub_items.append(item["name"])
 
