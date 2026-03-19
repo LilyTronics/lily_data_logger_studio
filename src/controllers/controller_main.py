@@ -11,6 +11,7 @@ from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_data_logger import ControllerDataLogger
 from src.controllers.controller_drivers import ControllerDrivers
 from src.controllers.controller_edit_instruments import ControllerEditInstruments
+from src.controllers.controller_edit_measurements import ControllerEditMeasurements
 from src.controllers.controller_edit_settings import ControllerEditSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
@@ -89,6 +90,8 @@ class MainController:
         self._view.Bind(wx.EVT_TOOL, self._show_edit_settings, id=IdManager.ID_SHOW_EDIT_SETTINGS)
         self._view.Bind(wx.EVT_TOOL, self._show_edit_instruments,
                         id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_measurements,
+                        id=IdManager.ID_SHOW_EDIT_MEASUREMENTS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -99,14 +102,23 @@ class MainController:
             self._configuration.load(AppData.TEST_CONFIGURATION)
 
         if test_options.show_edit_settings:
-            self._logger.debug("Test option: show view settings")
+            self._logger.debug("Test option: show edit settings")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_SETTINGS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
         if test_options.show_edit_instruments:
-            self._logger.debug("Test option: show view instruments")
+            self._logger.debug("Test option: show edit instruments")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_INSTRUMENTS)
             wx.PostEvent(self._view.GetEventHandler(), event)
+
+        if test_options.show_edit_measurements:
+            self._logger.debug("Test option: show edit measurements")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_MEASUREMENTS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
+    ##################
+    # Event handlers #
+    ##################
 
     def _show_edit_settings(self, event):
         ControllerEditSettings(self._view, self._configuration, self._logger)
@@ -118,9 +130,10 @@ class MainController:
         self._view.update_configuration(self._configuration)
         event.Skip()
 
-    ##################
-    # Event handlers #
-    ##################
+    def _show_edit_measurements(self, event):
+        ControllerEditMeasurements(self._view, self._logger, self._configuration)
+        self._view.update_configuration(self._configuration)
+        event.Skip()
 
     def _on_reload_drivers(self, event):
         self._controller_drivers.load()
@@ -169,5 +182,6 @@ if __name__ == "__main__":
     from src.main import run_data_logger
 
     TestOptions.log_to_stdout = True
+    TestOptions.load_test_configuration = True
 
     run_data_logger(TestOptions)

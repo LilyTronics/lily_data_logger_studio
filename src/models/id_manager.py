@@ -29,6 +29,17 @@ ID_INSTRUMENT_SAVE = wx.NewIdRef()
 ID_INSTRUMENT_CANCEL = wx.NewIdRef()
 ID_INSTRUMENT_CLOSE = wx.NewIdRef()
 
+# Edit instruments view
+ID_MEASUREMENT_LIST = wx.NewIdRef()
+ID_MEASUREMENT_INSTRUMENT = wx.NewIdRef()
+ID_MEASUREMENT_CHANNEL = wx.NewIdRef()
+ID_MEASUREMENT_NEW = wx.NewIdRef()
+ID_MEASUREMENT_DELETE = wx.NewIdRef()
+ID_MEASUREMENT_TEST = wx.NewIdRef()
+ID_MEASUREMENT_SAVE = wx.NewIdRef()
+ID_MEASUREMENT_CANCEL = wx.NewIdRef()
+ID_MEASUREMENT_CLOSE = wx.NewIdRef()
+
 
 if __name__ == "__main__":
 
