@@ -23,7 +23,7 @@
       "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
       "channel_id": "gat",
       "unit": "dC",
-      "gain": 0.0,
+      "gain": 1.0,
       "offset": 0.0
     }
   ],
