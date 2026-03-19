@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 60,
+    "continuous_mode": false
+  },
+  "instruments": [
+    {
+      "id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "name": "Temperature chamber (sim)",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "process": [],
+  "measurements": [],
+  "graphs": []
+}
