@@ -152,6 +152,8 @@ class ControllerEditInstruments:
             if self._selected_id is None:
                 self._configuration.add_instrument(instrument["name"], instrument["driver_id"],
                                                    instrument["settings"])
+                instrument = self._configuration.get_instrument(instrument["name"])
+                self._selected_id = instrument["id"]
             else:
                 self._configuration.update_instrument(instrument["id"], instrument["name"],
                                                       instrument["driver_id"],
