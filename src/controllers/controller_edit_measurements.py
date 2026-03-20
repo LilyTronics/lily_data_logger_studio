@@ -163,6 +163,8 @@ class ControllerEditMeasurements:
                 self._configuration.add_measurement(measurement["name"],
                     measurement["instrument_id"],measurement["channel_id"], measurement["unit"],
                     measurement["gain"], measurement["offset"])
+                measurement = self._configuration.get_measurement(measurement["name"])
+                self._selected_id = measurement["id"]
             else:
                 self._configuration.update_measurement(self._selected_id, measurement["name"],
                     measurement["instrument_id"],measurement["channel_id"], measurement["unit"],
