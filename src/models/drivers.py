@@ -22,6 +22,9 @@ class Drivers:
         "driver_settings.py", "driver_settings.pyc"
     ]
 
+    def __init__(self):
+        raise Exception("This class should not be instantiated")
+
     # Dummy callback in case the progress callback is None
     @staticmethod
     def _callback(*params):
