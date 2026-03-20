@@ -35,7 +35,8 @@ class ViewEditInstruments(wx.Dialog):
 
     def _create_list(self):
         self._lst_instruments = wx.ListCtrl(self, IdManager.ID_INSTRUMENT_LIST,
-                                            style=wx.LC_REPORT | wx.LC_NO_SORT_HEADER)
+                                            style=wx.LC_SINGLE_SEL | wx.LC_REPORT |
+                                            wx.LC_NO_SORT_HEADER)
         self._lst_instruments.InsertColumn(0, "Instruments:", width=self._COL_WIDTH)
         self._lst_instruments.id_map = {}
 
@@ -105,6 +106,12 @@ class ViewEditInstruments(wx.Dialog):
     ##########
     # Public #
     ##########
+
+    def get_selected_instrument(self):
+        index = self._lst_instruments.GetFirstSelected()
+        if index >= 0:
+            return self._lst_instruments.GetItemText(index)
+        return ""
 
     def set_instruments(self, instruments):
         self._lst_instruments.DeleteAllItems()

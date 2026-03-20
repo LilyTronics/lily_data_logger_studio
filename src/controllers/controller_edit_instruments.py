@@ -123,14 +123,16 @@ class ControllerEditInstruments:
         event.Skip()
 
     def _on_delete(self, event):
-        if self._selected_id is not None:
+        instrument_name = self._dlg.get_selected_instrument()
+        instrument = self._configuration.get_instrument(instrument_name)
+        if instrument is not None:
             dlg_title = "Delete instrument"
             btn = ViewDialogs.show_confirm(self._dlg,
-                                           "Are you sure you want to delete this instrument?",
+                                           f"Are you sure you want to delete {instrument["name"]}?",
                                            dlg_title)
             if btn == wx.ID_YES:
                 try:
-                    self._configuration.delete_instrument(self._selected_id)
+                    self._configuration.delete_instrument(instrument["id"])
                     self._selected_id = None
                     self._update_instruments()
                 except Exception as e:
