@@ -180,14 +180,15 @@ class ControllerEditMeasurements:
         event.Skip()
 
     def _on_delete(self, event):
-        if self._selected_id is not None:
+        measurement_name = self._dlg.get_selected_measurement()
+        measurement = self._configuration.get_measurement(measurement_name)
+        if measurement is not None:
             dlg_title = "Delete measurement"
             btn = ViewDialogs.show_confirm(self._dlg,
-                                           "Are you sure you want to delete this measurement?",
-                                           dlg_title)
+                f"Are you sure you want to delete {measurement["name"]}?", dlg_title)
             if btn == wx.ID_YES:
                 try:
-                    self._configuration.delete_measurement(self._selected_id)
+                    self._configuration.delete_measurement(measurement["id"])
                     self._selected_id = None
                     self._update_measurements()
                 except Exception as e:

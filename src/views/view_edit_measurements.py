@@ -174,6 +174,12 @@ class ViewEditMeasurements(wx.Dialog):
     # Public #
     ##########
 
+    def get_selected_measurement(self):
+        index = self._lst_measurements.GetFirstSelected()
+        if index >= 0:
+            return self._lst_measurements.GetItemText(index)
+        return ""
+
     def set_measurements(self, measurements):
         self._lst_measurements.DeleteAllItems()
         self._lst_measurements.id_map.clear()
