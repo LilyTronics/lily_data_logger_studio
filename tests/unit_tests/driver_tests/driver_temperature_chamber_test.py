@@ -12,6 +12,11 @@ from tests.lib.test_suite import TestSuite
 class DriverTemperatureChamberTest(TestSuite):
 
     driver = None
+    async_response = [False]
+
+    def _callback(self, response):
+        self.log.debug(f"Async response: {response}")
+        self.async_response[0] = True
 
     def setup(self):
         self.log.debug("Start simulators")
@@ -62,6 +67,14 @@ class DriverTemperatureChamberTest(TestSuite):
         response = self.driver.process_channel("gps")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != state, "The power state was not updated correctly")
+
+    def test_get_id_async(self):
+        self.async_response[0] = False
+        self.log.debug("Get ID")
+        response = self.driver.process_channel("gid", callback=self._callback)
+        self.fail_if(response is not None, f"No response expected, got: {response}")
+        if not self.wait_for(self.async_response, True, 2, 0.1):
+            self._fail("No async response received")
 
 
 if __name__ == "__main__":
