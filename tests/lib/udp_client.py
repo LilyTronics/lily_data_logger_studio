@@ -9,7 +9,7 @@ class UdpClient:
 
     _RX_BUFFER_SIZE = 1500
     _END_OF_LINE = "\n"
-    _TIMEOUT = 0.5
+    _TIMEOUT = 2
 
     def __init__(self, ip_address, ip_port):
         self._server_ip_address = ip_address
