@@ -3,8 +3,6 @@ Contains the instances of the instruments.
 Redirect processing channels and measurements to the correct instrument.
 """
 
-from copy import deepcopy
-
 from src.models.drivers import Drivers
 
 
@@ -21,7 +19,7 @@ class InstrumentPool:
 
     @classmethod
     def get_instruments(cls):
-        return deepcopy(cls._INSTRUMENTS)
+        return cls._INSTRUMENTS
 
     @classmethod
     def add_instruments(cls, instruments):
