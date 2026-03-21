@@ -12,6 +12,9 @@
 		"terminal.integrated.env.windows": {
 			"PYTHONPATH": "${workspaceFolder}"
 		},
+		"terminal.integrated.env.linux": {
+			"PYTHONPATH": "${workspaceFolder}"
+		},
 		"explorer.compactFolders": false
 	}
 }
