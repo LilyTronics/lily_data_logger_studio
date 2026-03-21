@@ -32,7 +32,7 @@ class TemperatureChamber(DriverBase):
     protocol = ProtocolAscii
 
     transport_settings = {
-        "timeout": 0.5
+        "timeout": 2
     }
 
     protocol_settings = {
