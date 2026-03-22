@@ -13,4 +13,4 @@ class TestSuiteTest(TestSuite):
 
 if __name__ == "__main__":
 
-    TestSuiteTest().run(True)
+    TestSuiteTest().run()
