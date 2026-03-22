@@ -8,7 +8,7 @@ import socket
 class UdpClient:
 
     _RX_BUFFER_SIZE = 1500
-    _END_OF_LINE = "\n"
+    _END_OF_LINE = b"\n"
     _TIMEOUT = 2
 
     def __init__(self, ip_address, ip_port):
@@ -27,10 +27,10 @@ class UdpClient:
     def send_command(self, command, expect_response=True):
         command += self._END_OF_LINE
         response = None
-        self._socket.sendto(command.encode("latin"), (self._server_ip_address, self._server_port))
+        self._socket.sendto(command, (self._server_ip_address, self._server_port))
         if expect_response:
             try:
-                response = self._socket.recv(self._RX_BUFFER_SIZE).decode("latin")
+                response = self._socket.recv(self._RX_BUFFER_SIZE)
                 if response.endswith(self._END_OF_LINE):
                     response = response.strip()
             except ConnectionResetError as e:
