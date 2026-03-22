@@ -29,23 +29,6 @@ class InstrumentPoolTest(TestSuite):
         self.fail_if(len(InstrumentPool.get_instruments()) == 0,
                      "No instruments added to the pool")
 
-    def test_add_instruments_by_instance(self):
-        InstrumentPool.clear()
-        instruments = self.config.get_instruments()
-        self.fail_if(len(instruments) == 0, "No instruments in the configuration")
-        instances = []
-        for instrument in instruments:
-            driver_class = Drivers.get_driver(instrument["driver_id"])
-            self.fail_if(driver_class is None,
-                         f"No driver for driver ID: {instrument["driver_id"]}")
-            instances.append({
-                "id": instrument["id"],
-                "instance": driver_class(instrument["settings"])
-            })
-        InstrumentPool.add_instruments(instances)
-        self.fail_if(len(InstrumentPool.get_instruments()) == 0,
-                     "No instruments added to the pool")
-
     def test_get_instrument(self):
         instruments = self.config.get_instruments()
         self.fail_if(len(instruments) == 0, "No instruments in the configuration")

@@ -24,12 +24,10 @@ class InstrumentPool:
     @classmethod
     def add_instruments(cls, instruments):
         for instrument in instruments:
-            if "instance" in instrument:
-                cls._INSTRUMENTS[instrument["id"]] = instrument["instance"]
-            elif "driver_id" in instrument:
-                driver_class = Drivers.get_driver(instrument["driver_id"])
-                if driver_class is not None:
-                    cls._INSTRUMENTS[instrument["id"]] = driver_class(instrument["settings"])
+            driver_class = Drivers.get_driver(instrument.get("driver_id"))
+            if driver_class is None:
+                raise Exception(f"No driver for: {instrument["name"]}")
+            cls._INSTRUMENTS[instrument["id"]] = driver_class(instrument["settings"])
 
     @classmethod
     def get_instrument(cls, instrument_id):
