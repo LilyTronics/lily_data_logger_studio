@@ -27,8 +27,8 @@ class TransportUdp(TransportBase):
             self.transport_settings.get("host", ""),
             self.transport_settings.get("port", self._DEFAULT_PORT)
         ))
-        # Make receiver non blocking
-        self.socket.settimeout(0)
+        # Small receiver timeout
+        self.socket.settimeout(0.001)
 
     def send(self, data):
         self.socket.send(data)
@@ -37,7 +37,7 @@ class TransportUdp(TransportBase):
         data = b""
         try:
             data = self.socket.recv(self._BUFFER_SIZE)
-        except:
+        except socket.error:
             pass
         return data
 
