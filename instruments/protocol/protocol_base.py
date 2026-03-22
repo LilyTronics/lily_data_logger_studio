@@ -33,7 +33,7 @@ class ProtocolBase(ABC):
         self.log_debug("Queue processor started")
         while not self._stop_event.is_set():
             try:
-                data = self._queue.get_nowait()
+                data = self._queue.get(True, 0.001)
                 response = self._process_command(data["channel"], data["command"])
                 data["callback"](response)
             except queue.Empty:
