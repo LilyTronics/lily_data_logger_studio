@@ -44,9 +44,15 @@ jobs:
         run: |
           python build/create_deployment.py
 
+      - name: Create timestamp for file
+        id: timestamp
+        shell: pwsh
+        run: |
+          "ts=$(Get-Date -Format 'yyyyMMdd_HHmmss')" >> $env:GITHUB_OUTPUT
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
         with:
-          name: BuildOutput-${{ github.run_id }}
+          name: LilyDataLoggerStudio_${{ steps.timestamp.outputs.ts }}
           path: build/build_output/dist/LilyDataLoggerStudio/
           retention-days: 30
