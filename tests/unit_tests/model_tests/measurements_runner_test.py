@@ -9,13 +9,13 @@ import src.app_data as AppData
 from src.models.configuration import Configuration
 from src.models.drivers import Drivers
 from src.models.instrument_pool import InstrumentPool
-from src.models.measurement_runner import MeasurementRunner
+from src.models.measurements_runner import MeasurementsRunner
 from src.simulators.run_simulators import start_simulators
 from src.simulators.run_simulators import stop_simulators
 from tests.lib.test_suite import TestSuite
 
 
-class MeasurementRunnerTest(TestSuite):
+class MeasurementsRunnerTest(TestSuite):
 
     measurement_runner = None
     config = Configuration()
@@ -39,7 +39,7 @@ class MeasurementRunnerTest(TestSuite):
     def setup(self):
         start_simulators()
         Drivers.load()
-        self.measurement_runner = MeasurementRunner(
+        self.measurement_runner = MeasurementsRunner(
             self.config, self.app_test_logger, self._call_back
         )
 
@@ -83,4 +83,4 @@ class MeasurementRunnerTest(TestSuite):
 
 if __name__ == "__main__":
 
-    MeasurementRunnerTest().run()
+    MeasurementsRunnerTest().run()

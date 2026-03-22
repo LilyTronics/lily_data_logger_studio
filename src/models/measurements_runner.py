@@ -9,7 +9,7 @@ from src.models.instrument_pool import InstrumentPool
 from src.models.time_converter import TimeConverter
 
 
-class MeasurementRunner:
+class MeasurementsRunner:
 
     def __init__(self, configuration, logger, measurement_callback):
         self._configuration = configuration
@@ -82,6 +82,6 @@ class MeasurementRunner:
 
 if __name__ == "__main__":
 
-    from tests.unit_tests.model_tests.measurement_runner_test import MeasurementRunnerTest
+    from tests.unit_tests.model_tests.measurements_runner_test import MeasurementsRunnerTest
 
-    MeasurementRunnerTest().run()
+    MeasurementsRunnerTest().run()
