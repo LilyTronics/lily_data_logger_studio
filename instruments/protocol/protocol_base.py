@@ -35,7 +35,7 @@ class ProtocolBase(ABC):
             try:
                 data = self._queue.get(True, 0.001)
                 response = self._process_command(data["channel"], data["command"])
-                data["callback"](response)
+                data["callback"](response, data["callback_params"])
             except queue.Empty:
                 pass
         self.log_debug("Queue processor stopped")
@@ -63,13 +63,14 @@ class ProtocolBase(ABC):
             print(f"({self.__class__.__name__})", message)
 
     @final
-    def process_command(self, channel, command, callback):
+    def process_command(self, channel, command, callback, callback_params):
         if callable(callback):
             self.log_debug("Add data to queue")
             self._queue.put({
                 "channel": channel,
                 "command": command,
-                "callback": callback
+                "callback": callback,
+                "callback_params": callback_params
             })
             return None
         # No callback, process immediately

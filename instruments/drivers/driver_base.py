@@ -158,7 +158,7 @@ class DriverBase(ABC):
         return None if len(matches) != 1 else matches[0]
 
     @final
-    def process_channel(self, channel_query, value=None, callback=None):
+    def process_channel(self, channel_query, value=None, callback=None, callback_params=None):
         self.log_debug(f"Get channel for query: '{channel_query}'")
         channel = self.get_channel(channel_query)
         if channel is None:
@@ -170,7 +170,7 @@ class DriverBase(ABC):
         if not isinstance(command, bytes):
             raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
-        response = self.protocol.process_command(channel, command, callback)
+        response = self.protocol.process_command(channel, command, callback, callback_params)
         if callable(callback):
             # The callback is present
             return None

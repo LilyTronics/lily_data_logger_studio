@@ -14,7 +14,7 @@ class DriverTemperatureChamberTest(TestSuite):
     driver = None
     async_response = [False]
 
-    def _callback(self, response):
+    def _callback(self, *response):
         self.log.debug(f"Async response: {response}")
         self.async_response[0] = True
 

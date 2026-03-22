@@ -1,0 +1,31 @@
+{
+  "settings": {
+    "sample_time": 2,
+    "end_time": 10,
+    "continuous_mode": false
+  },
+  "instruments": [
+    {
+      "id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "name": "Temperature chamber (sim)",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "process": [],
+  "measurements": [
+    {
+      "id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
+      "name": "Tamb",
+      "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "channel_id": "gat",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0
+    }
+  ],
+  "graphs": []
+}
