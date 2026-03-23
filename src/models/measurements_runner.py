@@ -36,6 +36,7 @@ class MeasurementsRunner:
         self._measurement_callback(request_time, value)
 
     def _run_measurement(self):
+        time.sleep(0.1)
         self._logger.debug("Measurement runner started")
         settings = self._configuration.get_settings()
         end_time = 0

@@ -3,6 +3,7 @@ Runs the process steps.
 """
 
 import threading
+import time
 
 import src.models.process_steps as ProcessSteps
 
@@ -20,6 +21,7 @@ class ProcessRunner:
     ###########
 
     def _run_process(self):
+        time.sleep(0.1)
         self._logger.debug("Process runner started")
         config_steps = self._configuration.get_process_steps()
         loop_steps = [x for x in config_steps if x["type"] == "ProcessStepLoop"]
