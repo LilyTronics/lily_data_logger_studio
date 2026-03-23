@@ -20,13 +20,14 @@ Release 1.0:
 * Load and reload drivers from the instruments package ✅
 * Edit instruments in the configuration ✅
 * Edit measurements ✅
-* Edit process for controlling instruments
-* Start/stop data logger
-* Show measurements in the data table
+* Start/stop data logger, runs measurements and process steps ✅
+* Edit process steps for controlling instruments
 * Edit graphs in the configuration
-* Show measurements in one or more graphs
+* Show measurements in the data table
+* Show measurements in graphs
 * Write mearurement to a CSV file
-* Show live updates on the process
+* Show live updates of the process
+* User manual for data logger and for creating drivers
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
