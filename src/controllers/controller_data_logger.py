@@ -65,10 +65,10 @@ class ControllerDataLogger:
             if not dlg:
                 self._check_result = False
                 return
-            dlg.update_instrument(key, result, message)
+            wx.CallAfter(dlg.update_instrument, key, result, message)
         wx.Sleep(1)
         if dlg:
-            dlg.Close()
+            wx.CallAfter(dlg.Close)
 
     def _measurements_callback(self, *params):
         print(params)
@@ -90,10 +90,11 @@ class ControllerDataLogger:
             return
 
         has_measurements = len(self._configuration.get_measurements()) > 0
+        has_steps = len(self._configuration.get_process_steps()) > 0
 
-        if not has_measurements:
+        if not (has_measurements or has_steps):
             ViewDialogs.show_message(
-                self._parent_view, "No measurments in the configuration.", dlg_title
+                self._parent_view, "No measurments or steps in the configuration.", dlg_title
             )
             return
 
