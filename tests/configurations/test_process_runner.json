@@ -1,0 +1,99 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 60,
+    "continuous_mode": false
+  },
+  "instruments": [
+    {
+      "id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "name": "Temperature chamber (sim)",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
+      "name": "Tamb",
+      "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "channel_id": "gat",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0
+    }
+  ],
+  "process": [
+    {
+      "label": "",
+      "name": "Turn on temperature chamber",
+      "type": "ProcessStepSetOutput",
+      "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "channel_id": "sps",
+      "value": 1
+    },
+    {
+      "label": "start cycle",
+      "name": "Set temperature to 35",
+      "type": "ProcessStepSetOutput",
+      "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "channel_id": "sts",
+      "value": 35
+    },
+    {
+      "label": "",
+      "name": "Wait for temperature to reach set point",
+      "type": "ProcessStepWait",
+      "wait_for": "measurement",
+      "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
+      "min_value": 34,
+      "max_value": 36,
+      "poll_interval": 2,
+      "timeout": 10
+    },
+    {
+      "label": "",
+      "name": "Hold temperature",
+      "type": "ProcessStepWait",
+      "wait_for": "time",
+      "wait_time": 10
+    },
+    {
+      "label": "",
+      "name": "Set temperature to 20",
+      "type": "ProcessStepSetOutput",
+      "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+      "channel_id": "sts",
+      "value": 20
+    },
+    {
+      "label": "",
+      "name": "Wait for temperature to reach set point",
+      "type": "ProcessStepWait",
+      "wait_for": "measurement",
+      "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
+      "min_value": 19,
+      "max_value": 21,
+      "poll_interval": 2,
+      "timeout": 10
+    },
+    {
+      "label": "",
+      "name": "Hold temperature",
+      "type": "ProcessStepWait",
+      "wait_for": "time",
+      "wait_time": 10
+    },
+    {
+      "label": "",
+      "name": "Loop cyclus",
+      "type": "ProcessStepLoop",
+      "count": 3,
+      "loop_from": "start cycle"
+    }
+  ],
+  "graphs": []
+}
