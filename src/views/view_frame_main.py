@@ -34,6 +34,12 @@ class ViewFrameMain(wx.Frame):
     _DEFAULT_TABLE_SIZE = (300, 200)
     _DEFAULT_PROCESS_SIZE = (500, 200)
     _STATUS_SIZE = 170
+    _SB_SAMPLE_TIME = 1
+    _SB_END_TIME = 2
+    _SB_TOTAL_SAMPLES = 3
+    _SB_ELAPSED_TIME = 4
+    _SB_NR_OF_SAMPLES = 5
+    _SB_STATUS = 6
     _LED_SIZE = (16, 16)
     _COLOR_LED_OFF = "#060"
     _COLOR_LED_ON = "#0f0"
@@ -103,16 +109,19 @@ class ViewFrameMain(wx.Frame):
 
     def _create_status_bar(self):
         self._sb = self.CreateStatusBar()
-        self._sb.SetFieldsCount(6)
-        self._sb.SetStatusWidths([self._STATUS_SIZE, self._STATUS_SIZE,
+        self._sb.SetFieldsCount(7)
+        # First text field is for the long help text of the toolbar
+        # We don't use it so we make a small empty space
+        self._sb.SetStatusWidths([0, self._STATUS_SIZE, self._STATUS_SIZE,
                                   self._STATUS_SIZE, self._STATUS_SIZE,
                                   self._STATUS_SIZE, -1])
-        self._sb.SetStatusText("Sample time: -", 0)
-        self._sb.SetStatusText("End time: -", 1)
-        self._sb.SetStatusText("Total samples: -", 2)
-        self._sb.SetStatusText("Elapsed time: -", 3)
-        self._sb.SetStatusText("Number of samples: 0", 4)
-        self._sb.SetStatusText("Status: idle", 5)
+
+        self._sb.SetStatusText("Sample time: -", self._SB_SAMPLE_TIME)
+        self._sb.SetStatusText("End time: -", self._SB_END_TIME)
+        self._sb.SetStatusText("Total samples: -", self._SB_TOTAL_SAMPLES)
+        self._sb.SetStatusText("Elapsed time: -", self._SB_ELAPSED_TIME)
+        self._sb.SetStatusText("Number of samples: 0", self._SB_NR_OF_SAMPLES)
+        self._sb.SetStatusText("Status: idle", self._SB_STATUS)
 
         # This will positioned correct using the on size event
         self._activity_led = wx.Panel(self._sb, wx.ID_ANY, size=self._LED_SIZE,
@@ -227,7 +236,7 @@ class ViewFrameMain(wx.Frame):
         if self:
             wx.adv.LayoutAlgorithm().LayoutFrame(self, self._main_win)
             # Place the LED in the correct position
-            rect = self._sb.GetFieldRect(5)
+            rect = self._sb.GetFieldRect(self._SB_STATUS)
             rect.x += 100
             rect.y += 2
             self._activity_led.SetPosition((rect.x, rect.y))
@@ -273,16 +282,16 @@ class ViewFrameMain(wx.Frame):
             total_samples = int(end_time / sample_time) + 1
             end_time = TimeConverter.create_duration_time_string(end_time)
         sample_time = TimeConverter.create_duration_time_string(sample_time)
-        self._sb.SetStatusText(f"Sample time: {sample_time}", 0)
-        self._sb.SetStatusText(f"End time: {end_time}", 1)
-        self._sb.SetStatusText(f"Total samples: {total_samples}", 2)
+        self._sb.SetStatusText(f"Sample time: {sample_time}", self._SB_SAMPLE_TIME)
+        self._sb.SetStatusText(f"End time: {end_time}", self._SB_END_TIME)
+        self._sb.SetStatusText(f"Total samples: {total_samples}", self._SB_TOTAL_SAMPLES)
 
         title = f"{self._title} - {configuration.get_filename()}"
         title += "*" if configuration.is_changed() else ""
         self.SetTitle(title)
 
     def update_status(self, status):
-        self._sb.SetStatusText(f"Status: {status}", 5)
+        self._sb.SetStatusText(f"Status: {status}", self._SB_STATUS)
         if status == "running":
             self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
             self._blink_timer.Start(self._BLINK_SPEED)
