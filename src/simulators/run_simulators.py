@@ -28,8 +28,6 @@ def start_simulators():
                 _RUNNING_SIMULATORS.append(sim)
             except Exception as e:
                 print(f"Could not start simulator {sim_class}\n{e}")
-        else:
-            print(f"Simulator {sim_class} is already running")
     # Wait a bit to give the simulators time to start
     time.sleep(0.2)
 
