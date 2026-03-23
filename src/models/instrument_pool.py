@@ -1,6 +1,6 @@
 """
 Contains the instances of the instruments.
-Redirect processing channels and measurements to the correct instrument.
+Prevents creating multiple instances of the same instrument.
 """
 
 from src.models.drivers import Drivers
