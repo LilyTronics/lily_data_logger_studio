@@ -9,6 +9,7 @@ class TestOptions:
 
     show_edit_instruments = False
     show_edit_measurements = False
+    show_edit_process = False
     show_edit_settings = False
 
     suppress_loading_drivers = False
