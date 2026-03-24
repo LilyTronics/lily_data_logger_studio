@@ -125,10 +125,12 @@ class Configuration:
                     value = "yes" if value else "no"
                 key = key.replace("_", " ")
                 sub_items.append(f"{key}: {value}")
-        elif main_group in ["instruments", "measurements"]:
+        elif main_group in ["instruments", "measurements", "graphs"]:
             for item in collection:
                 sub_items.append(item["name"])
-
+        elif main_group == "process":
+            if len(collection) > 0:
+                sub_items.append(f"process: {len(collection)} steps")
         return sub_items
 
     ############
