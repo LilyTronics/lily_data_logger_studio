@@ -31,12 +31,13 @@ class ViewPanelConfiguration(wx.Panel):
         image_list.Add(Images.switch_16.GetBitmap())
         image_list.Add(Images.instrument_16.GetBitmap())
         image_list.Add(Images.measurement_16.GetBitmap())
+        image_list.Add(Images.step_16.GetBitmap())
         image_list.Add(Images.graph_16.GetBitmap())
         image_list.Add(Images.configuration_16.GetBitmap())
 
         self._tree = wx.TreeCtrl(self, wx.ID_ANY, style=wx.TR_HAS_BUTTONS)
         self._tree.AssignImageList(image_list)
-        self._tree.AddRoot("Configuration:", image=10)
+        self._tree.AddRoot("Configuration:", image=11)
         return self._tree
 
     ##########
@@ -60,6 +61,10 @@ class ViewPanelConfiguration(wx.Panel):
                     image_index = 7
                 elif main_group == "measurements":
                     image_index = 8
+                elif main_group == "process":
+                    image_index = 9
+                elif main_group == "graphs":
+                    image_index = 10
                 self._tree.AppendItem(main_item, sub_item, image_index)
         self._tree.ExpandAll()
 
