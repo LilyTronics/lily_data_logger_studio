@@ -23,6 +23,7 @@ restore layout    : combine undo 4 with window layout
 save              : save
 settings          : settings 12
 start             : play
+step              : media step forward
 stop              : stop
 switch            : switch 3
 time              : time
