@@ -27,8 +27,6 @@ class ViewFrameMain(wx.Frame):
     _DEFAULT_LOG_HEIGHT = 80
     _AUI_MANAGER_FLAGS = (aui.AUI_MGR_ALLOW_FLOATING | aui.AUI_MGR_LIVE_RESIZE |
                           aui.AUI_MGR_USE_NATIVE_MINIFRAMES)
-
-    _DOCK_CONSTRAINTS = (0.7, 0.7)
     _DOCK_MIN_SIZE = (200, 100)
     _DEFAULT_GRAPH_SIZE = (600, 400)
     _DEFAULT_TABLE_SIZE = (300, 200)
@@ -154,27 +152,11 @@ class ViewFrameMain(wx.Frame):
             flags &= ~aui.AUI_MGR_ALLOW_ACTIVE_PANE
 
         self._aui_manager = aui.AuiManager()
-        self._aui_manager.SetDockSizeConstraint(*self._DOCK_CONSTRAINTS)
         self._aui_manager.SetManagedWindow(self._main_win)
         self._aui_manager.SetAGWFlags(flags)
         art = self._aui_manager.GetArtProvider()
         art.SetMetric(aui.AUI_DOCKART_GRADIENT_TYPE, aui.AUI_GRADIENT_NONE)
 
-        self._aui_manager.AddPane(
-            ViewPanelDataTable(self._main_win),
-            aui.AuiPaneInfo()
-                .Name("data_table")
-                .Caption("Data Table")
-                .CloseButton(False)
-                .MaximizeButton(True)
-                .Dockable(self._allow_docking)
-                .Floatable(self._allow_docking)
-                .Movable(self._allow_docking)
-                .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize(self._DEFAULT_TABLE_SIZE)
-                .Right()
-                .Layer(2)
-        )
         self._aui_manager.AddPane(
             ViewPanelGraphs(self._main_win),
             aui.AuiPaneInfo()
@@ -187,8 +169,8 @@ class ViewFrameMain(wx.Frame):
                 .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize(self._DEFAULT_GRAPH_SIZE)
-                .Top()
-                .Layer(1)
+                .CenterPane()
+                .CaptionVisible(True)
         )
         self._aui_manager.AddPane(
             ViewPanelProcess(self._main_win),
@@ -202,9 +184,22 @@ class ViewFrameMain(wx.Frame):
                 .Movable(self._allow_docking)
                 .MinSize(self._DOCK_MIN_SIZE)
                 .BestSize(self._DEFAULT_PROCESS_SIZE)
-                .Top()
+                .Bottom()
                 .CaptionVisible(True)
-                .Layer(0)
+        )
+        self._aui_manager.AddPane(
+            ViewPanelDataTable(self._main_win),
+            aui.AuiPaneInfo()
+                .Name("data_table")
+                .Caption("Data Table")
+                .CloseButton(False)
+                .MaximizeButton(True)
+                .Dockable(self._allow_docking)
+                .Floatable(self._allow_docking)
+                .Movable(self._allow_docking)
+                .MinSize(self._DOCK_MIN_SIZE)
+                .BestSize(self._DEFAULT_TABLE_SIZE)
+                .Bottom()
         )
 
     def _update_layout(self):
