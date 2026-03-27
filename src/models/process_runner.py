@@ -26,9 +26,9 @@ class ProcessRunner:
         config_steps = self._configuration.get_process_steps()
         loop_steps = [x for x in config_steps if x["type"] == "ProcessStepLoop"]
         for loop_step in loop_steps:
-            loop_step["loop_from"] = self._configuration.get_process_step_index_for_label(
-                loop_step["loop_from"]
-            )
+            label = loop_step["settings"]["loop_from"]
+            index = self._configuration.get_process_step_index_for_label(label)
+            loop_step["settings"]["loop_from"] = index
         step_instances = {}
         step_index = 0
         while 0 <= step_index < len(config_steps) and not self._stop_event.is_set():
