@@ -49,6 +49,8 @@ class ProcessStepBase(ABC):
 
 class ProcessStepSetOutput(ProcessStepBase):
 
+    name = "Set output"
+
     def execute(self, step_index):
         instrument = InstrumentPool.get_instrument(self.step_data["instrument_id"])
         self.logger.debug(f"Set output: {instrument.name}, "
@@ -58,6 +60,8 @@ class ProcessStepSetOutput(ProcessStepBase):
 
 
 class ProcessStepWait(ProcessStepBase):
+
+    name = "Wait"
 
     def execute(self, step_index):
         wait_for = self.step_data.get("wait_for")
@@ -104,6 +108,8 @@ class ProcessStepWait(ProcessStepBase):
 
 
 class ProcessStepLoop(ProcessStepBase):
+
+    name = "Loop"
 
     def execute(self, step_index):
         loop_from = self.step_data.get("loop_from", -1)
