@@ -15,3 +15,4 @@ BOX_SPACING = 10
 TEXT_SMALL = wx.Size(40, -1)
 TEXT_MEDIUM = wx.Size(120, -1)
 TEXT_LARGE = wx.Size(200, -1)
+TEXT_XLARGE = wx.Size(280, -1)
