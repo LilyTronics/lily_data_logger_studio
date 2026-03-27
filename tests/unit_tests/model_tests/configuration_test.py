@@ -237,7 +237,153 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "No measurement found for this ID",
                          "Invalid exception message")
 
+    #################
+    # Process steps #
+    #################
+
+    def test_add_process_step(self):
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 0, "There should be no steps")
+
+        self.log.debug("Add step")
+        settings = {"time": 10}
+        self._configuration.add_process_step("test step 1", "label 1", "ProcessStepWait", settings)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 1, "Step was not added")
+
+        self.log.debug("Add step with same label")
+        try:
+            self._configuration.add_process_step("test step 1", "label 1",
+                                                 "ProcessStepWait", settings)
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A step with this label already exists",
+                         "Invalid exception message")
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 1, "There should be one step")
+
+    def test_edit_process_step(self):
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 1, "There should be one step")
+
+        self.log.debug("Add another step")
+        settings = {"time": 10}
+        self._configuration.add_process_step("test step 2", "label 2", "ProcessStepWait", settings)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 2, "Step was not added")
+
+        self.log.debug("Update label")
+        step = steps[0]
+        self._configuration.update_process_step(0, step["name"], "label 3", step["type"],
+                                                step["settings"])
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+
+        self.log.debug("Update step with same label")
+        try:
+            self._configuration.update_process_step(0, step["name"], "label 2", step["type"],
+                                                    step["settings"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A step with this label already exists",
+                         "Invalid exception message")
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+
+        self.log.debug("Update with an invallid index")
+        try:
+            self._configuration.update_process_step(len(steps), step["name"], "label 4",
+                                                    step["type"], step["settings"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "The step index is invalid",
+                         "Invalid exception message")
+
+    def test_move_process_step(self):
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 2, "There should be 2 steps")
+        # Add two more steps so we can better test the move
+        self.log.debug("Add extra step")
+        settings = {"time": 10}
+        self._configuration.add_process_step("test step 3", "", "ProcessStepWait", settings)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != 3, "There should be 3 steps")
+
+        # Move first step up, should not be possible
+        org_step = self._configuration.get_process_step(0)
+        self._configuration.move_process_step(0, -1)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        new_step = self._configuration.get_process_step(0)
+        self.fail_if(new_step != org_step, "Step is not supposed to move")
+
+        # Move first step down
+        org_step0 = self._configuration.get_process_step(0)
+        org_step1 = self._configuration.get_process_step(1)
+        self._configuration.move_process_step(0, 1)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        new_step0 = self._configuration.get_process_step(0)
+        new_step1 = self._configuration.get_process_step(1)
+        self.fail_if(new_step0 != org_step1, "Step did not move")
+        self.fail_if(new_step1 != org_step0, "Step did not move")
+
+        # Move last step down, should not be possible
+        org_step = self._configuration.get_process_step(2)
+        self._configuration.move_process_step(2, 1)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        new_step = self._configuration.get_process_step(2)
+        self.fail_if(new_step != org_step, "Step is not supposed to move")
+
+        # Move last step up
+        org_step2 = self._configuration.get_process_step(2)
+        org_step1 = self._configuration.get_process_step(1)
+        self._configuration.move_process_step(2, -1)
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        new_step2 = self._configuration.get_process_step(2)
+        new_step1 = self._configuration.get_process_step(1)
+        self.fail_if(new_step2 != org_step1, "Step did not move")
+        self.fail_if(new_step1 != org_step2, "Step did not move")
+
+    def test_delete_process_step(self):
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        n_steps = len(steps)
+        self.fail_if(n_steps < 1, "There should be at least one step")
+
+        self.log.debug("Delete process step")
+        self._configuration.delete_process_step(0)
+
+        steps = self._configuration.get_process_steps()
+        self.log.debug(f"Steps: {steps}")
+        self.fail_if(len(steps) != n_steps - 1, "Step was not deleted")
+
+        self.log.debug("Delete step with invalid index")
+        try:
+            self._configuration.delete_process_step(len(steps))
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "The step index is invalid",
+                         "Invalid exception message")
+
 
 if __name__ == "__main__":
 
-    ConfigurationTest().run(True)
+    ConfigurationTest().run()

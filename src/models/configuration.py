@@ -49,6 +49,13 @@ class Configuration:
         "offset": 0.0
     }
 
+    _STEP = {
+        "name": "",
+        "label": "",
+        "type": "",
+        "settings" : {}
+    }
+
     def __init__(self):
         self._filename = None
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
@@ -238,9 +245,63 @@ class Configuration:
     def get_process_steps(self):
         return deepcopy(self._configuration["process"])
 
+    def get_process_step(self, step_index):
+        step = None
+        if 0 <= step_index < len(self._configuration["process"]):
+            step =  self._configuration["process"][step_index]
+        return deepcopy(step)
+
+    def get_process_step_index_for_label(self, label):
+        return next(
+            (i for i, d in enumerate(self._configuration["process"])
+                if label != "" and d["label"] == label),
+            -1
+        )
+
+    def add_process_step(self, name, label, step_type, settings):
+        if self.get_process_step_index_for_label(label) >= 0:
+            raise Exception("A step with this label already exists")
+        step = deepcopy(self._STEP)
+        step["name"] = name
+        step["label"] = label
+        step["type"] = step_type
+        step["settings"] = deepcopy(settings)
+        self._configuration["process"].append(step)
+
+    def update_process_step(self, step_index, name, label, step_type, settings):
+        same_label = self.get_process_step_index_for_label(label)
+        if same_label >= 0 and same_label != step_index:
+            raise Exception("A step with this label already exists")
+        if step_index < 0 or step_index >= len(self._configuration["process"]):
+            raise Exception("The step index is invalid")
+        self._configuration["process"][step_index]["name"] = name
+        self._configuration["process"][step_index]["label"] = label
+        self._configuration["process"][step_index]["type"] = step_type
+        self._configuration["process"][step_index]["settings"] = settings
+
+    def move_process_step(self, step_index, direction):
+        if ((step_index == 0 and direction < 0) or
+            (step_index >= len(self._configuration["process"]) - 1 and direction > 0)):
+            return
+        new_index = step_index
+        if direction > 0:
+            new_index = step_index + 1
+        elif direction < 0:
+            new_index = step_index - 1
+        else:
+            raise Exception("Invalid value for direction")
+        self._configuration["process"].insert(
+            new_index, self._configuration["process"].pop(step_index)
+        )
+
+    def delete_process_step(self, step_index):
+        if step_index < 0 or step_index >= len(self._configuration["process"]):
+            raise Exception("The step index is invalid")
+        self._configuration["process"].pop(step_index)
+
 
 if __name__ == "__main__":
 
     from tests.unit_tests.model_tests.configuration_test import ConfigurationTest
 
-    ConfigurationTest().run(True)
+    ConfigurationTest().run()
