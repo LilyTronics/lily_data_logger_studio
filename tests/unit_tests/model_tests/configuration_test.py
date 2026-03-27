@@ -12,6 +12,11 @@ class ConfigurationTest(TestSuite):
     _EXPECTED_GROUPS = ["settings", "instruments", "measurements", "process", "graphs"]
     _configuration = Configuration()
 
+    def _log_list(self, name, items):
+        self.log.debug(f"{name}:")
+        for item in items:
+            self.log.debug(f"- {item}:")
+
     def setup(self):
         Drivers.load()
         drivers = Drivers.get_drivers()
@@ -35,13 +40,14 @@ class ConfigurationTest(TestSuite):
         driver_id = drivers[0].id
         settings = {"ip": "1.2.3.4"}
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != 0, "There should be no instruments")
 
         self.log.debug("Add instrument")
         self._configuration.add_instrument("test instrument 1", driver_id, settings)
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != 1, "Instrument was not added")
 
         self.log.debug("Add instrument with same name")
@@ -54,7 +60,7 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "An instrument with this name already exists",
                          "Invalid exception message")
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != 1, "There should be one instrument")
 
     def test_edit_instrument(self):
@@ -62,13 +68,13 @@ class ConfigurationTest(TestSuite):
         driver_id = drivers[0].id
         settings = {"ip": "1.2.3.4"}
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != 1, "There should be one instrument")
 
         self.log.debug("Add another instrument")
         self._configuration.add_instrument("test instrument 2", driver_id, settings)
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != 2, "Instrument was not added")
 
         self.log.debug("Update instrument name")
@@ -76,7 +82,7 @@ class ConfigurationTest(TestSuite):
         self._configuration.update_instrument(instrument["id"], "Test instrument 3",
                                               instrument["driver_id"], instrument["settings"])
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
 
         self.log.debug("Update setting")
         instrument = instruments[0]
@@ -84,7 +90,7 @@ class ConfigurationTest(TestSuite):
         self._configuration.update_instrument(instrument["id"], instrument["name"],
                                               instrument["driver_id"], settings)
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
 
         self.log.debug("Update with an existing name")
         instrument = instruments[0]
@@ -98,7 +104,7 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "An instrument with this name already exists",
                          "Invalid exception message")
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
 
         self.log.debug("Update with an invallid ID")
         instrument = instruments[0]
@@ -114,14 +120,14 @@ class ConfigurationTest(TestSuite):
 
     def test_delete_instrument(self):
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         n_instruments = len(instruments)
         self.fail_if(n_instruments < 1, "There should be at least one instrument")
 
         self.log.debug("Delete instrument")
         self._configuration.delete_instrument(instruments[0]["id"])
         instruments = self._configuration.get_instruments()
-        self.log.debug(f"Instruments: {instruments}")
+        self._log_list("Instruments", instruments)
         self.fail_if(len(instruments) != n_instruments - 1, "Instrument was not deleted")
 
         self.log.debug("Delete instrument with invalid ID")
@@ -140,14 +146,14 @@ class ConfigurationTest(TestSuite):
 
     def test_add_measurement(self):
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 0, "There should be no measurements")
 
         self.log.debug("Add measurement")
         self._configuration.add_measurement("test measurement 1", "instr-1234", "ch-1",
                                             "V", 1.0, 0.0)
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 1, "Measurement was not added")
 
         self.log.debug("Add measurement with same name")
@@ -166,14 +172,14 @@ class ConfigurationTest(TestSuite):
 
     def test_edit_measurements(self):
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 1, "There should be one measurement")
 
         self.log.debug("Add another measurement")
         self._configuration.add_measurement("test measurement 2", "instr-1234", "ch-2",
                                             "V", 1.0, 0.0)
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 2, "Measurement was not added")
 
         self.log.debug("Update measurement name")
@@ -183,7 +189,7 @@ class ConfigurationTest(TestSuite):
                                                measurement["channel_id"], measurement["unit"],
                                                measurement["gain"], measurement["offset"])
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
 
         self.log.debug("Update with an existing name")
         measurement = measurements[0]
@@ -199,7 +205,7 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "A measurement with this name already exists",
                          "Invalid exception message")
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
 
         self.log.debug("Update with an invallid ID")
         measurement = measurements[0]
@@ -217,14 +223,14 @@ class ConfigurationTest(TestSuite):
 
     def test_delete_measurement(self):
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         n_measurements = len(measurements)
         self.fail_if(n_measurements < 1, "There should be at least one measurement")
 
         self.log.debug("Delete measurement")
         self._configuration.delete_measurement(measurements[0]["id"])
         measurements = self._configuration.get_measurements()
-        self.log.debug(f"Measurements: {measurements}")
+        self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != n_measurements - 1, "Measurement was not deleted")
 
         self.log.debug("Delete measurement with invalid ID")
@@ -243,14 +249,14 @@ class ConfigurationTest(TestSuite):
 
     def test_add_process_step(self):
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != 0, "There should be no steps")
 
         self.log.debug("Add step")
         settings = {"time": 10}
         self._configuration.add_process_step("test step 1", "label 1", "ProcessStepWait", settings)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != 1, "Step was not added")
 
         self.log.debug("Add step with same label")
@@ -264,27 +270,34 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "A step with this label already exists",
                          "Invalid exception message")
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
-        self.fail_if(len(steps) != 1, "There should be one step")
-
-    def test_edit_process_step(self):
-        steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != 1, "There should be one step")
 
         self.log.debug("Add another step")
-        settings = {"time": 10}
-        self._configuration.add_process_step("test step 2", "label 2", "ProcessStepWait", settings)
+        self._configuration.add_process_step("test step 3", "label 3", "ProcessStepWait", settings)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != 2, "Step was not added")
+
+        self.log.debug("Insert a step")
+        self._configuration.add_process_step("test step 2", "label 2", "ProcessStepWait",
+                                             settings, 1)
+        steps = self._configuration.get_process_steps()
+        self._log_list("Steps", steps)
+        self.fail_if(len(steps) != 3, "Step was not added")
+
+
+    def test_edit_process_step(self):
+        steps = self._configuration.get_process_steps()
+        self._log_list("Steps", steps)
+        self.fail_if(len(steps) != 3, "There should be 3 steps")
 
         self.log.debug("Update label")
         step = steps[0]
-        self._configuration.update_process_step(0, step["name"], "label 3", step["type"],
+        self._configuration.update_process_step(0, step["name"], "label 4", step["type"],
                                                 step["settings"])
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
 
         self.log.debug("Update step with same label")
         try:
@@ -297,11 +310,11 @@ class ConfigurationTest(TestSuite):
             self.fail_if(str(e) != "A step with this label already exists",
                          "Invalid exception message")
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
 
-        self.log.debug("Update with an invallid index")
+        self.log.debug("Update with an invalid index")
         try:
-            self._configuration.update_process_step(len(steps), step["name"], "label 4",
+            self._configuration.update_process_step(len(steps), step["name"], "",
                                                     step["type"], step["settings"])
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
@@ -312,49 +325,42 @@ class ConfigurationTest(TestSuite):
 
     def test_move_process_step(self):
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
-        self.fail_if(len(steps) != 2, "There should be 2 steps")
-        # Add two more steps so we can better test the move
-        self.log.debug("Add extra step")
-        settings = {"time": 10}
-        self._configuration.add_process_step("test step 3", "", "ProcessStepWait", settings)
-        steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != 3, "There should be 3 steps")
 
-        # Move first step up, should not be possible
+        self.log.debug("Move first step up, should not be possible")
         org_step = self._configuration.get_process_step(0)
         self._configuration.move_process_step(0, -1)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         new_step = self._configuration.get_process_step(0)
         self.fail_if(new_step != org_step, "Step is not supposed to move")
 
-        # Move first step down
+        self.log.debug("Move first step down")
         org_step0 = self._configuration.get_process_step(0)
         org_step1 = self._configuration.get_process_step(1)
         self._configuration.move_process_step(0, 1)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         new_step0 = self._configuration.get_process_step(0)
         new_step1 = self._configuration.get_process_step(1)
         self.fail_if(new_step0 != org_step1, "Step did not move")
         self.fail_if(new_step1 != org_step0, "Step did not move")
 
-        # Move last step down, should not be possible
+        self.log.debug("Move last step down, should not be possible")
         org_step = self._configuration.get_process_step(2)
         self._configuration.move_process_step(2, 1)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         new_step = self._configuration.get_process_step(2)
         self.fail_if(new_step != org_step, "Step is not supposed to move")
 
-        # Move last step up
+        self.log.debug("Move last step up")
         org_step2 = self._configuration.get_process_step(2)
         org_step1 = self._configuration.get_process_step(1)
         self._configuration.move_process_step(2, -1)
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         new_step2 = self._configuration.get_process_step(2)
         new_step1 = self._configuration.get_process_step(1)
         self.fail_if(new_step2 != org_step1, "Step did not move")
@@ -362,7 +368,7 @@ class ConfigurationTest(TestSuite):
 
     def test_delete_process_step(self):
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         n_steps = len(steps)
         self.fail_if(n_steps < 1, "There should be at least one step")
 
@@ -370,7 +376,7 @@ class ConfigurationTest(TestSuite):
         self._configuration.delete_process_step(0)
 
         steps = self._configuration.get_process_steps()
-        self.log.debug(f"Steps: {steps}")
+        self._log_list("Steps", steps)
         self.fail_if(len(steps) != n_steps - 1, "Step was not deleted")
 
         self.log.debug("Delete step with invalid index")

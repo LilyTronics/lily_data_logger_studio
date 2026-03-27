@@ -258,7 +258,7 @@ class Configuration:
             -1
         )
 
-    def add_process_step(self, name, label, step_type, settings):
+    def add_process_step(self, name, label, step_type, settings, position=-1):
         if self.get_process_step_index_for_label(label) >= 0:
             raise Exception("A step with this label already exists")
         step = deepcopy(self._STEP)
@@ -266,7 +266,10 @@ class Configuration:
         step["label"] = label
         step["type"] = step_type
         step["settings"] = deepcopy(settings)
-        self._configuration["process"].append(step)
+        if position >= 0:
+            self._configuration["process"].insert(position, step)
+        else:
+            self._configuration["process"].append(step)
 
     def update_process_step(self, step_index, name, label, step_type, settings):
         same_label = self.get_process_step_index_for_label(label)
