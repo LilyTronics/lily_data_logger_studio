@@ -15,7 +15,6 @@
       }
     }
   ],
-  "process": [],
   "measurements": [
     {
       "id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
@@ -27,5 +26,6 @@
       "offset": 0.0
     }
   ],
+  "process": [],
   "graphs": []
 }
