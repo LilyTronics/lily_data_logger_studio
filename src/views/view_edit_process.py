@@ -38,7 +38,7 @@ class ViewEditProcess(wx.Dialog):
         self._lst_process = ListAutosize(self, IdManager.ID_PROCESS_LIST,
                                          wx.LC_HRULES | wx.LC_VRULES)
         self._lst_process.add_cols(
-            ["#", "label", "name", "step", "settings"],
+            ["#", "Label", "Name", "Step", "Settings"],
             [30, 100, 100, 100, 200]
         )
         btn_add = wx.Button(self, IdManager.ID_PROCESS_NEW, "New")

@@ -256,6 +256,7 @@ class ViewFrameMain(wx.Frame):
     ##########
     # Public #
     ##########
+
     def get_tree_width(self):
         return self._left_win.GetSize()[0]
 
@@ -272,6 +273,9 @@ class ViewFrameMain(wx.Frame):
 
     def update_configuration(self, configuration):
         self._configuration_panel.update_tree(configuration)
+        self._graphs_panel.update(configuration)
+        self._process_panel.update(configuration)
+        self._data_table_panel.update(configuration)
 
         settings = configuration.get_settings()
         sample_time = settings["sample_time"]

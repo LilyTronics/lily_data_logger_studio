@@ -4,6 +4,9 @@ View for the process.
 
 import wx
 
+from src.models.process_steps import STEP_CLASSES
+from src.views.view_list_autosize import ListAutosize
+
 
 class ViewPanelProcess(wx.Panel):
 
@@ -14,16 +17,53 @@ class ViewPanelProcess(wx.Panel):
         box.Add(self._create_process_list(), 1, wx.EXPAND)
         self.SetSizer(box)
 
+    ###########
+    # Private #
+    ###########
+
     def _create_process_list(self):
-        self._lst_steps = wx.ListCtrl(self, style=wx.LC_REPORT | wx.LC_VRULES |
-                                      wx.LC_HRULES | wx.LC_SINGLE_SEL)
+        self._lst_process = ListAutosize(self, wx.ID_ANY,
+                                         wx.LC_HRULES | wx.LC_VRULES)
+        self._lst_process.add_cols(
+            ["#", "Label", "Name", "Step", "Settings"],
+            [30, 100, 100, 100, 200]
+        )
+        self._lst_process.Bind(wx.EVT_LIST_ITEM_SELECTED, self._on_select)
 
-        self._lst_steps.InsertColumn(0, "#")
-        self._lst_steps.InsertColumn(1, "Label")
-        self._lst_steps.InsertColumn(3, "Step")
-        self._lst_steps.InsertColumn(4, "Params")
+        return self._lst_process
 
-        return self._lst_steps
+    ##################
+    # Event handlers #
+    ##################
+
+    def _on_select(self, event):
+        # Preven selecting items
+        self._lst_process.Select(-1, 0)
+        event.Skip()
+
+    ##########
+    # Public #
+    ##########
+
+    def update(self, configuration):
+        steps = configuration.get_process_steps()
+        self._lst_process.DeleteAllItems()
+        for step in steps:
+            matches = [x for x in STEP_CLASSES if x.get_class_name() == step["type"]]
+            step_name = "unknown" if len(matches) != 1 else matches[0].name
+            index = self._lst_process.GetItemCount()
+            self._lst_process.InsertItem(index, str(index + 1))
+            self._lst_process.SetItem(index, 1, step["label"])
+            self._lst_process.SetItem(index, 2, step["name"])
+            self._lst_process.SetItem(index, 3, step_name)
+            # Build settings string
+            settings = []
+            for key, value in step.get("settings", {}).items():
+                if key in ["instrument_id", "channel_id", "measurement_id"]:
+                    continue
+                settings.append(f"{key.replace("_", " ")}: {value}")
+            self._lst_process.SetItem(index, 4, ", ".join(settings))
+        self._lst_process.autosize()
 
 
 if __name__ == "__main__":
@@ -32,5 +72,6 @@ if __name__ == "__main__":
     from src.models.test_options import TestOptions
 
     TestOptions.log_to_stdout = True
+    TestOptions.load_test_configuration = True
 
     run_data_logger(TestOptions)

@@ -20,6 +20,10 @@ class ViewPanelGraphs(wx.Panel):
         box.Add(self._grid, 1, wx.EXPAND | wx.ALL, self._SPACING)
         self.SetSizer(box)
 
+    ###########
+    # Private #
+    ###########
+
     def _show_graphs(self):
         # Clear grid, remove children and clear sizer
         for c in self._grid.GetChildren():
@@ -50,6 +54,10 @@ class ViewPanelGraphs(wx.Panel):
 
         self.Layout()
 
+    ##########
+    # Public #
+    ##########
+
     def add_graph(self, graph_name):
         self._graphs.append(ViewPlotCanvas(self, graph_name))
         self._show_graphs()
@@ -62,6 +70,8 @@ class ViewPanelGraphs(wx.Panel):
                 break
         self._show_graphs()
 
+    def update(self, configuration):
+        pass
 
 if __name__ == "__main__":
 
