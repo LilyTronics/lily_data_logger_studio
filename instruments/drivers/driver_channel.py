@@ -11,7 +11,8 @@ class DriverChannel:
     DIR_OUTPUT = "output"
     SUPPORTED_TYPES = [float, int, str]
 
-    def __init__(self, channel_id, name, parameters, response_type, expect_response=True):
+    def __init__(self, channel_id, name, parameters, value_type, response_type,
+                 expect_response=True):
         if not isinstance(channel_id, str):
             raise TypeError("(Channel) Channel ID must be a string")
         if channel_id == "":
@@ -33,14 +34,19 @@ class DriverChannel:
         for p in parameters:
             if not isinstance(p, dict):
                 raise TypeError("(Channel) Parameters must be a list of dictionaries")
-        if response_type not in self.SUPPORTED_TYPES:
+        if value_type is not None and value_type not in self.SUPPORTED_TYPES:
             raise ValueError(f"(Channel) Value type {response_type} is not supported")
+        if response_type is not None and response_type not in self.SUPPORTED_TYPES:
+            raise ValueError(f"(Channel) Response type {response_type} is not supported")
         if not isinstance(expect_response, bool):
             raise TypeError("(Channel) Expect response must be a boolean")
+        if response_type is None and expect_response:
+            raise TypeError("(Channel) Response type must be set if expect response is true")
 
         self.channel_id = channel_id
         self.name = name
         self.parameters = parameters
+        self.value_type = value_type
         self.response_type = response_type
         self.expect_response = expect_response
         self.direction = self.DIR_INPUT if name.startswith("get ") else self.DIR_OUTPUT

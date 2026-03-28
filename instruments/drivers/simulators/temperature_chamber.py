@@ -20,12 +20,12 @@ class TemperatureChamber(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", [], str),
-        DriverChannel("gat", "get actual temperature", [], float),
-        DriverChannel("gts", "get temperature setpoint", [], float),
-        DriverChannel("sts", "set temperature setpoint", [], str),
-        DriverChannel("gps", "get power state", [], int),
-        DriverChannel("sps", "set power state", [], int, False)
+        DriverChannel("gid", "get instrument ID", [], None, str),
+        DriverChannel("gat", "get actual temperature", [], None, float),
+        DriverChannel("gts", "get temperature setpoint", [], None, float),
+        DriverChannel("sts", "set temperature setpoint", [], float, str),
+        DriverChannel("gps", "get power state", [], None, int),
+        DriverChannel("sps", "set power state", [], int, None, False)
     ]
 
     transport = TransportUdp
@@ -42,6 +42,9 @@ class TemperatureChamber(DriverBase):
     is_simulator = True
 
     def build_command(self, channel, value):
+        if channel.value_type is not None:
+            value = channel.value_type(value)
+
         match channel.channel_id:
             case "gid":
                 return b"id?"
