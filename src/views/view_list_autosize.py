@@ -20,6 +20,7 @@ class ListAutosize(wx.ListCtrl):
         self.autosize()
 
     def autosize(self):
+        self.Freeze()
         for i, min_width in enumerate(self._min_col_widths):
             widths = []
             self.SetColumnWidth(i, wx.LIST_AUTOSIZE_USEHEADER)
@@ -29,6 +30,7 @@ class ListAutosize(wx.ListCtrl):
             self.SetColumnWidth(i, max(widths))
             if max(widths) < min_width:
                 self.SetColumnWidth(i, min_width)
+        self.Thaw()
 
 
 if __name__ == "__main__":
