@@ -111,12 +111,12 @@ class ControllerEditMeasurements:
             raise Exception("Channel not found in the driver")
         measurement = self._configuration.get_new_measurement()
         measurement["id"] = self._selected_id
-        measurement["name"] = settings.get("name", "")
+        measurement["name"] = settings["name"]
         measurement["instrument_id"] = instrument["id"]
         measurement["channel_id"] = channel.channel_id
-        measurement["unit"] = settings.get("unit", "")
-        measurement["gain"] = settings.get("gain", 1.0)
-        measurement["offset"] = settings.get("offset", 0.0)
+        measurement["unit"] = settings["unit"]
+        measurement["gain"] = settings["gain"]
+        measurement["offset"] = settings["offset"]
         if measurement["name"] == "":
             raise Exception("Name cannot be empty")
         return measurement
