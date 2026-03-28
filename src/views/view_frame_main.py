@@ -146,61 +146,66 @@ class ViewFrameMain(wx.Frame):
         self._main_win = wx.Panel(self, wx.ID_ANY)
 
     def _create_panes(self):
+        self._graphs_panel = ViewPanelGraphs(self._main_win)
+        self._process_panel = ViewPanelProcess(self._main_win)
+        self._data_table_panel = ViewPanelDataTable(self._main_win)
+
+        panels = [
+            {
+                "panel": self._graphs_panel,
+                "name": "graphs",
+                "caption": "Graphs",
+                "size": self._DEFAULT_GRAPH_SIZE,
+                "dock": "centerpane"
+            },
+            {
+                "panel": self._process_panel,
+                "name": "process",
+                "caption": "Process",
+                "size": self._DEFAULT_PROCESS_SIZE,
+                "dock": aui.AUI_DOCK_BOTTOM
+            },
+            {
+                "panel": self._data_table_panel,
+                "name": "data_table",
+                "caption": "Measurements",
+                "size": self._DEFAULT_TABLE_SIZE,
+                "dock": aui.AUI_DOCK_BOTTOM
+            }
+        ]
+
         flags = self._AUI_MANAGER_FLAGS
         if not self._allow_docking:
             flags &= ~aui.AUI_MGR_ALLOW_FLOATING
             flags &= ~aui.AUI_MGR_ALLOW_ACTIVE_PANE
-
         self._aui_manager = aui.AuiManager()
         self._aui_manager.SetManagedWindow(self._main_win)
         self._aui_manager.SetAGWFlags(flags)
         art = self._aui_manager.GetArtProvider()
         art.SetMetric(aui.AUI_DOCKART_GRADIENT_TYPE, aui.AUI_GRADIENT_NONE)
 
-        self._aui_manager.AddPane(
-            ViewPanelGraphs(self._main_win),
-            aui.AuiPaneInfo()
-                .Name("graphs")
-                .Caption("Graphs")
+        for panel in panels:
+            pane_info = (
+                aui.AuiPaneInfo()
+                .Name(panel["name"])
+                .Caption(panel["caption"])
                 .CloseButton(False)
                 .MaximizeButton(True)
                 .Dockable(self._allow_docking)
                 .Floatable(self._allow_docking)
                 .Movable(self._allow_docking)
+            )
+            if panel["dock"] == "centerpane":
+                pane_info = pane_info.CenterPane()
+            else:
+                pane_info = pane_info.Direction(panel["dock"])
+            # Must be last.
+            pane_info = (
+                pane_info.CaptionVisible(True)
                 .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize(self._DEFAULT_GRAPH_SIZE)
-                .CenterPane()
-                .CaptionVisible(True)
-        )
-        self._aui_manager.AddPane(
-            ViewPanelProcess(self._main_win),
-            aui.AuiPaneInfo()
-                .Name("process")
-                .Caption("Process")
-                .CloseButton(False)
-                .MaximizeButton(True)
-                .Dockable(self._allow_docking)
-                .Floatable(self._allow_docking)
-                .Movable(self._allow_docking)
-                .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize(self._DEFAULT_PROCESS_SIZE)
-                .Bottom()
-                .CaptionVisible(True)
-        )
-        self._aui_manager.AddPane(
-            ViewPanelDataTable(self._main_win),
-            aui.AuiPaneInfo()
-                .Name("data_table")
-                .Caption("Data Table")
-                .CloseButton(False)
-                .MaximizeButton(True)
-                .Dockable(self._allow_docking)
-                .Floatable(self._allow_docking)
-                .Movable(self._allow_docking)
-                .MinSize(self._DOCK_MIN_SIZE)
-                .BestSize(self._DEFAULT_TABLE_SIZE)
-                .Bottom()
-        )
+                .BestSize(panel["size"])
+            )
+            self._aui_manager.AddPane(panel["panel"], pane_info)
 
     def _update_layout(self):
         self._aui_manager.Update()
