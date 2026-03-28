@@ -21,7 +21,7 @@ Release 1.0:
 * Edit instruments in the configuration ✅
 * Edit measurements ✅
 * Start/stop data logger, runs measurements and process steps ✅
-* Edit process steps for controlling instruments
+* Edit process steps for controlling instruments ✅
 * Edit graphs in the configuration
 * Show measurements in the data table
 * Show measurements in graphs

@@ -12,6 +12,7 @@ from src.controllers.controller_data_logger import ControllerDataLogger
 from src.controllers.controller_drivers import ControllerDrivers
 from src.controllers.controller_edit_instruments import ControllerEditInstruments
 from src.controllers.controller_edit_measurements import ControllerEditMeasurements
+from src.controllers.controller_edit_process import ControllerEditProcess
 from src.controllers.controller_edit_settings import ControllerEditSettings
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
@@ -92,6 +93,8 @@ class MainController:
                         id=IdManager.ID_SHOW_EDIT_INSTRUMENTS)
         self._view.Bind(wx.EVT_TOOL, self._show_edit_measurements,
                         id=IdManager.ID_SHOW_EDIT_MEASUREMENTS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_process,
+                        id=IdManager.ID_SHOW_EDIT_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -116,6 +119,11 @@ class MainController:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_MEASUREMENTS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
+        if test_options.show_edit_process:
+            self._logger.debug("Test option: show edit process")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_PROCESS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
     ##################
     # Event handlers #
     ##################
@@ -132,6 +140,11 @@ class MainController:
 
     def _show_edit_measurements(self, event):
         ControllerEditMeasurements(self._view, self._logger, self._configuration)
+        self._view.update_configuration(self._configuration)
+        event.Skip()
+
+    def _show_edit_process(self, event):
+        ControllerEditProcess(self._view, self._logger, self._configuration)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
