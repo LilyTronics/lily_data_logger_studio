@@ -242,6 +242,9 @@ class Configuration:
     # Process steps #
     #################
 
+    def get_new_process_step(self):
+        return deepcopy(self._STEP)
+
     def get_process_steps(self):
         return deepcopy(self._configuration["process"])
 
