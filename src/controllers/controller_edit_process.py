@@ -221,9 +221,9 @@ class ControllerEditProcess:
                 self._configuration.update_process_step(self._selected_index, step["name"],
                                                     step["label"], step["type"], step["settings"])
         except Exception as e:
-            self._logger.error(f"Error saving instrument: {e}")
-            ViewDialogs.show_message(self._dlg, f"Error saving instrument: {e}",
-                                     "Save Instrument", wx.ICON_EXCLAMATION)
+            self._logger.error(f"Error saving step: {e}")
+            ViewDialogs.show_message(self._dlg, f"Error saving step: {e}",
+                                     "Save step", wx.ICON_EXCLAMATION)
             return
         self._update_steps()
         event.Skip()
