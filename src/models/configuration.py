@@ -56,6 +56,12 @@ class Configuration:
         "settings" : {}
     }
 
+    _GRAPH = {
+        "name": "",
+        "measurements": [],
+        "settings": {}
+    }
+
     def __init__(self):
         self._filename = None
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
@@ -275,11 +281,11 @@ class Configuration:
             self._configuration["process"].append(step)
 
     def update_process_step(self, step_index, name, label, step_type, settings):
+        if step_index < 0 or step_index >= len(self._configuration["process"]):
+            raise Exception("The step index is invalid")
         same_label = self.get_process_step_index_for_label(label)
         if same_label >= 0 and same_label != step_index:
             raise Exception("A step with this label already exists")
-        if step_index < 0 or step_index >= len(self._configuration["process"]):
-            raise Exception("The step index is invalid")
         self._configuration["process"][step_index]["name"] = name
         self._configuration["process"][step_index]["label"] = label
         self._configuration["process"][step_index]["type"] = step_type
@@ -304,6 +310,67 @@ class Configuration:
         if step_index < 0 or step_index >= len(self._configuration["process"]):
             raise Exception("The step index is invalid")
         self._configuration["process"].pop(step_index)
+
+    ##########
+    # Graphs #
+    ##########
+
+    def get_new_graph(self):
+        return deepcopy(self._GRAPH)
+
+    def get_graphs(self):
+        return deepcopy(self._configuration["graphs"])
+
+    def get_graph_by_name(self, name):
+        matches = [x for x in self._configuration["graphs"] if x["name"] == name]
+        return None if len(matches) != 1 else matches[0]
+
+    def get_graph_index_for_name(self, name):
+        return next(
+            (i for i, d in enumerate(self._configuration["graphs"])
+                if name != "" and d["name"] == name),
+            -1
+        )
+
+    def add_graph(self, name, measurements, settings):
+        if self.get_graph_by_name(name) is not None:
+            raise Exception("A graph with this name already exists")
+        graph = deepcopy(self._GRAPH)
+        graph["name"] = name
+        graph["measurements"] = measurements
+        graph["settings"] = settings
+        self._configuration["graphs"].append(graph)
+
+    def update_graph(self, graph_index, name, measurements, settings):
+        if graph_index < 0 or graph_index >= len(self._configuration["graphs"]):
+            raise Exception("The graph index is invalid")
+        same_name = self.get_graph_index_for_name(name)
+        print(same_name, graph_index)
+        if same_name >= 0 and same_name != graph_index:
+            raise Exception("A graph with this name already exists")
+        self._configuration["graphs"][graph_index]["name"] = name
+        self._configuration["graphs"][graph_index]["measurements"] = measurements
+        self._configuration["graphs"][graph_index]["settings"] = settings
+
+    def move_graph(self, graph_index, direction):
+        if ((graph_index == 0 and direction < 0) or
+            (graph_index >= len(self._configuration["graphs"]) - 1 and direction > 0)):
+            return
+        new_index = graph_index
+        if direction > 0:
+            new_index = graph_index + 1
+        elif direction < 0:
+            new_index = graph_index - 1
+        else:
+            raise Exception("Invalid value for direction")
+        self._configuration["graphs"].insert(
+            new_index, self._configuration["graphs"].pop(graph_index)
+        )
+
+    def delete_graph(self, graph_index):
+        if graph_index < 0 or graph_index >= len(self._configuration["graphs"]):
+            raise Exception("The graph index is invalid")
+        self._configuration["graphs"].pop(graph_index)
 
 
 if __name__ == "__main__":

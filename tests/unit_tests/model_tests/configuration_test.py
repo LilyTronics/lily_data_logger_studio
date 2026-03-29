@@ -15,7 +15,7 @@ class ConfigurationTest(TestSuite):
     def _log_list(self, name, items):
         self.log.debug(f"{name}:")
         for item in items:
-            self.log.debug(f"- {item}:")
+            self.log.debug(f"- {item}")
 
     def setup(self):
         Drivers.load()
@@ -370,7 +370,7 @@ class ConfigurationTest(TestSuite):
         steps = self._configuration.get_process_steps()
         self._log_list("Steps", steps)
         n_steps = len(steps)
-        self.fail_if(n_steps < 1, "There should be at least one step")
+        self.fail_if(n_steps < 2, "There should be at least two step")
 
         self.log.debug("Delete process step")
         self._configuration.delete_process_step(0)
@@ -387,6 +387,153 @@ class ConfigurationTest(TestSuite):
             self.log.debug("Exception was raised, as expected")
             self.log.debug(f"Message: {e}")
             self.fail_if(str(e) != "The step index is invalid",
+                         "Invalid exception message")
+
+    ##########
+    # Graphs #
+    ##########
+
+    def test_add_graph(self):
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 0, "There should be no graphs")
+
+        self.log.debug("Add graph")
+        settings = {"log_scale": False}
+        self._configuration.add_graph("graph 1", ["measuremnt-1"], settings)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 1, "Graph was not added")
+
+        self.log.debug("Add graph with same name")
+        try:
+            self._configuration.add_graph("graph 1", ["measurement-2"], settings)
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A graph with this name already exists",
+                         "Invalid exception message")
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 1, "There should only be one graph")
+
+    def test_edit_graph(self):
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 1, "There should be one graph")
+
+        self.log.debug("Add another graph")
+        settings = {"log_scale": False}
+        self._configuration.add_graph("graph 2", ["measuremnt-2"], settings)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 2, "Graph was not added")
+
+        self.log.debug("Update graph name")
+        graph = graphs[0]
+        self._configuration.update_graph(0, "graph 3", graph["measurements"], graph["settings"])
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(graphs[0]["name"] != "graph 3", "Graph name was not updated")
+
+        self.log.debug("Update graph name with an existing name")
+        graph = graphs[0]
+        try:
+            self._configuration.update_graph(0, graphs[1]["name"], graph["measurements"],
+                                             graph["settings"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A graph with this name already exists",
+                         "Invalid exception message")
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+
+        self.log.debug("Update with an invallid index")
+        graph = graphs[0]
+        try:
+            self._configuration.update_graph(len(graphs), graph["name"], graph["measurements"],
+                                             graph["settings"])
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "The graph index is invalid",
+                         "Invalid exception message")
+
+    def test_move_graph(self):
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 2, "There should be 2 graphs")
+
+        self.log.debug("Add another graph")
+        settings = {"log_scale": False}
+        self._configuration.add_graph("graph 1", ["measuremnt-3"], settings)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != 3, "Graph was not added")
+
+        self.log.debug("Move first graph up, should not be possible")
+        org_graph = graphs[0]
+        self._configuration.move_graph(0, -1)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        new_graph = graphs[0]
+        self.fail_if(new_graph != org_graph, "Graph is not supposed to move")
+
+        self.log.debug("Move first graph down")
+        org_graph0 = graphs[0]
+        org_graph1 = graphs[1]
+        self._configuration.move_graph(0, 1)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        new_graph0 = graphs[0]
+        new_graph1 = graphs[1]
+        self.fail_if(new_graph0 != org_graph1, "Graph did not move")
+        self.fail_if(new_graph1 != org_graph0, "Graph did not move")
+
+        self.log.debug("Move last graph down, should not be possible")
+        org_graph = graphs[2]
+        self._configuration.move_graph(2, 1)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        new_graph = graphs[2]
+        self.fail_if(new_graph != org_graph, "Graph is not supposed to move")
+
+        self.log.debug("Move last graph up")
+        org_graph2 = graphs[2]
+        org_graph1 = graphs[1]
+        self._configuration.move_graph(2, -1)
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        new_graph2 = graphs[2]
+        new_graph1 = graphs[1]
+        self.fail_if(new_graph2 != org_graph1, "Graph did not move")
+        self.fail_if(new_graph1 != org_graph2, "Graph did not move")
+
+    def test_delete_graph(self):
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        n_graphs = len(graphs)
+        self.fail_if(n_graphs < 2, "There should be at least two graphs")
+
+        self.log.debug("Delete graph")
+        self._configuration.delete_graph(0)
+
+        graphs = self._configuration.get_graphs()
+        self._log_list("Graphs", graphs)
+        self.fail_if(len(graphs) != n_graphs - 1, "Graph was not deleted")
+
+        self.log.debug("Delete graph with invalid index")
+        try:
+            self._configuration.delete_graph(len(graphs))
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "The graph index is invalid",
                          "Invalid exception message")
 
 
