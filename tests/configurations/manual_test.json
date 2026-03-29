@@ -111,5 +111,15 @@
       }
     }
   ],
-  "graphs": []
+  "graphs": [
+    {
+      "name": "Graph 1",
+      "measurements": [
+        "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
+      ],
+      "settings": {
+        "log_scale": false
+      }
+    }
+  ]
 }
