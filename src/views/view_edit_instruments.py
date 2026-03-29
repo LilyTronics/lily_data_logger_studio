@@ -6,7 +6,7 @@ import wx
 
 import src.models.id_manager as IdManager
 import src.models.images as Images
-import src.views.gui_sizes as ViewSizes
+import src.views.gui_sizes as GuiSizes
 
 
 class ViewEditInstruments(wx.Dialog):
@@ -26,7 +26,7 @@ class ViewEditInstruments(wx.Dialog):
         self.SetIcon(icon)
 
         box = wx.BoxSizer(wx.HORIZONTAL)
-        box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(self._create_controls(), 5, wx.EXPAND)
 
         self.SetSizer(box)
@@ -43,7 +43,7 @@ class ViewEditInstruments(wx.Dialog):
         btn_add = wx.Button(self, IdManager.ID_INSTRUMENT_NEW, "New")
         btn_delete = wx.Button(self, IdManager.ID_INSTRUMENT_DELETE,"Delete")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(self._lst_instruments, (0, 0), (1, 2), wx.EXPAND)
         grid.Add(btn_add, (1, 0), wx.DefaultSpan)
         grid.Add(btn_delete, (1, 1), wx.DefaultSpan)
@@ -54,14 +54,14 @@ class ViewEditInstruments(wx.Dialog):
 
     def _create_controls(self):
         # Placeholder for driver settings
-        self._settings_grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        self._settings_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         self._settings_grid.Add(wx.Panel(self), (0, 0))
 
         box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._settings_grid, 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
 
         return box
 
@@ -72,7 +72,7 @@ class ViewEditInstruments(wx.Dialog):
         self._cmb_drivers = wx.ComboBox(self, IdManager.ID_INSTRUMENT_DRIVER,
                                         style=wx.CB_READONLY)
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_name, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_name, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL | wx.EXPAND)
         grid.Add(lbl_drivers, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -94,7 +94,7 @@ class ViewEditInstruments(wx.Dialog):
         btn_cancel = wx.Button(self, IdManager.ID_INSTRUMENT_CANCEL, "Cancel")
         btn_close = wx.Button(self, IdManager.ID_INSTRUMENT_CLOSE, "Close")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
         grid.Add(btn_save, (0, 1), wx.DefaultSpan)
         grid.Add(btn_cancel, (0, 2), wx.DefaultSpan)
@@ -135,7 +135,7 @@ class ViewEditInstruments(wx.Dialog):
                 for i, setting in enumerate(settings):
                     lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
                     ctrl_class = getattr(wx, setting.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
+                    ctrl = ctrl_class(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
                     ctrl.SetValue(str(setting.default_value))
                     self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                     self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)

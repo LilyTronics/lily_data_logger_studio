@@ -6,7 +6,7 @@ import wx
 
 import src.models.id_manager as IdManager
 import src.models.images as Images
-import src.views.gui_sizes as ViewSizes
+import src.views.gui_sizes as GuiSizes
 
 
 class ViewEditMeasurements(wx.Dialog):
@@ -27,7 +27,7 @@ class ViewEditMeasurements(wx.Dialog):
         self.SetIcon(icon)
 
         box = wx.BoxSizer(wx.HORIZONTAL)
-        box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_list(), 2, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(self._create_controls(), 5, wx.EXPAND)
 
         self.Bind(wx.EVT_COMBOBOX, self._on_channel_select, id=IdManager.ID_MEASUREMENT_CHANNEL)
@@ -49,7 +49,7 @@ class ViewEditMeasurements(wx.Dialog):
         btn_add = wx.Button(self, IdManager.ID_MEASUREMENT_NEW, "New")
         btn_delete = wx.Button(self, IdManager.ID_MEASUREMENT_DELETE,"Delete")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(self._lst_measurements, (0, 0), (1, 2), wx.EXPAND)
         grid.Add(btn_add, (1, 0), wx.DefaultSpan)
         grid.Add(btn_delete, (1, 1), wx.DefaultSpan)
@@ -60,15 +60,15 @@ class ViewEditMeasurements(wx.Dialog):
 
     def _create_controls(self):
         # Placeholder for channel settings
-        self._settings_grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        self._settings_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         self._settings_grid.Add(wx.Panel(self), (0, 0))
 
         box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._settings_grid, 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_conversion_settings(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._settings_grid, 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_conversion_settings(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
 
         return box
 
@@ -82,7 +82,7 @@ class ViewEditMeasurements(wx.Dialog):
         self._cmb_channels = wx.ComboBox(self, IdManager.ID_MEASUREMENT_CHANNEL,
                                             style=wx.CB_READONLY)
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_name, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_name, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL | wx.EXPAND)
         grid.Add(lbl_instrument, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -95,17 +95,17 @@ class ViewEditMeasurements(wx.Dialog):
 
     def _create_conversion_settings(self):
         lbl_unit = wx.StaticText(self, wx.ID_ANY, "Unit:")
-        self._txt_unit = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
+        self._txt_unit = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_gain = wx.StaticText(self, wx.ID_ANY, "Gain:")
-        self._txt_gain = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
+        self._txt_gain = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_offset = wx.StaticText(self, wx.ID_ANY, "Offset:")
-        self._txt_offset = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
+        self._txt_offset = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_msg_1 = wx.StaticText(self, wx.ID_ANY, "The actual value will be: "
                                                    "actual = measured * gain + offset")
         self._txt_gain.SetValue("1.0")
         self._txt_offset.SetValue("0.0")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_unit, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_unit, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(lbl_gain, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -129,7 +129,7 @@ class ViewEditMeasurements(wx.Dialog):
         btn_cancel = wx.Button(self, IdManager.ID_MEASUREMENT_CANCEL, "Cancel")
         btn_close = wx.Button(self, IdManager.ID_MEASUREMENT_CLOSE, "Close")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(btn_test, (0, 0), wx.DefaultSpan)
         grid.Add(btn_save, (0, 1), wx.DefaultSpan)
         grid.Add(btn_cancel, (0, 2), wx.DefaultSpan)
@@ -149,7 +149,7 @@ class ViewEditMeasurements(wx.Dialog):
                 for i, param in enumerate(parameters):
                     lbl = wx.StaticText(self, wx.ID_ANY, f"{param.name}:")
                     ctrl_class = getattr(wx, param.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
+                    ctrl = ctrl_class(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
                     ctrl.SetValue(str(param.default_value))
                     self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                     self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)

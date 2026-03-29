@@ -5,7 +5,7 @@ View for the settings.
 import wx
 
 import src.models.images as Images
-import src.views.gui_sizes as ViewSizes
+import src.views.gui_sizes as GuiSizes
 
 from src.models.time_converter import TimeConverter
 
@@ -23,8 +23,8 @@ class ViewEditSettings(wx.Dialog):
         self.SetIcon(icon)
 
         box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(self._create_controls(self), 1, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
-        box.Add(self._create_buttons_box(self), 0, wx.EXPAND | wx.ALL, ViewSizes.BOX_SPACING)
+        box.Add(self._create_controls(self), 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._create_buttons_box(self), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
 
         self.Bind(wx.EVT_TEXT, self._on_time_change, self._txt_sample_time)
         self.Bind(wx.EVT_TEXT, self._on_time_change, self._txt_end_time)
@@ -51,12 +51,12 @@ class ViewEditSettings(wx.Dialog):
 
     def _create_controls(self, parent):
         lbl_sample_time = wx.StaticText(parent, wx.ID_ANY, "Sample interval:")
-        self._txt_sample_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.WIDTH_SMALL)
+        self._txt_sample_time = wx.TextCtrl(parent, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_sample_time = wx.ComboBox(parent, wx.ID_ANY,
                                             style=wx.CB_READONLY, choices=TimeConverter.TIME_UNITS)
         self._radio_end_time = wx.RadioButton(parent, wx.ID_ANY, "Fixed end time:")
         self._radio_end_time.SetValue(True)
-        self._txt_end_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.WIDTH_SMALL)
+        self._txt_end_time = wx.TextCtrl(parent, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_end_time = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY,
                                          choices=TimeConverter.TIME_UNITS)
         self._radio_continuous = wx.RadioButton(parent, wx.ID_ANY, "Continuous mode:")
@@ -64,7 +64,7 @@ class ViewEditSettings(wx.Dialog):
         lbl_total_samples = wx.StaticText(parent, wx.ID_ANY, "Total samples:")
         self._lbl_total_samples = wx.StaticText(parent, wx.ID_ANY, "-")
 
-        grid = wx.GridBagSizer(ViewSizes.GRID_SPACING, ViewSizes.GRID_SPACING)
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_sample_time, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_sample_time, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._cmb_sample_time, (0, 2), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -83,8 +83,8 @@ class ViewEditSettings(wx.Dialog):
         btn_cancel = wx.Button(parent, wx.ID_CANCEL, "Cancel")
 
         box = wx.BoxSizer(wx.HORIZONTAL)
-        box.Add(btn_ok, 0, wx.ALL, ViewSizes.GRID_SPACING)
-        box.Add(btn_cancel, 0, wx.ALL, ViewSizes.GRID_SPACING)
+        box.Add(btn_ok, 0, wx.ALL, GuiSizes.GRID_SPACING)
+        box.Add(btn_cancel, 0, wx.ALL, GuiSizes.GRID_SPACING)
 
         return box
 
