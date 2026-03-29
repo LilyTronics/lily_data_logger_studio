@@ -51,12 +51,12 @@ class ViewEditSettings(wx.Dialog):
 
     def _create_controls(self, parent):
         lbl_sample_time = wx.StaticText(parent, wx.ID_ANY, "Sample interval:")
-        self._txt_sample_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.TEXT_SMALL)
+        self._txt_sample_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.WIDTH_SMALL)
         self._cmb_sample_time = wx.ComboBox(parent, wx.ID_ANY,
                                             style=wx.CB_READONLY, choices=TimeConverter.TIME_UNITS)
         self._radio_end_time = wx.RadioButton(parent, wx.ID_ANY, "Fixed end time:")
         self._radio_end_time.SetValue(True)
-        self._txt_end_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.TEXT_SMALL)
+        self._txt_end_time = wx.TextCtrl(parent, wx.ID_ANY, size=ViewSizes.WIDTH_SMALL)
         self._cmb_end_time = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY,
                                          choices=TimeConverter.TIME_UNITS)
         self._radio_continuous = wx.RadioButton(parent, wx.ID_ANY, "Continuous mode:")

@@ -70,9 +70,9 @@ class ViewEditProcess(wx.Dialog):
 
     def _create_general_controls(self):
         lbl_name = wx.StaticText(self, wx.ID_ANY, "Name:")
-        self._txt_name = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_XLARGE)
+        self._txt_name = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_XLARGE)
         lbl_label = wx.StaticText(self, wx.ID_ANY, "Label:")
-        self._txt_label = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_LARGE)
+        self._txt_label = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_LARGE)
         lbl_step = wx.StaticText(self, wx.ID_ANY, "Step:")
         self._cmb_steps = wx.ComboBox(self, IdManager.ID_PROCESS_STEP,
                                       style=wx.CB_READONLY)

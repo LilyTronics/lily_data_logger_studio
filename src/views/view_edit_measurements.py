@@ -95,11 +95,11 @@ class ViewEditMeasurements(wx.Dialog):
 
     def _create_conversion_settings(self):
         lbl_unit = wx.StaticText(self, wx.ID_ANY, "Unit:")
-        self._txt_unit = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+        self._txt_unit = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
         lbl_gain = wx.StaticText(self, wx.ID_ANY, "Gain:")
-        self._txt_gain = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+        self._txt_gain = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
         lbl_offset = wx.StaticText(self, wx.ID_ANY, "Offset:")
-        self._txt_offset = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+        self._txt_offset = wx.TextCtrl(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
         lbl_msg_1 = wx.StaticText(self, wx.ID_ANY, "The actual value will be: "
                                                    "actual = measured * gain + offset")
         self._txt_gain.SetValue("1.0")
@@ -149,7 +149,7 @@ class ViewEditMeasurements(wx.Dialog):
                 for i, param in enumerate(parameters):
                     lbl = wx.StaticText(self, wx.ID_ANY, f"{param.name}:")
                     ctrl_class = getattr(wx, param.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
                     ctrl.SetValue(str(param.default_value))
                     self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                     self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)

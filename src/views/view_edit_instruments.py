@@ -135,7 +135,7 @@ class ViewEditInstruments(wx.Dialog):
                 for i, setting in enumerate(settings):
                     lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
                     ctrl_class = getattr(wx, setting.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.TEXT_MEDIUM)
+                    ctrl = ctrl_class(self, wx.ID_ANY, size=ViewSizes.WIDTH_MEDIUM)
                     ctrl.SetValue(str(setting.default_value))
                     self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                     self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)

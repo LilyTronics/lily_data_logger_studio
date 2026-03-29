@@ -32,7 +32,7 @@ class ViewStepPanelSetOutput(ViewStepPanel):
         lbl_channel = wx.StaticText(self, wx.ID_ANY, "Channel:")
         self._cmb_channels = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY)
         lbl_value = wx.StaticText(self, wx.ID_ANY, "Value:")
-        self._txt_value = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_MEDIUM)
+        self._txt_value = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_instrument, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
@@ -71,9 +71,9 @@ class ViewStepPanelWait(ViewStepPanel):
     name = "Wait"
 
     def create_controls(self):
-        self._radio_time = wx.RadioButton(self, wx.ID_ANY, "Time:", size=GuiSizes.TEXT_MEDIUM)
+        self._radio_time = wx.RadioButton(self, wx.ID_ANY, "Time:", size=GuiSizes.WIDTH_MEDIUM)
         self._radio_time.SetValue(True)
-        self._txt_time = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_SMALL)
+        self._txt_time = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_time = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY,
                                      choices=TimeConverter.TIME_UNITS)
 
@@ -83,19 +83,19 @@ class ViewStepPanelWait(ViewStepPanel):
         time_grid.Add(self._cmb_time, (0, 2), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
 
         self._radio_measurement = wx.RadioButton(self, wx.ID_ANY, "Measurement:",
-                                                 size=GuiSizes.TEXT_MEDIUM)
+                                                 size=GuiSizes.WIDTH_MEDIUM)
         lbl_measurement = wx.StaticText(self, wx.ID_ANY, "Measurement:")
         self._cmb_measurements = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY)
         lbl_min = wx.StaticText(self, wx.ID_ANY, "Min:")
-        self._txt_min = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_MEDIUM)
+        self._txt_min = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_max = wx.StaticText(self, wx.ID_ANY, "Min:")
-        self._txt_max = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_MEDIUM)
+        self._txt_max = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_interval = wx.StaticText(self, wx.ID_ANY, "Poll interval:")
-        self._txt_interval = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_SMALL)
+        self._txt_interval = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_interval = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY,
                                          choices=TimeConverter.TIME_UNITS)
         lbl_timeout = wx.StaticText(self, wx.ID_ANY, "Timeout:")
-        self._txt_timeout = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_SMALL)
+        self._txt_timeout = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_timeout = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY,
                                          choices=TimeConverter.TIME_UNITS)
 
@@ -184,7 +184,7 @@ class ViewStepPanelLoop(ViewStepPanel):
         lbl_loop_from = wx.StaticText(self, wx.ID_ANY, "Loop from:")
         self._cmb_labels = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY)
         lbl_count = wx.StaticText(self, wx.ID_ANY, "Count:")
-        self._txt_count = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.TEXT_MEDIUM)
+        self._txt_count = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_loop_from, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
