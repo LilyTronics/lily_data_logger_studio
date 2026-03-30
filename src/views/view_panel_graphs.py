@@ -25,10 +25,9 @@ class ViewPanelGraphs(wx.Panel):
     ###########
 
     def _show_graphs(self):
-        # Clear grid, remove children and clear sizer
         for c in self._grid.GetChildren():
             self._grid.Detach(c.GetWindow())
-        self._grid.Clear(True)
+        self._grid.Clear()
 
         col = 0
         row = 0
@@ -58,36 +57,44 @@ class ViewPanelGraphs(wx.Panel):
     # Public #
     ##########
 
-    def add_graph(self, graph_name):
-        self._graphs.append(ViewPlotCanvas(self, graph_name))
-        self._show_graphs()
-
-    def remove_graph(self, graph_name):
-        for graph in self._graphs:
-            if graph.title == graph_name:
-                self._graphs.remove(graph)
-                graph.Destroy()
-                break
-        self._show_graphs()
-
     def update(self, configuration):
-        pass
+        for g in self._graphs:
+            g.Destroy()
+        del self._graphs[:]
+        graphs = configuration.get_graphs()
+        for graph in graphs:
+            labels = []
+            for m in graph["measurements"]:
+                meas = configuration.get_measurement(m)
+                if meas is not None:
+                    labels.append(f"{meas['name']} [{meas['unit']}]")
+            self._graphs.append(ViewPlotCanvas(self, graph["name"], labels))
+        self._show_graphs()
+
 
 if __name__ == "__main__":
+
+    import src.app_data as AppData
+
+    from src.models.configuration import Configuration
+
 
     class TestFrame(wx.Frame):
         def __init__(self):
             super().__init__(None, title="Test ViewPanelGraphs", size=(800, 600))
             panel = wx.Panel(self)
 
-            self._n_graphs = 0
+            self._config = Configuration()
+
             self.spin_count = wx.SpinCtrl(panel, value="0", min=0, max=12)
             self.graphs_view = ViewPanelGraphs(panel)
+            btn_load = wx.Button(panel, wx.ID_ANY, "Load from config")
 
             grid = wx.GridBagSizer(5, 5)
             grid.Add(wx.StaticText(panel, label="Number of Graphs:"), (0, 0),
                                    flag=wx.ALIGN_CENTER_VERTICAL)
             grid.Add(self.spin_count, (0, 1), flag=wx.ALIGN_CENTER_VERTICAL)
+            grid.Add(btn_load, (0, 3), flag=wx.ALIGN_CENTER_VERTICAL)
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(grid, 0, wx.EXPAND | wx.ALL, 5)
@@ -96,16 +103,22 @@ if __name__ == "__main__":
             panel.SetSizer(box)
 
             self.spin_count.Bind(wx.EVT_SPINCTRL, self.on_spin)
+            btn_load.Bind(wx.EVT_BUTTON, self.on_load)
 
         def on_spin(self, _event):
-            diff = self.spin_count.GetValue() - self._n_graphs
-            if diff > 0:
-                for i in range(diff):
-                    self.graphs_view.add_graph(f"Graph {self._n_graphs + 1 + i}")
-            elif diff < 0:
-                for i in range(-diff):
-                    self.graphs_view.remove_graph(f"Graph {self._n_graphs}")
-            self._n_graphs = self.spin_count.GetValue()
+            graphs = self._config.get_graphs()
+            diff = self.spin_count.GetValue() - len(graphs)
+            if diff == 1:
+                self._config.add_graph(f"Graph {len(graphs) + 1}", ["Voltage [V]"], {})
+            elif diff == -1:
+                self._config.delete_graph(len(graphs) - 1)
+            self.graphs_view.update(self._config)
+
+        def on_load(self, _event):
+            config = Configuration()
+            config.load(AppData.TEST_CONFIGURATION)
+            self.graphs_view.update(config)
+            self.spin_count.SetValue(len(config.get_graphs()))
 
 
     app = wx.App(False)

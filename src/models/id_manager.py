@@ -43,7 +43,6 @@ ID_MEASUREMENT_CLOSE = wx.NewIdRef()
 # Edit process view
 ID_PROCESS_LIST = wx.NewIdRef()
 ID_PROCESS_NEW = wx.NewIdRef()
-ID_PROCESS_INSERT = wx.NewIdRef()
 ID_PROCESS_DOWN = wx.NewIdRef()
 ID_PROCESS_UP = wx.NewIdRef()
 ID_PROCESS_DELETE = wx.NewIdRef()
@@ -52,6 +51,16 @@ ID_PROCESS_SAVE = wx.NewIdRef()
 ID_PROCESS_CANCEL = wx.NewIdRef()
 ID_PROCESS_CLOSE = wx.NewIdRef()
 ID_PROCESS_INSTRUMENTS = wx.NewIdRef()
+
+# Edit graphs view
+ID_GRAPH_LIST = wx.NewIdRef()
+ID_GRAPH_NEW = wx.NewIdRef()
+ID_GRAPH_DOWN = wx.NewIdRef()
+ID_GRAPH_UP = wx.NewIdRef()
+ID_GRAPH_DELETE = wx.NewIdRef()
+ID_GRAPH_SAVE = wx.NewIdRef()
+ID_GRAPH_CANCEL = wx.NewIdRef()
+ID_GRAPH_CLOSE = wx.NewIdRef()
 
 
 if __name__ == "__main__":

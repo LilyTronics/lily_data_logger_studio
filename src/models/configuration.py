@@ -345,7 +345,6 @@ class Configuration:
         if graph_index < 0 or graph_index >= len(self._configuration["graphs"]):
             raise Exception("The graph index is invalid")
         same_name = self.get_graph_index_for_name(name)
-        print(same_name, graph_index)
         if same_name >= 0 and same_name != graph_index:
             raise Exception("A graph with this name already exists")
         self._configuration["graphs"][graph_index]["name"] = name

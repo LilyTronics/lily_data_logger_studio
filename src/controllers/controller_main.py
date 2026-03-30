@@ -10,6 +10,7 @@ import src.models.id_manager as IdManager
 from src.controllers.controller_configuration import ControllerConfiguration
 from src.controllers.controller_data_logger import ControllerDataLogger
 from src.controllers.controller_drivers import ControllerDrivers
+from src.controllers.controller_edit_graphs import ControllerEditGraphs
 from src.controllers.controller_edit_instruments import ControllerEditInstruments
 from src.controllers.controller_edit_measurements import ControllerEditMeasurements
 from src.controllers.controller_edit_process import ControllerEditProcess
@@ -63,9 +64,9 @@ class MainController:
 
         msg = (
             f"You are running on: {get_platform_info()}.\n"
-            "Some window docking/undocking features (AUI panes) may not work reliably "
+            "Some window docking/undocking features (AUI panes) may not work reliable "
             "unless you are using Xorg (X11).\n"
-            "You can continue, but docking will be switched off."
+            "You can continue, but docking will be limited."
         )
         is_checked = ViewDialogs.show_message(self._view, msg, "Display session notice",
                                               wx.ICON_WARNING, "Don't show this again")
@@ -95,6 +96,8 @@ class MainController:
                         id=IdManager.ID_SHOW_EDIT_MEASUREMENTS)
         self._view.Bind(wx.EVT_TOOL, self._show_edit_process,
                         id=IdManager.ID_SHOW_EDIT_PROCESS)
+        self._view.Bind(wx.EVT_TOOL, self._show_edit_graphs,
+                        id=IdManager.ID_SHOW_EDIT_GRAPHS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -124,6 +127,11 @@ class MainController:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_PROCESS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
+        if test_options.show_edit_graphs:
+            self._logger.debug("Test option: show edit graphs")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_GRAPHS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
     ##################
     # Event handlers #
     ##################
@@ -145,6 +153,11 @@ class MainController:
 
     def _show_edit_process(self, event):
         ControllerEditProcess(self._view, self._logger, self._configuration)
+        self._view.update_configuration(self._configuration)
+        event.Skip()
+
+    def _show_edit_graphs(self, event):
+        ControllerEditGraphs(self._view, self._logger, self._configuration)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
