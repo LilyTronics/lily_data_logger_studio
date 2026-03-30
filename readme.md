@@ -22,10 +22,9 @@ Release 1.0:
 * Edit measurements ✅
 * Start/stop data logger, runs measurements and process steps ✅
 * Edit process steps for controlling instruments ✅
-* Edit graphs in the configuration
+* Edit graphs in the configuration ✅
 * Show measurements in the data table
 * Show measurements in graphs
-* Write mearurement to a CSV file
 * Show live updates of the process
 * User manual for data logger and for creating drivers
 
