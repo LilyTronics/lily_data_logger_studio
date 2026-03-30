@@ -16,7 +16,8 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         "#cc00cc"
     ]
 
-    def __init__(self, parent, title, labels, init_data=[]):
+    def __init__(self, parent, title, labels, init_data=None):
+        init_data = [] if init_data is None else init_data
         self.title = title
         self.labels = labels
         super().__init__(parent)
@@ -35,11 +36,11 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         # pylint: enable=invalid-name
 
         lines = []
-        for i, label in enumerate(self.labels):
+        for index, label in enumerate(self.labels):
             lines.append(wx.lib.plot.PolyLine(
-                init_data[i] if i < len(init_data) else [],
+                init_data[index] if index < len(init_data) else [],
                 legend=label,
-                colour=wx.Colour(self._LINE_COLORS[i % len(self._LINE_COLORS)]),
+                colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
         gc = wx.lib.plot.PlotGraphics(lines, title)
@@ -52,15 +53,15 @@ if __name__ == "__main__":
 
     import random
 
-    labels = []
-    init_data = []
+    names = []
+    test_data = []
     for i in range(8):
-        labels.append(f"Label {i + 1}")
-        init_data.append(
+        names.append(f"Label {i + 1}")
+        test_data.append(
             [(x, y) for x in range(50) for y in random.sample(range(10), 1)]
         )
     app = wx.App(False)
     frame = wx.Frame(None, title="Test ViewPlot", size=(800, 600))
-    plot_view = ViewPlotCanvas(frame, "Sample Plot", labels, init_data)
+    plot_view = ViewPlotCanvas(frame, "Sample Plot", names, test_data)
     frame.Show()
     app.MainLoop()
