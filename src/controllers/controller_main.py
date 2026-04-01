@@ -42,7 +42,7 @@ class ControllerMain:
         self._check_display_session()
 
         self._controller_drivers = ControllerDrivers(self._view, self._logger,
-                                                     TestOptions.suppress_loading_drivers)
+                                                     test_options.suppress_loading_drivers)
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration,
                                                             self._logger)
 
