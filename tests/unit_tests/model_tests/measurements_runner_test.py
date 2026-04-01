@@ -60,6 +60,8 @@ class MeasurementsRunnerTest(TestSuite):
         is_running = self.measurement_runner.is_running()
         self.log.debug(f"Measurements running: {is_running}")
         self.fail_if(is_running, "Measurements should not be running")
+        # Wait for the last callback to be processed
+        self.sleep(1)
         self.log.debug(f"Number of measurements: {len(self.timestamps)}")
         self.fail_if(len(self.timestamps) != 6, "Expected 6 measurments")
 
@@ -77,6 +79,8 @@ class MeasurementsRunnerTest(TestSuite):
         is_running = self.measurement_runner.is_running()
         self.log.debug(f"Measurements running: {is_running}")
         self.fail_if(is_running, "Measurements should not be running")
+        # Wait for the last callback to be processed
+        self.sleep(1)
         self.log.debug(f"Number of measurements: {len(self.timestamps)}")
         self.fail_if(len(self.timestamps) != 8, "Expected 8 measurments")
 
