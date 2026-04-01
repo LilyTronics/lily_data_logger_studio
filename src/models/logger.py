@@ -7,8 +7,6 @@ import sys
 
 from datetime import datetime
 
-import src.app_data as AppData
-
 
 class Logger:
 
