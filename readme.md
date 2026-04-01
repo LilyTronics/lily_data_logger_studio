@@ -27,9 +27,9 @@ Release 1.0:
 * Edit graphs in the configuration ✅
 * Show measurements in the data table
 * Show measurements in graphs
-* Show live updates of the process
-* User manual for data logger and for creating drivers
+* Show live updates of the process ✅
 * Application for testing created drivers ✅
+* User manual for data logger and for creating drivers
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
