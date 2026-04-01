@@ -24,7 +24,7 @@ from src.views.view_frame_main import ViewFrameMain
 from src.views.view_dialogs import ViewDialogs
 
 
-class MainController:
+class ControllerMain:
 
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger

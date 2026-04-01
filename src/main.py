@@ -6,7 +6,7 @@ import wx
 
 import src.app_data as AppData
 
-from src.controllers.controller_main import MainController
+from src.controllers.controller_main import ControllerMain
 from src.models.logger import Logger
 from src.models.os_specifics import get_platform_info
 from src.models.os_specifics import is_valid_display_session
@@ -23,7 +23,7 @@ def run_data_logger(options=TestOptions):
 
     app = wx.App(redirect=False)
     app.SetAppName(AppData.EXE_NAME)
-    MainController(f"{AppData.APP_NAME} V{AppData.VERSION}", log)
+    ControllerMain(f"{AppData.APP_NAME} V{AppData.VERSION}", log)
     app.MainLoop()
 
     log.info("Application terminated")
