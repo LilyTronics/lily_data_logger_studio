@@ -58,9 +58,11 @@ class ControllerDrivers:
 
 if __name__ == "__main__":
 
+    import src.app_data as AppData
     from src.models.logger import Logger
 
-    log = Logger(True)
+
+    log = Logger(AppData.APP_LOG_FILE, True)
 
     app = wx.App(redirect=False)
 
