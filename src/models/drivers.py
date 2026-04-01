@@ -17,10 +17,7 @@ class Drivers:
     _drivers = []
     _lock = threading.Lock()
 
-    _EXCLUDED_FILES = [
-        "driver_base.py", "driver_base.pyc", "driver_channel.py", "driver_channel.pyc",
-        "driver_settings.py", "driver_settings.pyc"
-    ]
+    _EXCLUDED_FILES = [ "driver_base", "driver_channel", "driver_id", "driver_settings"]
 
     def __init__(self):
         raise Exception("This class should not be instantiated")
@@ -43,7 +40,8 @@ class Drivers:
                     continue
                 subfolders.sort()
                 for filename in filenames:
-                    if filename in cls._EXCLUDED_FILES or filename.startswith("_"):
+                    if (os.path.splitext(filename)[0] in cls._EXCLUDED_FILES or
+                        filename.startswith("_")):
                         continue
                     full_path = os.path.join(current_path, filename)
                     if filename.endswith(".py") or filename.endswith(".pyc"):
