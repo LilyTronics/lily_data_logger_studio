@@ -7,6 +7,7 @@ import wx
 import src.models.id_manager as IdManager
 import src.models.images as Images
 import src.views.gui_sizes as GuiSizes
+import src.views.view_common as ViewCommon
 
 
 class ViewEditInstruments(wx.Dialog):
@@ -126,25 +127,8 @@ class ViewEditInstruments(wx.Dialog):
         self.Layout()
 
     def show_driver_settings(self, settings):
-        self._settings_controls.clear()
-        self._settings_grid.Clear(True)
-        if settings is None:
-            self._settings_grid.Add(wx.Panel(self), (0, 0))
-        else:
-            try:
-                for i, setting in enumerate(settings):
-                    lbl = wx.StaticText(self, wx.ID_ANY, f"{setting.name}:")
-                    ctrl_class = getattr(wx, setting.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
-                    ctrl.SetValue(str(setting.default_value))
-                    self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                    self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                    self._settings_controls[setting.name] = (ctrl, setting.type)
-            except:
-                # Restore layout
-                self._settings_grid.Add(wx.Panel(self), (0, 0))
-                self.Layout()
-                raise
+        ViewCommon.create_settings_grid(settings, self._settings_grid, self,
+                                        self._settings_controls)
         self.Layout()
 
     def show_instrument(self, instrument, driver_settings):
