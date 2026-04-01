@@ -10,9 +10,10 @@ import src.models.process_steps as ProcessSteps
 
 class ProcessRunner:
 
-    def __init__(self, configuration, logger):
+    def __init__(self, configuration, logger, update_callback):
         self._configuration = configuration
         self._logger = logger
+        self._update_callback = update_callback
         self._thread = None
         self._stop_event = threading.Event()
 
@@ -42,6 +43,7 @@ class ProcessRunner:
                 step_instances[step_index] = step_class[0](step_data, self._stop_event,
                                                            self._logger)
             try:
+                self._update_callback(step_index)
                 step_index = step_instances[step_index].execute(step_index)
             except Exception as e:
                 self._logger.error(f"Error running step {step_index}, abort process")

@@ -20,6 +20,9 @@ class ProcessRunnerTest(TestSuite):
 
     process_runner = None
 
+    def _process_update(self, *params):
+        self.log.debug(f"Process update: {params}")
+
     def setup(self):
         Drivers.load()
         config = Configuration()
@@ -33,7 +36,7 @@ class ProcessRunnerTest(TestSuite):
             start_simulators()
         measurements = config.get_measurements()
         MeasurementsPool.add_measurements(measurements)
-        self.process_runner = ProcessRunner(config, self.app_test_logger)
+        self.process_runner = ProcessRunner(config, self.app_test_logger, self._process_update)
 
     def teardown(self):
         if self.process_runner is not None and self.process_runner.is_running():
