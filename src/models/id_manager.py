@@ -62,6 +62,12 @@ ID_GRAPH_SAVE = wx.NewIdRef()
 ID_GRAPH_CANCEL = wx.NewIdRef()
 ID_GRAPH_CLOSE = wx.NewIdRef()
 
+# Drivers test view
+ID_DRIVER_TEST_RELOAD_DRIVERS = wx.NewIdRef()
+ID_DRIVER_TEST_LIST_DRIVERS = wx.NewIdRef()
+ID_DRIVER_TEST_LIST_CHANNELS = wx.NewIdRef()
+ID_DRIVER_TEST_TEST = wx.NewIdRef()
+
 
 if __name__ == "__main__":
 
