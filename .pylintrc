@@ -16,4 +16,5 @@ disable = attribute-defined-outside-init,
           too-many-public-methods
 
 [TYPECHECK]
-ignored-modules = wx
+ignored-modules = wx,
+                  PyInstaller,
