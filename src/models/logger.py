@@ -33,8 +33,8 @@ class Logger:
         def flush(self):
             pass
 
-    def __init__(self, log_to_stdout=False, redirect_stdout=True):
-        self._filename = AppData.APP_LOG_FILE
+    def __init__(self, filename, log_to_stdout=False, redirect_stdout=True):
+        self._filename = filename
         path = os.path.dirname(self._filename)
         if not os.path.isdir(path):
             os.makedirs(path)
@@ -89,4 +89,4 @@ if __name__ == "__main__":
 
     from tests.unit_tests.model_tests.logger_test import LoggerTest
 
-    LoggerTest().run(True)
+    LoggerTest().run()

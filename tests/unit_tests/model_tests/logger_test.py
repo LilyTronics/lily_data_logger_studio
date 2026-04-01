@@ -21,7 +21,7 @@ class LoggerTest(TestSuite):
     _logger = None
 
     def setup(self):
-        self._logger = Logger()
+        self._logger = Logger(AppData.APP_LOG_FILE)
 
     def teardown(self):
         self._logger.shut_down()
