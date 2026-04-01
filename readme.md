@@ -12,6 +12,8 @@ Log data and control electronics instruments.
 
 ![main window](manual/images/main_window.png)
 
+![driver test](manual/images/driver_test.png)
+
 ## Road map
 
 Release 1.0:
@@ -27,6 +29,7 @@ Release 1.0:
 * Show measurements in graphs
 * Show live updates of the process
 * User manual for data logger and for creating drivers
+* Application for testing created drivers ✅
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
 
