@@ -15,6 +15,7 @@ class Logger:
     TYPE_ERROR = "ERROR"
     TYPE_STDOUT = "STDOUT"
     TYPE_STDERR = "STDERR"
+    TYPE_EMPTY = "EMPTY"
 
     _TIME_STAMP_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
     _LOG_FORMAT = "{} | {:6} | {}\n"
@@ -65,13 +66,20 @@ class Logger:
     def error(self, message):
         self.handle_message(self.TYPE_ERROR, f"{message}\n")
 
+    def empty_line(self):
+        self.handle_message(self.TYPE_EMPTY, "\n")
+
     def handle_message(self, message_type, message_text):
         timestamp = datetime.now().strftime(self._TIME_STAMP_FORMAT)[:-3]
         self._output += message_text
         while "\n" in self._output:
             index = self._output.find("\n")
-            message = self._LOG_FORMAT.format(timestamp, message_type, self._output[:index])
+            message = self._output[:index]
             self._output = self._output[index + 1:]
+            if message_type == self.TYPE_EMPTY:
+                message = "\n"
+            else:
+                message = self._LOG_FORMAT.format(timestamp, message_type, message)
             if message_type in [self.TYPE_STDOUT, self.TYPE_STDERR] and \
                 self._stdout_callback is not None:
                 # Only log STDOUT and STDERR messages to the callback
