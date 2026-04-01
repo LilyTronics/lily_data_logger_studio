@@ -26,7 +26,7 @@ def _clean_output_folder(output_folder):
         os.makedirs(output_folder)
 
 
-def _create_version_file(version_file, artifacts_path):
+def _create_version_file(version_file, artifacts_path, app_name, exe_name):
     print("Create version file . . .")
     version_template = os.path.join(artifacts_path, "version.template")
     version_tuple = []
@@ -40,10 +40,10 @@ def _create_version_file(version_file, artifacts_path):
         version_tuple.append(0)
     with open(version_template, "r", encoding="utf-8") as fp:
         version_template = fp.read()
-        version_template = version_template.replace("{app_name}", AppData.APP_NAME)
+        version_template = version_template.replace("{app_name}", app_name)
         version_template = version_template.replace("{version_tuple}", str(version_tuple))
         version_template = version_template.replace("{version_string}", AppData.VERSION)
-        version_template = version_template.replace("{exe_name}", AppData.EXE_NAME)
+        version_template = version_template.replace("{exe_name}", exe_name)
         version_template = version_template.replace("{company_name}", AppData.COMPANY)
 
     with open(version_file, "w", encoding="utf-8") as fp:
@@ -93,14 +93,14 @@ def _create_zip_file(dist_path, app_path):
                 zip_object.write(full_path, target_name)
 
 
-def create_deployment():
-    output_folder = os.path.join(os.path.dirname(__file__), 'build_output')
-    version_file = os.path.join(output_folder, "app.version")
+def create_deployment(output_folder, app_id, app_name, exe_name):
+    version_file = os.path.join(output_folder, f"{app_id}.version")
     artifacts_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "artifacts"))
-    init_file = os.path.join(os.path.dirname(src.__file__), "main.py")
-    icon_file = os.path.join(artifacts_path, "app.ico")
-    dist_path = os.path.join(output_folder, "dist")
-    app_path = os.path.join(dist_path, AppData.EXE_NAME)
+    init_file = os.path.join(os.path.dirname(src.__file__), f"{app_id}.py")
+    icon_file = os.path.join(artifacts_path, f"{app_id}.ico")
+    dist_path = os.path.join(output_folder, f"{app_id}_dist")
+    work_path = os.path.join(output_folder, f"{app_id}_work")
+    app_path = os.path.join(dist_path, exe_name)
 
     horizontal_line = "=" * 120
     print(f"\n{horizontal_line}")
@@ -114,17 +114,14 @@ def create_deployment():
 
     print(f"{horizontal_line}\n")
 
-    _clean_output_folder(output_folder)
-    _create_version_file(version_file, artifacts_path)
-
-    work_path = os.path.join(output_folder, "work")
+    _create_version_file(version_file, artifacts_path, app_name, exe_name)
 
     PyInstaller.__main__.run([
         init_file,
         "--clean",
         "--onedir",
         "--noconsole",
-        f"--name={AppData.EXE_NAME}",
+        f"--name={exe_name}",
         f"--icon={icon_file}",
         f"--version-file={version_file}",
         "--contents=lib",
@@ -141,4 +138,9 @@ def create_deployment():
 
 if __name__ == "__main__":
 
-    create_deployment()
+    output_path = os.path.join(os.path.dirname(__file__), "build_output")
+    _clean_output_folder(output_path)
+
+    create_deployment(output_path, "main", AppData.APP_NAME, AppData.EXE_NAME)
+    create_deployment(output_path, "driver_test", AppData.DRIVER_TEST_APP_NAME,
+                      AppData.DRIVER_TEST_EXE_NAME)
