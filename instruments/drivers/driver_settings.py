@@ -14,7 +14,7 @@ class DriverSetting:
             raise ValueError(
                 f"(Settings) Setting type {setting_type} for '{name}' is not supported"
             )
-        if not isinstance(default_value, setting_type):
+        if default_value is not None and not isinstance(default_value, setting_type):
             raise TypeError(
                 f"(Settings) Default value for '{name}' must be of type {setting_type.__name__}"
             )
