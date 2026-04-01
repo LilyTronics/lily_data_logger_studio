@@ -127,6 +127,11 @@ class DriverBase(ABC):
     # Public #
     ##########
 
+    @staticmethod
+    @final
+    def get_driver_setting_class():
+        return DriverSetting
+
     @classmethod
     @final
     def get_class_name(cls):
