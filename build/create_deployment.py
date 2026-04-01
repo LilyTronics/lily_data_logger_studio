@@ -49,6 +49,21 @@ def _create_version_file(version_file, artifacts_path, app_name, exe_name):
     with open(version_file, "w", encoding="utf-8") as fp:
         fp.write(version_template)
 
+def _copy_driver_test(dist_path, app_path):
+    source_path = os.path.join(dist_path, AppData.DRIVER_TEST_EXE_NAME)
+    exe_sources = [
+        # On windows
+        os.path.join(source_path, f"{AppData.DRIVER_TEST_EXE_NAME}.exe"),
+        # On Ubuntu
+        os.path.join(source_path, f"{AppData.DRIVER_TEST_EXE_NAME}")
+    ]
+    for source in exe_sources:
+        if os.path.isfile(source):
+            target = os.path.join(app_path, os.path.basename(source))
+            print(f"Copy: {source}")
+            print(f"To  : {target}")
+            shutil.copy2(source, target)
+
 def _copy_drivers(app_path):
     print(f"Copy the drivers from: {AppData.INSTRUMENTS_PATH}")
     output_folder = os.path.join(app_path, "instruments")
@@ -92,15 +107,12 @@ def _create_zip_file(dist_path, app_path):
                 print(f"Add: {full_path} to zip as: {target_name}")
                 zip_object.write(full_path, target_name)
 
-
-def create_deployment(output_folder, app_id, app_name, exe_name):
+def _build_executable(output_folder, dist_path, app_id, app_name, exe_name):
     version_file = os.path.join(output_folder, f"{app_id}.version")
     artifacts_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "artifacts"))
     init_file = os.path.join(os.path.dirname(src.__file__), f"{app_id}.py")
     icon_file = os.path.join(artifacts_path, f"{app_id}.ico")
-    dist_path = os.path.join(output_folder, f"{app_id}_dist")
-    work_path = os.path.join(output_folder, f"{app_id}_work")
-    app_path = os.path.join(dist_path, exe_name)
+    work_path = os.path.join(output_folder, "work")
 
     horizontal_line = "=" * 120
     print(f"\n{horizontal_line}")
@@ -127,9 +139,23 @@ def create_deployment(output_folder, app_id, app_name, exe_name):
         "--contents=lib",
         f"--workpath={work_path}",
         f"--specpath={work_path}",
-        f"--distpath={dist_path}"
+        f"--distpath={dist_path}",
+        "--hidden-import=uuid"
     ])
 
+def create_deployment():
+
+    output_path = os.path.join(os.path.dirname(__file__), "build_output")
+    dist_path = os.path.join(output_path, "dist")
+    app_path = os.path.join(dist_path, AppData.EXE_NAME)
+
+    _clean_output_folder(output_path)
+
+    _build_executable(output_path, dist_path, "main", AppData.APP_NAME, AppData.EXE_NAME)
+    _build_executable(output_path, dist_path, "driver_test", AppData.DRIVER_TEST_APP_NAME,
+                      AppData.DRIVER_TEST_EXE_NAME)
+
+    _copy_driver_test(dist_path, app_path)
     _copy_drivers(app_path)
     _create_zip_file(dist_path, app_path)
 
@@ -138,9 +164,4 @@ def create_deployment(output_folder, app_id, app_name, exe_name):
 
 if __name__ == "__main__":
 
-    output_path = os.path.join(os.path.dirname(__file__), "build_output")
-    _clean_output_folder(output_path)
-
-    create_deployment(output_path, "main", AppData.APP_NAME, AppData.EXE_NAME)
-    create_deployment(output_path, "driver_test", AppData.DRIVER_TEST_APP_NAME,
-                      AppData.DRIVER_TEST_EXE_NAME)
+    create_deployment()
