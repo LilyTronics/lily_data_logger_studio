@@ -49,8 +49,9 @@ class ViewPanelLogMessages(wx.Panel):
         with open(self._filename, "r", encoding="utf-8") as fp:
             lines = fp.readlines()
 
-        content = self._console.GetValue()
-        for line in filter(lambda x: x not in content, lines):
+        n_lines = self._console.GetValue().count("\n")
+        lines = lines[n_lines:]
+        for line in lines:
             for key, value in self._TEXT_COLORS.items():
                 if f" | {key:6} | " in line:
                     self._console.SetDefaultStyle(wx.TextAttr(value))
