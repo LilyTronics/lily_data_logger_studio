@@ -15,8 +15,8 @@ from src.models.test_options import TestOptions
 
 def run_data_logger(options=TestOptions):
     valid = "valid" if is_valid_display_session() else "not valid"
-    log = Logger(options.log_to_stdout)
-    log.info("Start application")
+    log = Logger(AppData.APP_LOG_FILE, options.log_to_stdout)
+    log.info(f"Start application: {AppData.APP_NAME} V{AppData.VERSION}")
     log.info(f"Running on: {get_platform_info()} ({valid})")
     log.info(f"Application path: {AppData.APP_PATH}")
     log.info(f"Instruments path: {AppData.INSTRUMENTS_PATH}")

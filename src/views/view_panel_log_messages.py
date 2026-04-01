@@ -22,8 +22,9 @@ class ViewPanelLogMessages(wx.Panel):
         Logger.TYPE_STDOUT: "#999"
     }
 
-    def __init__(self, parent):
+    def __init__(self, parent, filename):
         super().__init__(parent, wx.ID_ANY)
+        self._filename = filename
 
         self._console = wx.TextCtrl(self, style=wx.TE_MULTILINE | wx.TE_DONTWRAP | wx.TE_READONLY |
                                     wx.TE_RICH)
@@ -45,7 +46,7 @@ class ViewPanelLogMessages(wx.Panel):
     ###########
 
     def _show_messages(self):
-        with open(AppData.APP_LOG_FILE, "r", encoding="utf-8") as fp:
+        with open(self._filename, "r", encoding="utf-8") as fp:
             lines = fp.readlines()
 
         content = self._console.GetValue()
@@ -72,6 +73,6 @@ if __name__ == "__main__":
     app = wx.App(redirect=False)
     f = wx.Frame(None, title="Log messages")
     f.SetInitialSize((800, 600))
-    log = ViewPanelLogMessages(f)
+    log = ViewPanelLogMessages(f, AppData.APP_LOG_FILE)
     f.Show()
     app.MainLoop()

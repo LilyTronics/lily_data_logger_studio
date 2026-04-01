@@ -34,7 +34,7 @@ class MainController:
         self._view_progress = None
 
         self._logger.debug("Load main view")
-        self._view = ViewFrameMain(title, is_valid_display_session)
+        self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session)
         self._prepare_view()
         self._logger.debug("Show main view")
         self._view.Show()

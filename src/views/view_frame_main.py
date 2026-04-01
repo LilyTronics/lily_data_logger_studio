@@ -43,11 +43,12 @@ class ViewFrameMain(wx.Frame):
     _COLOR_LED_ON = "#0f0"
     _BLINK_SPEED = 500
 
-    def __init__(self, title, allow_docking):
+    def __init__(self, title, log_filename, allow_docking):
         self._title = title
         super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
         self._allow_docking = allow_docking
         self._default_layout = ""
+        self._log_filename = log_filename
 
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.graphs_24.GetBitmap())
@@ -133,7 +134,7 @@ class ViewFrameMain(wx.Frame):
         self._bot_win.SetOrientation(wx.adv.LAYOUT_HORIZONTAL)
         self._bot_win.SetAlignment(wx.adv.LAYOUT_BOTTOM)
         self._bot_win.SetSashVisible(wx.adv.SASH_TOP, True)
-        ViewPanelLogMessages(self._bot_win)
+        ViewPanelLogMessages(self._bot_win, self._log_filename)
 
         self._left_win =  wx.adv.SashLayoutWindow(self, self._ID_WINDOW_LEFT,
                                                  style=wx.NO_BORDER|wx.adv.SW_3D)
