@@ -10,6 +10,9 @@ from src.views.view_list_autosize import ListAutosize
 
 class ViewPanelProcess(wx.Panel):
 
+    _ACTIVE_COLOR = "#99ccff"
+    _DEFAULT_COLOR = "#ffffff"
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -65,6 +68,12 @@ class ViewPanelProcess(wx.Panel):
             self._lst_process.SetItem(index, 4, ", ".join(settings))
         self._lst_process.autosize()
 
+    def update_progress(self, step_index):
+        for i in range(self._lst_process.GetItemCount()):
+            if i == step_index - 1:
+                self._lst_process.SetItemBackgroundColour(i, wx.Colour(self._ACTIVE_COLOR))
+            else:
+                self._lst_process.SetItemBackgroundColour(i, wx.Colour(self._DEFAULT_COLOR))
 
 if __name__ == "__main__":
 

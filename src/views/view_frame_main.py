@@ -305,6 +305,9 @@ class ViewFrameMain(wx.Frame):
             self._blink_timer.Stop()
         self._activity_led.Refresh()
 
+    def update_process(self, step_index):
+        self._process_panel.update_progress(step_index)
+
 
 if __name__ == "__main__":
 

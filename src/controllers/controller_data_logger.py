@@ -22,10 +22,10 @@ class ControllerDataLogger:
         self._configuration = configuration
         self._logger = logger
         self._measurements_runner = MeasurementsRunner(
-            self._configuration, self._logger, self._measurements_callback
+            self._configuration, self._logger, self._measurements_update
         )
         self._process_runner = ProcessRunner(
-            self._configuration, self._logger
+            self._configuration, self._logger, self._process_update
         )
         self._check_result = False
 
@@ -50,6 +50,7 @@ class ControllerDataLogger:
                     status = "idle"
                     update_main = True
                     self._logger.info("Data logger stopped")
+                    wx.CallAfter(self._parent_view.update_process, 0)
 
                 if update_main:
                     wx.CallAfter(self._parent_view.update_status, status)
@@ -103,8 +104,11 @@ class ControllerDataLogger:
         if dlg:
             wx.CallAfter(dlg.Close)
 
-    def _measurements_callback(self, *params):
+    def _measurements_update(self, *params):
         print(params)
+
+    def _process_update(self, *params):
+        wx.CallAfter(self._parent_view.update_process, *params)
 
     ##########
     # Public #
