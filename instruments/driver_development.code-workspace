@@ -15,6 +15,9 @@
 		"terminal.integrated.env.linux": {
 			"PYTHONPATH": "${workspaceFolder}"
 		},
-		"explorer.compactFolders": false
+		"explorer.compactFolders": false,
+		"python.analysis.extraPaths": [
+			"${workspaceFolder}/.."
+		]
 	}
 }
