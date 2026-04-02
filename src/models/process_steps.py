@@ -85,24 +85,29 @@ class ProcessStepWait(ProcessStepBase):
             self.logger.debug(f"Wait for measurement to be in range of {min_value} - {max_value} "
                 f"with a timeout of {TimeConverter.create_duration_time_string(wait_time)}")
         else:
+            self.logger.error(f"Error in step {step_index + 1}")
             self.logger.error(f"Invalid wait for: {wait_for}, skip step")
             return step_index + 1
 
         start = int(time.time())
         sample_time = start
+        value = None
         while not self.stop_event.is_set() and time.time() - start < wait_time:
-            if measurement_id is not None and time.time() - sample_time >= interval:
-                value = MeasurementsPool.process_measurement(measurement_id)
-                if value is None:
-                    self.logger.error("Measurement failed, continue with next step")
-                    break
-                if min_value < value < max_value:
-                    self.logger.debug(f"Value is reached: {value}")
-                    break
-                sample_time = int(time.time())
+            if measurement_id is not None:
+                if (time.time() - sample_time) >= interval:
+                    sample_time = int(time.time())
+                    value = MeasurementsPool.process_measurement(measurement_id)
+                    if value is None:
+                        self.logger.error(f"Error in step {step_index + 1}")
+                        self.logger.error("Measurement failed, continue with next step")
+                        break
+                    if min_value < value < max_value:
+                        self.logger.debug(f"Value is reached: {value}")
+                        break
             time.sleep(0.1)
         else:
             if measurement_id is not None:
+                self.logger.error(f"Error in step {step_index + 1}")
                 self.logger.error("Measurement timeout, continue with next step")
                 self.logger.error(f"Measured value: {value}")
 
