@@ -28,14 +28,15 @@ class MeasurementsPool:
                 cls._MEASUREMENTS[measurement["id"]] = measurement
 
     @classmethod
-    def process_measurement(cls, measurement_id):
+    def process_measurement(cls, measurement_id, callback=None, callback_params=None):
         measurement = cls._MEASUREMENTS.get(measurement_id, None)
         if measurement is None:
             return None
         instrument = InstrumentPool.get_instrument(measurement["instrument_id"])
         if instrument is None:
             return None
-        value = instrument.process_channel(measurement["channel_id"])
+        value = instrument.process_channel(measurement["channel_id"], callback=callback,
+                                           callback_params=callback_params)
         if isinstance(value, (int, float)):
             gain = measurement.get("gain", 1.0)
             offset = measurement.get("offset", 0.0)

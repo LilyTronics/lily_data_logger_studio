@@ -5,7 +5,7 @@ Runs the measurements.
 import threading
 import time
 
-from src.models.instrument_pool import InstrumentPool
+from src.models.measurements_pool import MeasurementsPool
 from src.models.time_converter import TimeConverter
 
 
@@ -25,10 +25,8 @@ class MeasurementsRunner:
     def _request_measurements(self, request_time):
         measurements = self._configuration.get_measurements()
         for measurement in measurements:
-            instrument = InstrumentPool.get_instrument(measurement["instrument_id"])
-            instrument.process_channel(measurement["channel_id"],
-                                       callback=self._process_measurement,
-                                       callback_params=(request_time,))
+            MeasurementsPool.process_measurement(measurement["id"], self._process_measurement,
+                                                (request_time,))
 
     def _process_measurement(self, value, params):
         _response_time = int(time.time())
