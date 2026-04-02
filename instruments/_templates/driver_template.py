@@ -59,5 +59,11 @@ if __name__ == "__main__":
 
     # Add some test code here to test your driver
 
-    driver = DriverTemplate({})
+    # Override the default settings with some test settings if needed
+    driver_test_settings = {
+    }
+
+    # Initialize the driver with debug enabled to see the debug output
+    # "DPT": 'D': driver debug, 'P': protocol debug, 'T': transport debug
+    driver = DriverTemplate(driver_test_settings, "DPT")
     driver.test_driver()
