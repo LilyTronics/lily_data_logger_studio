@@ -13,7 +13,7 @@ class TransportBase(ABC):
 
     _DEFAULT_TIMEOUT = 2
 
-    def __init__(self, transport_settings, debug):
+    def __init__(self, transport_settings, debug=""):
         self.transport_settings = transport_settings
         self.debug = debug
         self.log_debug(f"Transport settings: {self.transport_settings}")

@@ -12,7 +12,7 @@ from typing import final
 
 class ProtocolBase(ABC):
 
-    def __init__(self, transport, protocol_settings, debug):
+    def __init__(self, transport, protocol_settings, debug=""):
         self.transport = transport
         self.protocol_settings = protocol_settings
         self.debug = debug
