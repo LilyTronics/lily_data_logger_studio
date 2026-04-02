@@ -72,12 +72,16 @@ def _copy_drivers(app_path):
     for current_path, sub_folders, filenames in os.walk(AppData.INSTRUMENTS_PATH):
         sub_folders.sort()
         for filename in filenames:
+            # Skip certain files
+            if "__pycache__" in current_path:
+                continue
+            full_path = os.path.join(current_path, filename)
+            target = os.path.join(output_folder, full_path[len(AppData.INSTRUMENTS_PATH) + 1:])
+            os.makedirs(os.path.dirname(target), exist_ok=True)
+            print(f"Copy: {full_path}")
+            print(f"To  : {target}")
             if filename.endswith(".py"):
-                full_path = os.path.join(current_path, filename)
-                print(f"Copy: {full_path}")
-                target = os.path.join(output_folder, full_path[len(AppData.INSTRUMENTS_PATH) + 1:])
-                os.makedirs(os.path.dirname(target), exist_ok=True)
-                print(f"To  : {target}")
+                # Copy Python files without the test code, the test code will not work
                 with open(full_path, "r", encoding="utf-8") as fp:
                     lines = fp.readlines()
                 # Remove test code
@@ -88,9 +92,9 @@ def _copy_drivers(app_path):
                             break
                         output += line
                     fp.write(f"{output.strip()}\n")
-                # Comile to byte code to prevent accidental edits
-                py_compile.compile(target, cfile=target + "c")
-                os.remove(target)
+            else:
+                # Just copy the file
+                shutil.copy2(full_path, target)
 
 def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")
