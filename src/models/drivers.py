@@ -22,10 +22,29 @@ class Drivers:
     def __init__(self):
         raise Exception("This class should not be instantiated")
 
+    ###########
+    # Private #
+    ###########
+
     # Dummy callback in case the progress callback is None
     @staticmethod
-    def _callback(*params):
+    def _callback(*_):
         pass
+
+    @classmethod
+    def _add_driver(cls, attribute):
+        matches = [x for x in cls._drivers if x.id == attribute.id]
+        if len(matches) > 0:
+            raise Exception(f"Duplicate driver ID: '{attribute.id}' "
+                            f"for '{attribute.name}' and '{matches[0].name}'")
+        matches = [x for x in cls._drivers if x.name == attribute.name]
+        if len(matches) > 0:
+            raise Exception(f"Duplicate driver name: '{attribute.name}'")
+        cls._drivers.append(attribute)
+
+    ##########
+    # Public #
+    ##########
 
     @classmethod
     def load(cls, progress_callback=None):
@@ -66,7 +85,7 @@ class Drivers:
                             if "ABC" in classes:
                                 classes.remove("ABC")
                             if len(classes) > 0:
-                                cls._drivers.append(attribute)
+                                cls._add_driver(attribute)
             progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
 
     @classmethod
