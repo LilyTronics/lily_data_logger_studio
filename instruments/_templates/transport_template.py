@@ -51,13 +51,11 @@ if __name__ =="__main__":
     print(transport.is_connection_ready())
 
     # Send some data
-    tx_data = b"test data"
-    transport.send(tx_data)
+    transport.send(b"test data")
 
     # Receive some data, with a time out
-    t = 5   # seconds timout
-    while t > 0:
-        rx_data = transport.receive()
-        print(rx_data)
+    timeout = 5   # seconds timout
+    while timeout > 0:
+        print(transport.receive())
         time.sleep(1)
-        t -= 1
+        timeout -= 1

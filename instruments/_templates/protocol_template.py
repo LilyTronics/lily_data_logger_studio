@@ -37,11 +37,8 @@ if __name__ == "__main__":
     protocol = ProtocolTemplate(transport, protocol_test_settings)
 
     # Test
-    tx_data = b"test data"
-    print(protocol.build_packet(tx_data))
+    print(protocol.build_packet(b"test data"))
 
-    rx_data = b"test data"
-    print(protocol.parse_packet(rx_data))
+    print(protocol.parse_packet(b"test data"))
 
-    response = b"test data"
-    print(protocol.validate_response(response))
+    print(protocol.validate_response(b"test data"))
