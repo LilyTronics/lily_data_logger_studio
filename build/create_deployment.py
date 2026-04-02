@@ -6,7 +6,6 @@ import os
 import platform
 import shutil
 import zipfile
-import py_compile
 import PyInstaller.__main__
 import src
 
@@ -80,7 +79,7 @@ def _copy_drivers(app_path):
             os.makedirs(os.path.dirname(target), exist_ok=True)
             print(f"Copy: {full_path}")
             print(f"To  : {target}")
-            if filename.endswith(".py"):
+            if filename.endswith(".py") and "_template" not in filename:
                 # Copy Python files without the test code, the test code will not work
                 with open(full_path, "r", encoding="utf-8") as fp:
                     lines = fp.readlines()
