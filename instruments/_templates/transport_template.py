@@ -28,3 +28,36 @@ class TransportTemplate(TransportBase):
         # if no data available directly return with an empty byte string
         data = b""
         return data
+
+
+if __name__ =="__main__":
+
+    # Test code imports only
+    import time
+
+    # Transport test settings
+    transport_test_settings = {
+    }
+    transport = TransportTemplate(transport_test_settings)
+
+    # Test
+
+    # Should be False because connect() is not called yet
+    print(transport.is_connection_ready())
+
+    transport.connect()
+
+    # Should be True because connect() is called
+    print(transport.is_connection_ready())
+
+    # Send some data
+    tx_data = b"test data"
+    transport.send(tx_data)
+
+    # Receive some data, with a time out
+    t = 5   # seconds timout
+    while t > 0:
+        rx_data = transport.receive()
+        print(rx_data)
+        time.sleep(1)
+        t -= 1
