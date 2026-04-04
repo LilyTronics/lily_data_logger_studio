@@ -308,12 +308,16 @@ class ViewFrameMain(wx.Frame):
     def update_process(self, step_index):
         self._process_panel.update_progress(step_index)
 
+    def update_data_table(self, table_data):
+        self._data_table_panel.update_data(table_data)
+
 
 if __name__ == "__main__":
 
     from src.main import run_data_logger
     from src.models.test_options import TestOptions
 
+    TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
 
     run_data_logger(TestOptions)

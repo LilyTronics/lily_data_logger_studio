@@ -174,13 +174,38 @@ class ControllerMain:
                 if self._controller_data_logger.is_running():
                     # Update GUI with data
                     self._view.update_process(self._controller_data_logger.get_process_step_index())
-
+                    test_run = self._controller_data_logger.get_test_run()
+                    if test_run is not None:
+                        wx.CallAfter(self._update_data_table, test_run)
+                        wx.CallAfter(self._update_graphs, test_run)
 
             except Exception as e:
                 self._logger.error("Error in data logger monitor thread:")
                 self._logger.error(str(e))
             time.sleep(self._MONITOR_UPDATE_RATE)
         self._logger.debug("Data logger monitor stopped")
+
+    def _update_data_table(self, test_run):
+        # start = time.time()
+        table_data = {
+            "time": [0],
+            "measurements": {}
+        }
+        for i, t in enumerate(test_run["timestamps"]):
+            if i > 0:
+                table_data["time"].append(t - test_run["timestamps"][0])
+        for m in test_run["measurements"]:
+            table_data["measurements"][m["name"]] = m["values"]
+        self._view.update_data_table(table_data)
+        # duration = int(1000 * (time.time() - start))
+        # self._logger.debug(f"Data table update took: {duration} ms")
+
+    def _update_graphs(self, test_run):
+        pass
+        # start = time.time()
+        # duration = int(1000 * (time.time() - start))
+        # self._logger.debug(f"Graphs update took: {duration} ms")
+
 
     ##################
     # Event handlers #

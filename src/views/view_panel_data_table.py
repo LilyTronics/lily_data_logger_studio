@@ -4,6 +4,8 @@ View for the data table.
 
 import wx.grid
 
+from src.models.time_converter import TimeConverter
+
 
 class ViewPanelDataTable(wx.Panel):
 
@@ -59,6 +61,30 @@ class ViewPanelDataTable(wx.Panel):
             self._data_table.AppendCols(1)
             self._data_table.SetColLabelValue(i + 1, label)
         self._auto_size_columns()
+
+    def update_data(self, table_data):
+        self._data_table.Freeze()
+        self._data_table.ClearGrid()
+        if self._data_table.GetNumberRows() > 0:
+            self._data_table.DeleteRows(0, self._data_table.GetNumberRows())
+        self._data_table.AppendRows(len(table_data["time"]))
+        for i, t in enumerate(table_data["time"]):
+            value = TimeConverter.create_duration_time_string(t)
+            self._data_table.SetCellValue(i, 0, value)
+            self._data_table.SetCellAlignment(i, 0, wx.ALIGN_CENTER, wx.ALIGN_CENTER)
+        n_rows = self._data_table.GetNumberRows()
+        if  n_rows > 0:
+            for col in range(self._data_table.GetNumberCols()):
+                label = self._data_table.GetColLabelValue(col)
+                for name, values in table_data["measurements"].items():
+                    if label.startswith(f"{name}\n"):
+                        for row in range(n_rows):
+                            self._data_table.SetCellValue(row, col, str(values[row]))
+                            self._data_table.SetCellAlignment(row, col, wx.ALIGN_CENTER,
+                                                              wx.ALIGN_CENTER)
+        self._auto_size_columns()
+        self._data_table.Thaw()
+        self._data_table.MakeCellVisible(n_rows - 1, 0)
 
 
 if __name__ == "__main__":

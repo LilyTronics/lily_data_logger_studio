@@ -9,7 +9,7 @@ from src.models.os_specifics import get_user_data_dir
 
 
 APP_NAME = "Lily Data Logger Studio\u2122"   # \u2122 is the trademark symbol
-VERSION = "0.8"
+VERSION = "0.9"
 EXE_NAME = "LilyDataLoggerStudio"
 COMPANY = "LilyTronics"
 DRIVER_TEST_APP_NAME = "Lily Data Logger Studio\u2122 Driver Test"

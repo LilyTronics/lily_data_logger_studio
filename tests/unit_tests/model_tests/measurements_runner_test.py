@@ -52,7 +52,7 @@ class MeasurementsRunnerTest(TestSuite):
     def check_test_run_id(self):
         # We need to wait unit the process is running and the test run ID is created
         self.sleep(0.2)
-        self.run_id = self .measurement_runner.get_test_run_id()
+        self.run_id = self .measurement_runner.get_run_id()
         self.log.debug(f"Run ID: {self.run_id}")
         uid = uuid.UUID(self.run_id)
         self.fail_if(uid.version != 4, "Invalid run ID")

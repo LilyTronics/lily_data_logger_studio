@@ -93,8 +93,11 @@ class MeasurementsRunner:
     def is_running(self):
         return self._thread is not None and self._thread.is_alive()
 
-    def get_test_run_id(self):
+    def get_run_id(self):
         return self._run_id
+
+    def get_test_run(self):
+        return TestRuns.get_test_run(self._run_id)
 
 
 if __name__ == "__main__":

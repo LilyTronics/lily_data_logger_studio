@@ -145,6 +145,9 @@ class ControllerDataLogger:
     def get_process_step_index(self):
         return self._process_runner.get_current_index()
 
+    def get_test_run(self):
+        return self._measurements_runner.get_test_run()
+
 
 if __name__ == "__main__":
 
