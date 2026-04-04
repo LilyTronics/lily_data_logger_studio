@@ -27,9 +27,9 @@ Release 1.0:
 * Start/stop data logger, runs measurements and process steps. ✅
 * Edit process steps for controlling instruments. ✅
 * Edit graphs in the configuration. ✅
-* Show measurements in the data table.
-* Show measurements in graphs.
+* Show measurements in the data table and graphs.
 * Show live updates of the process. ✅
+* Manage test runs (show, delete, export)
 * Application for testing created drivers. ✅
 * Templates and a VS code workspace included for creating drivers. ✅
 * User manual for data logger and for creating drivers.
