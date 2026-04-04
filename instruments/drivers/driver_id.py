@@ -11,7 +11,7 @@ import uuid
 
 
 def generate_driver_id():
-    print("New driver ID:", uuid.uuid4())
+    print("New driver ID:", str(uuid.uuid4()))
 
 
 if __name__ == "__main__":
