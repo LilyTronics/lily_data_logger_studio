@@ -17,6 +17,8 @@ class DriverTemperatureChamberTest(TestSuite):
     def _callback(self, *response):
         self.log.debug(f"Async response: {response}")
         self.async_response[0] = True
+        self.fail_if(not isinstance(response[0], response[1]),
+                     "The type is incorrect")
 
     def setup(self):
         self.log.debug("Start simulators")
@@ -71,7 +73,17 @@ class DriverTemperatureChamberTest(TestSuite):
     def test_get_id_async(self):
         self.async_response[0] = False
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gid", callback=self._callback)
+        response = self.driver.process_channel("gid", callback=self._callback,
+                                               callback_params=str)
+        self.fail_if(response is not None, f"No response expected, got: {response}")
+        if not self.wait_for(self.async_response, True, 2, 0.1):
+            self._fail("No async response received")
+
+    def test_get_temperature_async(self):
+        self.async_response[0] = False
+        self.log.debug("Get ID")
+        response = self.driver.process_channel("gat", callback=self._callback,
+                                               callback_params=float)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
             self._fail("No async response received")

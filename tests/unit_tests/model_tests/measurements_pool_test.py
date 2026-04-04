@@ -31,6 +31,9 @@ class MeasurementsPoolTest(TestSuite):
     def teardown(self):
         stop_simulators()
 
+    def callback(self, value, *_):
+        self.log.debug(f"Value: {value}")
+
     def test_add_measurements_from_config(self):
         MeasurementsPool.clear()
         measurements = self.config.get_measurements()
@@ -45,6 +48,17 @@ class MeasurementsPoolTest(TestSuite):
             self.log.debug(f"Process measurement: {measurement["name"]} ({measurement["id"]})")
             result = MeasurementsPool.process_measurement(measurement["id"])
             self.log.debug(f"Result: {result}")
+            self.fail_if(not isinstance(result, float), "Result must be float")
+
+    def test_process_measurement_callback(self):
+        measurements = self.config.get_measurements()
+        for measurement in measurements:
+            self.log.debug(f"Process measurement: {measurement["name"]} ({measurement["id"]})")
+            result = MeasurementsPool.process_measurement(measurement["id"], self.callback)
+            self.log.debug(f"Result: {result}")
+            self.fail_if(result is not None, "Result must be None")
+        # Wait for callbacks
+        self.sleep(0.5)
 
 
 if __name__ == "__main__":

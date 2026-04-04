@@ -123,6 +123,20 @@ class DriverBase(ABC):
             channels = [x for x in cls.channels if x.direction == direction]
         return channels
 
+    def _process_response(self, channel, response):
+        if channel.expect_response:
+            self.log_debug(f"Channel response: {response}")
+            response = self.parse_response(channel, response)
+            self.log_debug(f"Channel return value: {response}")
+        else:
+            self.log_debug(f"No channel response expected ({response})")
+        return response
+
+    def _process_callback(self, response, params):
+        response = self._process_response(params["channel"], response)
+        params["callback"](response, params["callback_params"])
+
+
     ##########
     # Public #
     ##########
@@ -175,17 +189,18 @@ class DriverBase(ABC):
         if not isinstance(command, bytes):
             raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
+        if callback is not None:
+            callback_params = {
+                "callback": callback,
+                "callback_params": callback_params,
+                "channel": channel
+            }
+            callback = self._process_callback
         response = self.protocol.process_command(channel, command, callback, callback_params)
         if callable(callback):
             # The callback is present
             return None
-        if channel.expect_response:
-            self.log_debug(f"Channel response: {response}")
-            response = self.parse_response(channel, response)
-            self.log_debug(f"Channel return value: {response}")
-        else:
-            self.log_debug(f"No channel response expected ({response})")
-        return response
+        return self._process_response(channel, response)
 
     #############
     # Overrides #
