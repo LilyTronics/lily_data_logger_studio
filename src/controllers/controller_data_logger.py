@@ -22,12 +22,9 @@ class ControllerDataLogger:
         self._parent_view = parent_view
         self._configuration = configuration
         self._logger = logger
-        self._measurements_runner = MeasurementsRunner(
-            self._configuration, self._logger, self._measurements_update
-        )
-        self._process_runner = ProcessRunner(
-            self._configuration, self._logger, self._process_update
-        )
+        self._measurements_runner = MeasurementsRunner(self._configuration, self._logger)
+        self._process_runner = ProcessRunner(self._configuration, self._logger,
+                                             self._process_update)
         self._check_result = False
 
         threading.Thread(target=self._data_logger_monitor, daemon=True).start()
