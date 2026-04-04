@@ -28,10 +28,17 @@ class TestRunsTest(TestSuite):
         measurements = self.config.get_measurements()
         t = int(time.time())
         for _ in range(10):
+            self.log.debug("Initialize cycle")
+            TestRuns.init_cycle(self.run_id, t)
+            test_run = TestRuns.get_test_run(self.run_id)
+            self.fail_if(test_run["timestamps"][-1] != t, "Sample time not added")
+            for m in test_run["measurements"]:
+                self.fail_if(m["values"][-1] is not None, "Value is not initialized")
+            self.log.debug("Add measurements")
             for m in measurements:
                 value = round(random.uniform(25, 30), 1)
                 self.log.debug(f"Add value: {t}: {value}")
-                TestRuns.add_measurement_value(self.run_id, t, m["id"], value)
+                TestRuns.store_measurement(self.run_id, t, m["id"], value)
             t += 3
         test_run = TestRuns.get_test_run(self.run_id)
         self.fail_if(len(test_run["timestamps"]) != 10, "Timestampes were not added")

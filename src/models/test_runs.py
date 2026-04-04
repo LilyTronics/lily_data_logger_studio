@@ -48,7 +48,7 @@ class TestRuns:
     @classmethod
     def new_test_run(cls, measurements):
         test_run = deepcopy(cls._TEST_RUN)
-        test_run["id"] = uuid.uuid4()
+        test_run["id"] = str(uuid.uuid4())
         for measurement in measurements:
             m = deepcopy(cls._MEASUREMENT)
             m["id"] = measurement["id"]
@@ -59,15 +59,20 @@ class TestRuns:
         return test_run["id"]
 
     @classmethod
-    def add_measurement_value(cls, run_id, timestamp, measurement_id, value):
+    def init_cycle(cls, run_id, timestamp):
         test_run = cls._get_test_run_ref(run_id)
-        if test_run is None:
-            return
         test_run["timestamps"].append(timestamp)
+        for measurement in test_run["measurements"]:
+            measurement["values"].append(None)
+
+    @classmethod
+    def store_measurement(cls, run_id, timestamp, measurement_id, value):
+        test_run = cls._get_test_run_ref(run_id)
+        index = test_run["timestamps"].index(timestamp)
         matches = [x for x in test_run["measurements"] if x["id"] == measurement_id]
-        if len(matches) != 1:
-            return
-        matches[0]["values"].append(value)
+        if len(matches) == 1:
+            if index < len(matches[0]["values"]):
+                matches[0]["values"][index] = value
 
 
 if __name__ == "__main__":
