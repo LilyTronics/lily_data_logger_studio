@@ -54,7 +54,7 @@ class ProcessStepSetOutput(ProcessStepBase):
     def execute(self, step_index):
         settings = self.step_data["settings"]
         instrument = InstrumentPool.get_instrument(settings["instrument_id"])
-        self.logger.debug(f"Set output: {instrument.name}, "
+        self.logger.debug(f"Step {step_index + 1}: set output: {instrument.name}, "
                           f"{settings["channel_id"]}, {settings["value"]}")
         instrument.process_channel(settings["channel_id"], settings["value"])
         return step_index + 1
@@ -72,7 +72,10 @@ class ProcessStepWait(ProcessStepBase):
         measurement_id = None
         if wait_for == "time":
             wait_time = settings.get("wait_time", 0)
-            self.logger.debug(f"Wait for {TimeConverter.create_duration_time_string(wait_time)}")
+            self.logger.debug(
+                f"Step {step_index + 1}: "
+                f"wait for {TimeConverter.create_duration_time_string(wait_time)}"
+            )
         elif wait_for == "measurement":
             wait_time = settings.get("timeout", 0)
             interval = settings.get("poll_interval", None)
@@ -82,8 +85,11 @@ class ProcessStepWait(ProcessStepBase):
             if None in [interval, min_value, max_value, measurement_id]:
                 self.logger.error("Invalid settings for this step, skip step")
                 return step_index + 1
-            self.logger.debug(f"Wait for measurement to be in range of {min_value} - {max_value} "
-                f"with a timeout of {TimeConverter.create_duration_time_string(wait_time)}")
+            self.logger.debug(
+                f"Step {step_index + 1}: "
+                f"wait for measurement to be in range of {min_value} - {max_value} "
+                f"with a timeout of {TimeConverter.create_duration_time_string(wait_time)}"
+            )
         else:
             self.logger.error(f"Error in step {step_index + 1}")
             self.logger.error(f"Invalid wait for: {wait_for}, skip step")
@@ -126,7 +132,9 @@ class ProcessStepLoop(ProcessStepBase):
             return step_index + 1
         count = settings.get("count", 0)
         self.loop_counter += 1
-        self.logger.debug(f"Loop: {count} times, current iteration: {self.loop_counter}")
+        self.logger.debug(
+            f"Step {step_index + 1}: loop: {count} times, current iteration: {self.loop_counter}"
+        )
         return loop_from if self.loop_counter < count else step_index + 1
 
 

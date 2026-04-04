@@ -20,9 +20,6 @@ class ProcessRunnerTest(TestSuite):
 
     process_runner = None
 
-    def _process_update(self, *params):
-        self.log.debug(f"Process update: {params}")
-
     def setup(self):
         Drivers.load()
         config = Configuration()
@@ -36,7 +33,7 @@ class ProcessRunnerTest(TestSuite):
             start_simulators()
         measurements = config.get_measurements()
         MeasurementsPool.add_measurements(measurements)
-        self.process_runner = ProcessRunner(config, self.app_test_logger, self._process_update)
+        self.process_runner = ProcessRunner(config, self.app_test_logger)
 
     def teardown(self):
         if self.process_runner is not None and self.process_runner.is_running():
@@ -50,8 +47,12 @@ class ProcessRunnerTest(TestSuite):
         is_running = self.process_runner.is_running()
         self.log.debug(f"Process running: {is_running}")
         self.fail_if(not is_running, "Process should be running")
+        current_index = 0
         while self.process_runner.is_running():
-            self.sleep(1)
+            if current_index != self.process_runner.get_current_index():
+                current_index = self.process_runner.get_current_index()
+                self.log.debug(f"Current index: {current_index}")
+            self.sleep(0.1)
         is_running = self.process_runner.is_running()
         self.log.debug(f"Process running: {is_running}")
         self.fail_if(is_running, "Process should not be running")

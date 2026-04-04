@@ -3,7 +3,6 @@ Controller for the data logger.
 """
 
 import threading
-import time
 import wx
 
 from src.models.instrument_pool import InstrumentPool
@@ -23,42 +22,12 @@ class ControllerDataLogger:
         self._configuration = configuration
         self._logger = logger
         self._measurements_runner = MeasurementsRunner(self._configuration, self._logger)
-        self._process_runner = ProcessRunner(self._configuration, self._logger,
-                                             self._process_update)
+        self._process_runner = ProcessRunner(self._configuration, self._logger)
         self._check_result = False
-
-        threading.Thread(target=self._data_logger_monitor, daemon=True).start()
 
     ###########
     # Private #
     ###########
-
-    def _data_logger_monitor(self):
-        # This thread never stops, unless the application stops
-        status= "idle"
-        update_main = True
-        while True:
-            try:
-                # Detect state change
-                if self.is_running() and status == "idle":
-                    status = "running"
-                    update_main = True
-                    self._logger.info("Data logger started")
-                elif not self.is_running() and status == "running":
-                    status = "idle"
-                    update_main = True
-                    self._logger.info("Data logger stopped")
-                    wx.CallAfter(self._parent_view.update_process, 0)
-
-                if update_main:
-                    wx.CallAfter(self._parent_view.update_status, status)
-                    update_main = False
-
-            except Exception as e:
-                self._logger.error("Error in data logger monitor thread:")
-                self._logger.error(str(e))
-
-            time.sleep(0.01)
 
     def _check_configuration(self):
         dlg_title = "Check configuration"
@@ -141,9 +110,6 @@ class ControllerDataLogger:
         if dlg:
             wx.CallAfter(dlg.Close)
 
-    def _measurements_update(self, *params):
-        print(params)
-
     def _process_update(self, *params):
         wx.CallAfter(self._parent_view.update_process, *params)
 
@@ -175,6 +141,9 @@ class ControllerDataLogger:
 
     def is_running(self):
         return self._measurements_runner.is_running() or self._process_runner.is_running()
+
+    def get_process_step_index(self):
+        return self._process_runner.get_current_index()
 
 
 if __name__ == "__main__":

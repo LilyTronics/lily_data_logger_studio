@@ -2,6 +2,8 @@
 Main controller.
 """
 
+import threading
+import time
 import wx
 
 import src.app_data as AppData
@@ -26,12 +28,16 @@ from src.views.view_dialogs import ViewDialogs
 
 class ControllerMain:
 
+    _MONITOR_UPDATE_RATE = 0.5
+
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
         self._view_progress = None
+        self._stop_event = threading.Event()
+        self._monitor_thread = None
 
         self._logger.debug("Load main view")
         self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session)
@@ -53,6 +59,7 @@ class ControllerMain:
         wx.PostEvent(self._view.GetEventHandler(), event)
 
         self._process_test_options(test_options)
+        wx.CallAfter(self._start_monitor_thread)
 
     ###########
     # Private #
@@ -71,7 +78,6 @@ class ControllerMain:
         is_checked = ViewDialogs.show_message(self._view, msg, "Display session notice",
                                               wx.ICON_WARNING, "Don't show this again")
         self._app_settings.store_check_display_session(not is_checked)
-
 
     def _prepare_view(self):
         value = self._app_settings.get_main_window_position()
@@ -131,6 +137,50 @@ class ControllerMain:
             self._logger.debug("Test option: show edit graphs")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_GRAPHS)
             wx.PostEvent(self._view.GetEventHandler(), event)
+
+    def _start_monitor_thread(self):
+        if not (self._monitor_thread is not None and self._monitor_thread.is_alive()):
+            self._monitor_thread = threading.Thread(name="Data logger monitor",
+                                                    target=self._data_logger_monitor,
+                                                    daemon=True)
+            self._monitor_thread.start()
+
+    def _stop_monitor_thread(self):
+        if self._monitor_thread is not None and self._monitor_thread.is_alive():
+            self._stop_event.set()
+            self._monitor_thread.join()
+
+    def _data_logger_monitor(self):
+        self._logger.debug("Data logger monitor started")
+        status= "idle"
+        update_main = True
+        while not self._stop_event.is_set():
+            try:
+                # Detect change
+                if self._controller_data_logger.is_running() and status == "idle":
+                    status = "running"
+                    update_main = True
+                    self._logger.info("Data logger started")
+                elif not self._controller_data_logger.is_running() and status == "running":
+                    status = "idle"
+                    update_main = True
+                    self._logger.info("Data logger stopped")
+                    self._view.update_process(0)
+
+                if update_main:
+                    wx.CallAfter(self._view.update_status, status)
+                    update_main = False
+
+                if self._controller_data_logger.is_running():
+                    # Update GUI with data
+                    self._view.update_process(self._controller_data_logger.get_process_step_index())
+
+
+            except Exception as e:
+                self._logger.error("Error in data logger monitor thread:")
+                self._logger.error(str(e))
+            time.sleep(self._MONITOR_UPDATE_RATE)
+        self._logger.debug("Data logger monitor stopped")
 
     ##################
     # Event handlers #
@@ -193,6 +243,7 @@ class ControllerMain:
         event.Skip()
 
     def _on_view_close(self, event):
+        self._stop_monitor_thread()
         self._logger.debug("Close main view")
         self._app_settings.store_main_window_maximized(self._view.IsMaximized())
         if not self._view.IsMaximized():
