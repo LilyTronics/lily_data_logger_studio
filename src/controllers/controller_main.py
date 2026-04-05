@@ -206,7 +206,7 @@ class ControllerMain:
         graphs = self._configuration.get_graphs()
         graphs_data = {}
         for graph in graphs:
-            graphs_data[graph["name"]] = []
+            lines = []
             for m in graph["measurements"]:
                 matches = [x for x in test_run["measurements"] if x["id"] == m]
                 if len(matches) != 1:
@@ -222,10 +222,13 @@ class ControllerMain:
                     data.append((x_values[i], value))
                 line_data = {
                     "legend": f"{matches[0]['name']} [{matches[0]['unit']}]",
-                    "settings": graph["settings"],
                     "data": data
                 }
-                graphs_data[graph["name"]].append(line_data)
+                lines.append(line_data)
+            graphs_data[graph["name"]] = {
+                "lines": lines,
+                "settings": graph["settings"]
+            }
         self._view.update_graphs(graphs_data)
 
     ##################

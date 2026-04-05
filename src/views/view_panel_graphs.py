@@ -75,7 +75,8 @@ class ViewPanelGraphs(wx.Panel):
         for key, graph_data in graphs_data.items():
             matches = [g for g in self._graphs if g.title == key]
             if len(matches) == 1:
-                matches[0].draw_lines(graph_data)
+                matches[0].draw_lines(graph_data["lines"])
+                matches[0].logScale = (False, graph_data["settings"]["log_scale"])
 
 
 if __name__ == "__main__":
