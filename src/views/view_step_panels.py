@@ -88,7 +88,7 @@ class ViewStepPanelWait(ViewStepPanel):
         self._cmb_measurements = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY)
         lbl_min = wx.StaticText(self, wx.ID_ANY, "Min:")
         self._txt_min = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
-        lbl_max = wx.StaticText(self, wx.ID_ANY, "Min:")
+        lbl_max = wx.StaticText(self, wx.ID_ANY, "Max:")
         self._txt_max = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
         lbl_interval = wx.StaticText(self, wx.ID_ANY, "Poll interval:")
         self._txt_interval = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
