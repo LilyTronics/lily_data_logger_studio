@@ -311,6 +311,9 @@ class ViewFrameMain(wx.Frame):
     def update_data_table(self, table_data):
         self._data_table_panel.update_data(table_data)
 
+    def update_graphs(self, graphs_data):
+        self._graphs_panel.update_graphs(graphs_data)
+
 
 if __name__ == "__main__":
 

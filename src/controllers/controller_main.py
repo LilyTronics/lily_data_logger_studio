@@ -195,8 +195,38 @@ class ControllerMain:
         self._view.update_data_table(table_data)
 
     def _update_graphs(self, test_run):
-        pass
+        # We can only create a graph if we have 2 or more samples
+        if len(test_run["timestamps"]) < 2:
+            return
 
+        # Create x values for the graph
+        x_values = [0]
+        for i in range(1, len(test_run["timestamps"])):
+            x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
+        graphs = self._configuration.get_graphs()
+        graphs_data = {}
+        for graph in graphs:
+            graphs_data[graph["name"]] = []
+            for m in graph["measurements"]:
+                matches = [x for x in test_run["measurements"] if x["id"] == m]
+                if len(matches) != 1:
+                    continue
+                data = []
+                previous_value = 0
+                for i, value in enumerate(matches[0]["values"]):
+                    # We can only show int or floats in the graph
+                    if isinstance(value, (int, float)):
+                        previous_value = value
+                    else:
+                        value = previous_value
+                    data.append((x_values[i], value))
+                line_data = {
+                    "legend": f"{matches[0]['name']} [{matches[0]['unit']}]",
+                    "settings": graph["settings"],
+                    "data": data
+                }
+                graphs_data[graph["name"]].append(line_data)
+        self._view.update_graphs(graphs_data)
 
     ##################
     # Event handlers #
