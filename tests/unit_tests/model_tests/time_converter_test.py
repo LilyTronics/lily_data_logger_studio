@@ -54,12 +54,12 @@ class TimeConverterTest(TestSuite):
             self.fail_if(value != test_value[3],
                          f"Invalid value. Expected: {test_value[3]}")
 
-    def test_get_timestamp(self):
+    def test_get_time_string(self):
         timestamp = time.time()
-        expected = datetime.fromtimestamp(timestamp).strftime("%Y%m%d %H%M%S")
-        value = TimeConverter.get_timestamp(timestamp)
+        expected = datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+        value = TimeConverter.get_time_string(timestamp)
         self.log.debug(f"Result: {value}")
-        self.fail_if(value != expected, f"Invalid timestamp. Expected: {expected}")
+        self.fail_if(value != expected, f"Invalid time string. Expected: {expected}")
 
 
 if __name__ == "__main__":

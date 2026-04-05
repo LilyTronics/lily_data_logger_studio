@@ -186,25 +186,16 @@ class ControllerMain:
         self._logger.debug("Data logger monitor stopped")
 
     def _update_data_table(self, test_run):
-        # start = time.time()
         table_data = {
-            "time": [0],
+            "timestamps": test_run["timestamps"],
             "measurements": {}
         }
-        for i, t in enumerate(test_run["timestamps"]):
-            if i > 0:
-                table_data["time"].append(t - test_run["timestamps"][0])
         for m in test_run["measurements"]:
             table_data["measurements"][m["name"]] = m["values"]
         self._view.update_data_table(table_data)
-        # duration = int(1000 * (time.time() - start))
-        # self._logger.debug(f"Data table update took: {duration} ms")
 
     def _update_graphs(self, test_run):
         pass
-        # start = time.time()
-        # duration = int(1000 * (time.time() - start))
-        # self._logger.debug(f"Graphs update took: {duration} ms")
 
 
     ##################

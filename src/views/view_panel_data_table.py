@@ -11,6 +11,7 @@ class ViewPanelDataTable(wx.Panel):
 
     _HEADER_HEIGHT = 40
     _TIME_COL_WIDTH = 100
+    _HEADER_WIDTH = 140
     _COL_EXTRA_WIDTH = 8
 
     def __init__(self, parent):
@@ -29,18 +30,16 @@ class ViewPanelDataTable(wx.Panel):
         self._data_table.CreateGrid(0, 1)
         self._data_table.SetColLabelValue(0, "Time\n[s]")
         self._data_table.SetColLabelSize(self._HEADER_HEIGHT)
-        self._data_table.SetColSize(0, self._TIME_COL_WIDTH)
+        self._data_table.SetRowLabelSize(self._HEADER_WIDTH)
         self._data_table.EnableEditing(False)
         self._data_table.EnableDragRowSize(False)
         self._data_table.EnableDragColMove(False)
         self._data_table.EnableDragColSize(False)
+        self._auto_size_columns()
         return self._data_table
 
     def _auto_size_columns(self):
         for col in range(self._data_table.GetNumberCols()):
-            # Time column is fixed
-            if col == 0:
-                continue
             self._data_table.AutoSizeColumn(col)
             size = self._data_table.GetColSize(col) + self._COL_EXTRA_WIDTH
             self._data_table.SetColSize(col, size)
@@ -67,9 +66,13 @@ class ViewPanelDataTable(wx.Panel):
         self._data_table.ClearGrid()
         if self._data_table.GetNumberRows() > 0:
             self._data_table.DeleteRows(0, self._data_table.GetNumberRows())
-        self._data_table.AppendRows(len(table_data["time"]))
-        for i, t in enumerate(table_data["time"]):
-            value = TimeConverter.create_duration_time_string(t)
+        self._data_table.AppendRows(len(table_data["timestamps"]))
+        start_time = 0
+        for i, t in enumerate(table_data["timestamps"]):
+            self._data_table.SetRowLabelValue(i, TimeConverter.get_time_string(t))
+            if i == 0:
+                start_time = t
+            value = TimeConverter.create_duration_time_string(t - start_time)
             self._data_table.SetCellValue(i, 0, value)
             self._data_table.SetCellAlignment(i, 0, wx.ALIGN_CENTER, wx.ALIGN_CENTER)
         n_rows = self._data_table.GetNumberRows()
