@@ -118,7 +118,9 @@
         "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
       ],
       "settings": {
-        "log_scale": false
+        "log_scale": false,
+        "min_scale": 10.0,
+        "max_scale": 40.0
       }
     }
   ]

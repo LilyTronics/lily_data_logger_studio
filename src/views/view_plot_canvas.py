@@ -30,6 +30,8 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         self.enableLegend = True
         self.enableTicks = (True, True, False, False)
         self.enableAntiAliasing = True
+        self.enableYAxisLabel = False
+        self.enableXAxisLabel = True
         self.xSpec = "auto"
         self.ySpec = "auto"
         # pylint: enable=invalid-name
@@ -42,14 +44,14 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
-        gc = wx.lib.plot.PlotGraphics(lines, title)
+        gc = wx.lib.plot.PlotGraphics(lines, title, "Time [s]")
         self.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))
 
     ##########
     # Public #
     ##########
 
-    def draw_lines(self, graph_data):
+    def draw_lines(self, graph_data, x_label):
         lines = []
         for index, graph in enumerate(graph_data):
             lines.append(wx.lib.plot.PolyLine(
@@ -58,7 +60,7 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
-        self.Draw(wx.lib.plot.PlotGraphics(lines, self.title))
+        self.Draw(wx.lib.plot.PlotGraphics(lines, self.title, x_label))
 
 
 if __name__ == "__main__":
@@ -77,5 +79,5 @@ if __name__ == "__main__":
     frame = wx.Frame(None, title="Test ViewPlot", size=(800, 600))
     plot_view = ViewPlotCanvas(frame, "Sample Plot", names)
     frame.Show()
-    wx.CallAfter(plot_view.draw_lines, test_data)
+    wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]")
     app.MainLoop()

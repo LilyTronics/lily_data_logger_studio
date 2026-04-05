@@ -203,6 +203,7 @@ class ControllerMain:
         x_values = [0]
         for i in range(1, len(test_run["timestamps"])):
             x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
+        x_label = "Time [s]"
         graphs = self._configuration.get_graphs()
         graphs_data = {}
         for graph in graphs:
@@ -226,6 +227,7 @@ class ControllerMain:
                 }
                 lines.append(line_data)
             graphs_data[graph["name"]] = {
+                "x_label": x_label,
                 "lines": lines,
                 "settings": graph["settings"]
             }

@@ -61,6 +61,12 @@ class ViewEditGraphs(wx.Dialog):
         self._lst_measurements = wx.CheckListBox(self, wx.ID_ANY)
         lbl_log_scale = wx.StaticText(self, wx.ID_ANY, "Y-axis log scale:")
         self._ckh_log_scale = wx.CheckBox(self, wx.ID_ANY,)
+        lbl_y_scale = wx.StaticText(self, wx.ID_ANY,
+                                    "Y-axis scale, leave empty for automatic scale:")
+        lbl_y_min = wx.StaticText(self, wx.ID_ANY, "Y-axis min scale:")
+        self._txt_y_min = wx.TextCtrl(self, wx.ID_ANY)
+        lbl_y_max = wx.StaticText(self, wx.ID_ANY, "Y-axis max scale:")
+        self._txt_y_max = wx.TextCtrl(self, wx.ID_ANY)
         btn_save = wx.Button(self, IdManager.ID_GRAPH_SAVE, "Save")
         btn_cancel = wx.Button(self, IdManager.ID_GRAPH_CANCEL, "Cancel")
         btn_close = wx.Button(self, IdManager.ID_GRAPH_CLOSE, "Close")
@@ -72,9 +78,14 @@ class ViewEditGraphs(wx.Dialog):
         grid.Add(self._lst_measurements, (1, 1), wx.DefaultSpan, wx.ALIGN_TOP | wx.EXPAND)
         grid.Add(lbl_log_scale, (2, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._ckh_log_scale, (2, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(btn_save, (4, 2), wx.DefaultSpan)
-        grid.Add(btn_cancel, (4, 3), wx.DefaultSpan)
-        grid.Add(btn_close, (4, 4), wx.DefaultSpan)
+        grid.Add(lbl_y_scale, (3, 0), (1, 4), wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(lbl_y_min, (4, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._txt_y_min, (4, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(lbl_y_max, (5, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._txt_y_max, (5, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(btn_save, (7, 2), wx.DefaultSpan)
+        grid.Add(btn_cancel, (7, 3), wx.DefaultSpan)
+        grid.Add(btn_close, (7, 4), wx.DefaultSpan)
         grid.AddGrowableCol(1)
         grid.AddGrowableRow(1)
 
@@ -98,11 +109,15 @@ class ViewEditGraphs(wx.Dialog):
         self._lst_graphs.Select(selected_index)
 
     def get_settings(self):
+        y_min = self._txt_y_min.GetValue().strip()
+        y_max = self._txt_y_max.GetValue().strip()
         return {
             "name": self._txt_name.GetValue().strip(),
             "measurements": list(self._lst_measurements.GetCheckedStrings()),
             "settings": {
-                "log_scale": self._ckh_log_scale.GetValue()
+                "log_scale": self._ckh_log_scale.GetValue(),
+                "min_scale": None if y_min == "" else float(y_min),
+                "max_scale": None if y_min == "" else float(y_max)
             }
         }
 
@@ -110,6 +125,8 @@ class ViewEditGraphs(wx.Dialog):
         self._txt_name.SetValue(settings["name"])
         self._lst_measurements.SetCheckedStrings(settings["measurements"])
         self._ckh_log_scale.SetValue(settings["settings"].get("log_scale", False))
+        self._txt_y_min.SetValue(str(settings["settings"].get("min_scale", "")))
+        self._txt_y_max.SetValue(str(settings["settings"].get("max_scale", "")))
 
 
 if __name__ == "__main__":
