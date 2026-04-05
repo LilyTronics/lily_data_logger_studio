@@ -28,11 +28,11 @@ Release 1.0:
 * Edit process steps for controlling instruments. ✅
 * Edit graphs in the configuration. ✅
 * Show measurements in the data table  ✅
-* Show measurements in graphs.
+* Show measurements in graphs. ✅
 * Show live updates of the process. ✅
-* Manage test runs (show, delete, export)
 * Application for testing created drivers. ✅
 * Templates and a VS code workspace included for creating drivers. ✅
+* Manage test runs (show, delete, export)
 * User manual for data logger and for creating drivers.
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
