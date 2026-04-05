@@ -16,8 +16,7 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         "#cc00cc"
     ]
 
-    def __init__(self, parent, title, labels, init_data=None):
-        init_data = [] if init_data is None else init_data
+    def __init__(self, parent, title, labels):
         self.title = title
         self.labels = labels
         super().__init__(parent)
@@ -38,15 +37,28 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         lines = []
         for index, label in enumerate(self.labels):
             lines.append(wx.lib.plot.PolyLine(
-                init_data[index] if index < len(init_data) else [],
+                [],
                 legend=label,
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
         gc = wx.lib.plot.PlotGraphics(lines, title)
-        x_axis = None if len(init_data) > 0 else (0, 1)
-        y_axis = None if len(init_data) > 0 else (0, 1)
-        self.Draw(gc, xAxis=x_axis, yAxis=y_axis)
+        self.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))
+
+    ##########
+    # Public #
+    ##########
+
+    def draw_lines(self, graph_data):
+        lines = []
+        for index, graph in enumerate(graph_data):
+            lines.append(wx.lib.plot.PolyLine(
+                graph["data"],
+                legend=graph["legend"],
+                colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
+                width=2
+            ))
+        self.Draw(wx.lib.plot.PlotGraphics(lines, self.title))
 
 
 if __name__ == "__main__":
@@ -56,12 +68,14 @@ if __name__ == "__main__":
     names = []
     test_data = []
     for i in range(8):
+        line_data = {}
         names.append(f"Label {i + 1}")
-        test_data.append(
-            [(x, y) for x in range(50) for y in random.sample(range(10), 1)]
-        )
+        line_data["legend"] = names[-1]
+        line_data["data"] = [(x, y) for x in range(50) for y in random.sample(range(10), 1)]
+        test_data.append(line_data)
     app = wx.App(False)
     frame = wx.Frame(None, title="Test ViewPlot", size=(800, 600))
-    plot_view = ViewPlotCanvas(frame, "Sample Plot", names, test_data)
+    plot_view = ViewPlotCanvas(frame, "Sample Plot", names)
     frame.Show()
+    wx.CallAfter(plot_view.draw_lines, test_data)
     app.MainLoop()
