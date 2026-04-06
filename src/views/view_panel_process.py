@@ -72,6 +72,7 @@ class ViewPanelProcess(wx.Panel):
         for i in range(self._lst_process.GetItemCount()):
             if i == step_index - 1:
                 self._lst_process.SetItemBackgroundColour(i, wx.Colour(self._ACTIVE_COLOR))
+                self._lst_process.EnsureVisible(i)
             else:
                 self._lst_process.SetItemBackgroundColour(i, wx.Colour(self._DEFAULT_COLOR))
 
