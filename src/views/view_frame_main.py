@@ -326,6 +326,8 @@ class ViewFrameMain(wx.Frame):
         self._process_panel.update_progress(step_index)
 
     def update_data_table(self, table_data):
+        n_samples = len(table_data["timestamps"])
+        self._sb.SetStatusText(f"Number of samples: {n_samples}", self._SB_NR_OF_SAMPLES)
         self._data_table_panel.update_data(table_data)
 
     def update_graphs(self, graphs_data):
