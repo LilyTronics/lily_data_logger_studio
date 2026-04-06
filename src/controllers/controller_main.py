@@ -28,8 +28,6 @@ from src.views.view_dialogs import ViewDialogs
 
 class ControllerMain:
 
-    _MONITOR_UPDATE_RATE = 0.5
-
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
         self._logger.debug("Start main controller")
@@ -165,73 +163,17 @@ class ControllerMain:
                     status = "idle"
                     update_main = True
                     self._logger.info("Data logger stopped")
-                    self._view.update_process(0)
+                    wx.CallAfter(self._view.update_process, 0)
 
                 if update_main:
                     wx.CallAfter(self._view.update_status, status)
                     update_main = False
 
-                if self._controller_data_logger.is_running():
-                    # Update GUI with data
-                    self._view.update_process(self._controller_data_logger.get_process_step_index())
-                    test_run = self._controller_data_logger.get_test_run()
-                    if test_run is not None:
-                        wx.CallAfter(self._update_data_table, test_run)
-                        wx.CallAfter(self._update_graphs, test_run)
-
             except Exception as e:
                 self._logger.error("Error in data logger monitor thread:")
                 self._logger.error(str(e))
-            time.sleep(self._MONITOR_UPDATE_RATE)
+            time.sleep(0.05)
         self._logger.debug("Data logger monitor stopped")
-
-    def _update_data_table(self, test_run):
-        table_data = {
-            "timestamps": test_run["timestamps"],
-            "measurements": {}
-        }
-        for m in test_run["measurements"]:
-            table_data["measurements"][m["name"]] = m["values"]
-        self._view.update_data_table(table_data)
-
-    def _update_graphs(self, test_run):
-        # We can only create a graph if we have 2 or more samples
-        if len(test_run["timestamps"]) < 2:
-            return
-
-        # Create x values for the graph
-        x_values = [0]
-        for i in range(1, len(test_run["timestamps"])):
-            x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
-        x_label = "Time [s]"
-        graphs = self._configuration.get_graphs()
-        graphs_data = {}
-        for graph in graphs:
-            lines = []
-            for m in graph["measurements"]:
-                matches = [x for x in test_run["measurements"] if x["id"] == m]
-                if len(matches) != 1:
-                    continue
-                data = []
-                previous_value = 0
-                for i, value in enumerate(matches[0]["values"]):
-                    # We can only show int or floats in the graph
-                    if isinstance(value, (int, float)):
-                        previous_value = value
-                    else:
-                        value = previous_value
-                    data.append((x_values[i], value))
-                line_data = {
-                    "legend": f"{matches[0]['name']} [{matches[0]['unit']}]",
-                    "data": data
-                }
-                lines.append(line_data)
-            graphs_data[graph["name"]] = {
-                "x_label": x_label,
-                "lines": lines,
-                "settings": graph["settings"]
-            }
-        self._view.update_graphs(graphs_data)
 
     ##################
     # Event handlers #

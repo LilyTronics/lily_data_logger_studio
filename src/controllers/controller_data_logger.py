@@ -21,13 +21,67 @@ class ControllerDataLogger:
         self._parent_view = parent_view
         self._configuration = configuration
         self._logger = logger
-        self._measurements_runner = MeasurementsRunner(self._configuration, self._logger)
-        self._process_runner = ProcessRunner(self._configuration, self._logger)
+        self._measurements_runner = MeasurementsRunner(self._configuration, self._logger,
+                                                       self._measurement_callback)
+        self._process_runner = ProcessRunner(self._configuration, self._logger,
+                                             self._process_callback)
         self._check_result = False
 
     ###########
     # Private #
     ###########
+
+    def _measurement_callback(self, test_run):
+        # Update data table:
+        table_data = {
+            "timestamps": test_run["timestamps"],
+            "measurements": {}
+        }
+        for m in test_run["measurements"]:
+            table_data["measurements"][m["name"]] = m["values"]
+        wx.CallAfter(self._parent_view.update_data_table, table_data)
+
+        # Update graphs
+        # We can only create a graph if we have 2 or more samples
+        if len(test_run["timestamps"]) < 2:
+            return
+
+        # Create x values for the graph
+        x_values = [0]
+        for i in range(1, len(test_run["timestamps"])):
+            x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
+        x_label = "Time [s]"
+        graphs = self._configuration.get_graphs()
+        graphs_data = {}
+        for graph in graphs:
+            lines = []
+            for m in graph["measurements"]:
+                matches = [x for x in test_run["measurements"] if x["id"] == m]
+                if len(matches) != 1:
+                    continue
+                data = []
+                previous_value = 0
+                for i, value in enumerate(matches[0]["values"]):
+                    # We can only show int or floats in the graph
+                    if isinstance(value, (int, float)):
+                        previous_value = value
+                    else:
+                        value = previous_value
+                    data.append((x_values[i], value))
+                line_data = {
+                    "legend": f"{matches[0]['name']} [{matches[0]['unit']}]",
+                    "data": data
+                }
+                lines.append(line_data)
+            graphs_data[graph["name"]] = {
+                "x_label": x_label,
+                "lines": lines,
+                "settings": graph["settings"]
+            }
+        wx.CallAfter(self._parent_view.update_graphs, graphs_data)
+
+    def _process_callback(self, step_index):
+        wx.CallAfter(self._parent_view.update_process, step_index + 1)
 
     def _check_configuration(self):
         dlg_title = "Check configuration"
@@ -141,12 +195,6 @@ class ControllerDataLogger:
 
     def is_running(self):
         return self._measurements_runner.is_running() or self._process_runner.is_running()
-
-    def get_process_step_index(self):
-        return self._process_runner.get_current_index()
-
-    def get_test_run(self):
-        return self._measurements_runner.get_test_run()
 
 
 if __name__ == "__main__":

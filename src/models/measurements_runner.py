@@ -12,9 +12,10 @@ from src.models.time_converter import TimeConverter
 
 class MeasurementsRunner:
 
-    def __init__(self, configuration, logger):
+    def __init__(self, configuration, logger, update_callback):
         self._configuration = configuration
         self._logger = logger
+        self._update_callback = update_callback
         self._thread = None
         self._stop_event = threading.Event()
         self._run_id = None
@@ -62,6 +63,7 @@ class MeasurementsRunner:
         do_sample = True
         while not self._stop_event.is_set():
             if do_sample:
+                self._update_callback(TestRuns.get_test_run(self._run_id))
                 sample_start = int(time.time())
                 TestRuns.init_cycle(self._run_id, sample_start)
                 self._request_measurements(sample_start)
@@ -71,6 +73,7 @@ class MeasurementsRunner:
             elif 0 < end_time <= time.time() - start:
                 self._stop_event.set()
             time.sleep(0.01)
+        self._update_callback(TestRuns.get_test_run(self._run_id))
         self._logger.debug("Measurment runner stopped")
 
     ##########
@@ -92,12 +95,6 @@ class MeasurementsRunner:
 
     def is_running(self):
         return self._thread is not None and self._thread.is_alive()
-
-    def get_run_id(self):
-        return self._run_id
-
-    def get_test_run(self):
-        return TestRuns.get_test_run(self._run_id)
 
 
 if __name__ == "__main__":
