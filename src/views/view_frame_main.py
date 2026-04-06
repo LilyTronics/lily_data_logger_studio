@@ -2,6 +2,7 @@
 Main view
 """
 
+import time
 import wx.adv
 
 from wx.lib.agw import aui
@@ -41,7 +42,8 @@ class ViewFrameMain(wx.Frame):
     _LED_SIZE = (16, 16)
     _COLOR_LED_OFF = "#060"
     _COLOR_LED_ON = "#0f0"
-    _BLINK_SPEED = 500
+    _TIMER_SPEED = 100
+    _BLINK_SPEED = 5
 
     def __init__(self, title, log_filename, allow_docking):
         self._title = title
@@ -49,6 +51,8 @@ class ViewFrameMain(wx.Frame):
         self._allow_docking = allow_docking
         self._default_layout = ""
         self._log_filename = log_filename
+        self._start_time = None
+        self._blink_ticks = 0
 
         icon = wx.Icon()
         icon.CopyFromBitmap(Images.graphs_24.GetBitmap())
@@ -243,11 +247,20 @@ class ViewFrameMain(wx.Frame):
             self._activity_led.SetPosition((rect.x, rect.y))
 
     def _on_blink_timer(self, event):
-        if self._activity_led.GetBackgroundColour() == self._COLOR_LED_ON:
-            self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
+        if self._blink_ticks == self._BLINK_SPEED:
+            if self._activity_led.GetBackgroundColour() == self._COLOR_LED_ON:
+                self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
+            else:
+                self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
+            self._activity_led.Refresh()
+            self._blink_ticks = 0
         else:
-            self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
-        self._activity_led.Refresh()
+            self._blink_ticks += 1
+
+        if self._start_time is not None:
+            elapsed = TimeConverter.create_duration_time_string(int(time.time() - self._start_time))
+            self._sb.SetStatusText(f"Elapsed time: {elapsed}", self._SB_ELAPSED_TIME)
+
         event.Skip()
 
     def _on_restore_layout(self, event):
@@ -299,10 +312,14 @@ class ViewFrameMain(wx.Frame):
         self._sb.SetStatusText(f"Status: {status}", self._SB_STATUS)
         if status == "running":
             self._activity_led.SetBackgroundColour(self._COLOR_LED_ON)
-            self._blink_timer.Start(self._BLINK_SPEED)
+            self._blink_timer.Start(self._TIMER_SPEED)
+            if self._start_time is None:
+                self._start_time = time.time()
         else:
             self._activity_led.SetBackgroundColour(self._COLOR_LED_OFF)
             self._blink_timer.Stop()
+            self._start_time = None
+            self._blink_ticks = 0
         self._activity_led.Refresh()
 
     def update_process(self, step_index):
