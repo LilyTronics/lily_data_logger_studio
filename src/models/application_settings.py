@@ -95,6 +95,32 @@ class ApplicationSettings:
     def store_main_window_log_height(self, height):
         return self._store_property("main_window", "log_height", height)
 
+    ######################
+    # Driver test window #
+    ######################
+
+    def get_driver_test_window_size(self):
+        return (self._get_property("driver_test_window", "width", -1),
+                self._get_property("driver_test_window", "height", -1))
+
+    def store_driver_test_window_size(self, width, height):
+        self._store_property("driver_test_window", "width", width)
+        self._store_property("driver_test_window", "height", height)
+
+    def get_driver_test_window_position(self):
+        return (self._get_property("driver_test_window", "left", -1),
+                self._get_property("driver_test_window", "top", -1))
+
+    def store_driver_test_window_position(self, left, top):
+        self._store_property("driver_test_window", "left", left)
+        self._store_property("driver_test_window", "top", top)
+
+    def get_driver_test_window_maximized(self):
+        return self._get_property("driver_test_window", "maximized", False)
+
+    def store_driver_test_window_maximized(self, is_maximized):
+        self._store_property("driver_test_window", "maximized", is_maximized)
+
 
 if __name__ == "__main__":
 

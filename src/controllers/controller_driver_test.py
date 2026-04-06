@@ -8,6 +8,7 @@ import src.app_data as AppData
 import src.models.id_manager as IdManager
 
 from src.controllers.controller_drivers import ControllerDrivers
+from src.models.application_settings import ApplicationSettings
 from src.models.drivers import Drivers
 from src.models.test_options import TestOptions
 from src.simulators.run_simulators import start_simulators
@@ -21,11 +22,21 @@ class ControllerDriverTest:
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
         self._logger.debug("Start driver test controller")
+        self._app_settings = ApplicationSettings()
         self._driver_class = None
 
         self._logger.debug("Load driver test view")
         self._view = ViewFrameDriverTest(title, AppData.DRIVER_TEST_LOG_FILE)
 
+        value = self._app_settings.get_driver_test_window_position()
+        if -1 not in value:
+            self._view.SetPosition(value)
+        value = self._app_settings.get_driver_test_window_size()
+        if -1 not in value:
+            self._view.SetSize(value)
+        self._view.Maximize(self._app_settings.get_driver_test_window_maximized())
+
+        self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_BUTTON, self._on_reload_drivers,
                         id=IdManager.ID_DRIVER_TEST_RELOAD_DRIVERS)
         self._view.Bind(wx.EVT_LISTBOX, self._on_driver_select,
@@ -137,6 +148,13 @@ class ControllerDriverTest:
         finally:
             stop_simulators()
         self._logger.info("Driver test completed")
+        event.Skip()
+
+    def _on_view_close(self, event):
+        self._app_settings.store_driver_test_window_maximized(self._view.IsMaximized())
+        if not self._view.IsMaximized():
+            self._app_settings.store_driver_test_window_position(*self._view.GetPosition())
+            self._app_settings.store_driver_test_window_size(*self._view.GetSize())
         event.Skip()
 
 
