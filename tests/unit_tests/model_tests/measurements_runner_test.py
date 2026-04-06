@@ -27,12 +27,16 @@ class MeasurementsRunnerTest(TestSuite):
     def setup(self):
         start_simulators()
         Drivers.load()
-        self.measurement_runner = MeasurementsRunner(self.config, self.app_test_logger)
+        self.measurement_runner = MeasurementsRunner(self.config, self.app_test_logger,
+                                                     self.callback)
 
     def teardown(self):
         if self.measurement_runner is not None and self.measurement_runner.is_running():
             self.measurement_runner.stop()
         stop_simulators()
+
+    def callback(self, test_run):
+        self.run_id = test_run["id"]
 
     def load_config(self, config_filename):
         self.config.load(os.path.join(AppData.TEST_CONFIG_PATH, config_filename))
@@ -51,8 +55,7 @@ class MeasurementsRunnerTest(TestSuite):
 
     def check_test_run_id(self):
         # We need to wait unit the process is running and the test run ID is created
-        self.sleep(0.2)
-        self.run_id = self .measurement_runner.get_run_id()
+        self.sleep(1)
         self.log.debug(f"Run ID: {self.run_id}")
         uid = uuid.UUID(self.run_id)
         self.fail_if(uid.version != 4, "Invalid run ID")
@@ -73,7 +76,6 @@ class MeasurementsRunnerTest(TestSuite):
         self.fail_if(len(n_samples) != 1,
                      "Number of samples in the measurement are not consistent")
         n_samples = n_samples.pop()
-
 
     def test_run_measurements_end_time(self):
         self.load_config("test_measurements_end_time.json")
@@ -96,7 +98,7 @@ class MeasurementsRunnerTest(TestSuite):
         self.log.debug(f"Measurements running: {is_running}")
         self.fail_if(not is_running, "Measurements should be running")
         self.check_test_run_id()
-        result = self.wait_for(self.measurement_runner.is_running, False, 15, 1)
+        result = self.wait_for(self.measurement_runner.is_running, False, 14, 1)
         self.fail_if(result, "Measurement runner stopped unexpectedly")
         self.log.debug("Stop measurement runner")
         self.measurement_runner.stop()
