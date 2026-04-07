@@ -6,6 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+# Disable message for naming convention in this file,
+# because we must comply to the sphinx naming convention
+# pylint: disable=invalid-name
+
 project = 'Lily Data Logger Studio'
 copyright = '2026, LilyTronics'
 author = 'LilyTronics'
