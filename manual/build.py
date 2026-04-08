@@ -23,7 +23,7 @@ def build_manual(doc_name):
         subprocess.run(
             [
                 "sphinx-build",
-                "-b", "html",
+                "-b", "singlehtml",
                 "-c", manual_dir,
                 source_dir,
                 build_dir
