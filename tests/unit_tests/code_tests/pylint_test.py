@@ -25,6 +25,9 @@ class PylintTest(TestSuite):
             # Skip files in the temp folder
             if current_path.startswith(os.path.join(AppData.APP_PATH, "temp")):
                 continue
+            # Skip files in the build folder
+            if current_path.startswith(os.path.join(AppData.APP_PATH, "build", "build_output")):
+                continue
 
             sub_folders.sort()
             for filename in filenames:
