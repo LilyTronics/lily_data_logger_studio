@@ -7,11 +7,11 @@ import shutil
 import subprocess
 
 
-def build_manual(doc_name):
+def build_manual(src_name, doc_name):
 
     print(f"*** Build documentation {doc_name} ***")
     manual_dir = os.path.abspath(os.path.dirname(__file__))
-    source_dir = os.path.join(manual_dir, doc_name)
+    source_dir = os.path.join(manual_dir, src_name)
     build_dir = os.path.join(manual_dir, "build", doc_name)
 
     print(f"Manuals: {manual_dir}")
@@ -32,11 +32,23 @@ def build_manual(doc_name):
             capture_output=True,
             text=True
         )
+        # Remove files that are not needed
+        shutil.rmtree(os.path.join(build_dir, ".doctrees"), True)
+        os.remove(os.path.join(build_dir, ".buildinfo"))
+        os.remove(os.path.join(build_dir, "objects.inv"))
         print("Documentation built successfully.")
+        return True
     except subprocess.CalledProcessError as e:
         print(f"Error building documentation: {e.stderr}")
+    return False
+
 
 if __name__ == "__main__":
 
-    build_manual("main")
-    build_manual("driver_test")
+    results = [
+        build_manual("main", "Data Logger Studio"),
+        build_manual("driver_dev", "Driver Development")
+    ]
+
+    if False in results:
+        print("Some documentation failed to build.")
