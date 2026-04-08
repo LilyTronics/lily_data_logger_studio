@@ -26,6 +26,7 @@ else:
 
 INSTRUMENTS_PATH = os.path.join(APP_PATH, "instruments")
 DRIVERS_PATH = os.path.join(INSTRUMENTS_PATH, "drivers")
+MANUALS_PATH = os.path.join(APP_PATH, "manuals")
 SETTINGS_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.json")
 APP_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.log")
 DRIVER_TEST_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{DRIVER_TEST_EXE_NAME}.log")
