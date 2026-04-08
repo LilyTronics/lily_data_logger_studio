@@ -1,7 +1,7 @@
 Lily Data Logger Studio
 =======================
 
-.. image:: images/main_view.png
+.. image:: images/main_window.png
 
 .. toctree::
    :maxdepth: 2

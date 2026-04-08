@@ -1,7 +1,7 @@
 Lily Data Logger Studio Driver Development
 ==========================================
 
-.. image:: images/main_view.png
+.. image:: images/driver_test.png
 
 .. toctree::
    :maxdepth: 2
