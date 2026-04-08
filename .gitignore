@@ -7,7 +7,7 @@
 
 # Build output
 /build/build_output
-/manual/build
+/manuals/build
 
 # Test reports
 /tests/test_reports

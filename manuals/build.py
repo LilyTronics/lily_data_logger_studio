@@ -42,13 +42,16 @@ def build_manual(src_name, doc_name):
         print(f"Error building documentation: {e.stderr}")
     return False
 
-
-if __name__ == "__main__":
-
+def build_manuals():
+    print("*** Build manuals ***")
     results = [
         build_manual("main", "Data Logger Studio"),
         build_manual("driver_dev", "Driver Development")
     ]
+    print(f"Build results: {results}")
+    return False not in results
 
-    if False in results:
-        print("Some documentation failed to build.")
+
+if __name__ == "__main__":
+
+    print(build_manuals())
