@@ -73,6 +73,9 @@ class MeasurementsRunner:
             elif 0 < end_time <= time.time() - start:
                 self._stop_event.set()
             time.sleep(0.01)
+        # Wait for measurements to finish
+        while time.time() - sample_start < settings["sample_time"]:
+            time.sleep(0.1)
         self._update_callback(TestRuns.get_test_run(self._run_id))
         self._logger.debug("Measurment runner stopped")
 
