@@ -54,7 +54,7 @@ class TransportBase(ABC):
                 if validate_response(response):
                     break
             else:
-                raise TimeoutError("(Transport) Timout while waiting for response")
+                raise TimeoutError("(Transport) Timeout while waiting for response")
             self.log_debug(f"Response: {response}")
         else:
             self.log_debug(f"No response expected ({response})")
@@ -78,6 +78,10 @@ class TransportBase(ABC):
 
     @abstractmethod
     def receive(self):
+        pass
+
+    @abstractmethod
+    def close(self):
         pass
 
 

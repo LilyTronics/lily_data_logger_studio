@@ -202,6 +202,10 @@ class DriverBase(ABC):
             return None
         return self._process_response(channel, response)
 
+    @final
+    def close(self):
+        self.transport.close()
+
     #############
     # Overrides #
     #############

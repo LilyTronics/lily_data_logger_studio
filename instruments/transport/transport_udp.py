@@ -41,6 +41,9 @@ class TransportUdp(TransportBase):
             pass
         return data
 
+    def close(self):
+        self.socket.close()
+
 
 if __name__ == "__main__":
 
