@@ -9,6 +9,7 @@ import subprocess
 
 def build_manual(doc_name):
 
+    print(f"*** Build documentation {doc_name} ***")
     manual_dir = os.path.abspath(os.path.dirname(__file__))
     source_dir = os.path.join(manual_dir, doc_name)
     build_dir = os.path.join(manual_dir, "build", doc_name)
