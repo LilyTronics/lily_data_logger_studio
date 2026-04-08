@@ -8,7 +8,7 @@ from tests.lib.test_suite import TestSuite
 
 class DriversTest(TestSuite):
 
-    _EXPECTED_NR_FOF_DRIVERS = 1
+    _EXPECTED_NR_FOF_DRIVERS = 2
 
     def _on_progress(self, *params):
         self.log.debug(f"Loading: {params}")
