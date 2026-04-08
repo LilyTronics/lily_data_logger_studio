@@ -10,6 +10,7 @@ import PyInstaller.__main__
 import src
 
 import src.app_data as AppData
+from manuals.build import build_manuals
 
 
 def _clean_output_folder(output_folder):
@@ -95,6 +96,16 @@ def _copy_drivers(app_path):
                 # Just copy the file
                 shutil.copy2(full_path, target)
 
+def _copy_manuals(app_path):
+    if not build_manuals():
+        raise Exception("Error building manuals")
+
+    print("Copy manuals . . .")
+    source_folder = os.path.join(AppData.MANUALS_PATH, "build")
+    output_folder = os.path.join(app_path, "manuals")
+    os.makedirs(output_folder, exist_ok=True)
+    shutil.copytree(source_folder, output_folder, dirs_exist_ok=True)
+
 def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")
     print(platform.system())
@@ -161,6 +172,7 @@ def create_deployment():
 
     _copy_driver_test(dist_path, app_path)
     _copy_drivers(app_path)
+    _copy_manuals(app_path)
     _create_zip_file(dist_path, app_path)
 
     print("\nBuild done")
