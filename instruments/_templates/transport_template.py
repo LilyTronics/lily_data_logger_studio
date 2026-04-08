@@ -29,6 +29,10 @@ class TransportTemplate(TransportBase):
         data = b""
         return data
 
+    def close(self):
+        # Close the transport channel
+        pass
+
 
 if __name__ =="__main__":
 
@@ -59,3 +63,5 @@ if __name__ =="__main__":
         print(transport.receive())
         time.sleep(1)
         timeout -= 1
+
+    transport.close()
