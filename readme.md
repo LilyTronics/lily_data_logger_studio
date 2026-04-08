@@ -12,9 +12,9 @@ Log data from electronic instruments and control electronics instruments.
 * Write your own drivers using Python for any instrument. Templates and a VS Code workspace are included.
 * Tested on Windows and Ubuntu (probably can run on others).
 
-![main window](manual/main/images/main_window.png)
+![main window](manuals/main/images/main_window.png)
 
-![driver test](manual/driver_test/images/driver_test.png)
+![driver test](manuals/driver_dev/images/driver_test.png)
 
 ## Road map
 
