@@ -18,7 +18,7 @@ def build_manual(doc_name):
     print(f"Output : {build_dir}")
 
     try:
-        shutil.rmtree(build_dir)
+        shutil.rmtree(build_dir, True)
         subprocess.run(
             [
                 "sphinx-build",
