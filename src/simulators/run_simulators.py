@@ -4,10 +4,12 @@ Run all simulators.
 
 import time
 
+from src.simulators.multi_channel_analog_io import MultiChannelAnalogIo
 from src.simulators.temperature_chamber import TemperatureChamber
 
 _RUNNING_SIMULATORS = []
 _AVAILABLE_SIMULATORS = [
+    MultiChannelAnalogIo,
     TemperatureChamber
 ]
 

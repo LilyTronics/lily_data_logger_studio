@@ -10,6 +10,10 @@ class SimulatorSettings:
         "port": 51000
     }
 
+    AnalogIo = {
+        "host": "localhost",
+        "port": 51100
+    }
 
 if __name__ == "__main__":
 
