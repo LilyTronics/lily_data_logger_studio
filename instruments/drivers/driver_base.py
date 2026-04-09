@@ -19,6 +19,7 @@ class DriverBase(ABC):
 
     id = None
     name = "base class"
+    description = "Base class for all drivers"
     driver_settings = None
     channels = None
     transport = None
@@ -54,6 +55,11 @@ class DriverBase(ABC):
         if cls.name is DriverBase.name or not cls.name:
             raise ValueError(
                 f"(Driver) Driver name is not set in driver {cls.__name__}"
+            )
+        # Driver description
+        if cls.description is DriverBase.description or not cls.description:
+            raise ValueError(
+                f"(Driver) Driver description is not set in driver {cls.__name__}"
             )
         # Driver settings
         if cls.driver_settings is None:

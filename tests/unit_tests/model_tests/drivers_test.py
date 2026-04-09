@@ -35,25 +35,6 @@ class DriversTest(TestSuite):
             self.log.debug(f"Driver class: {driver_class}")
             self.fail_if(driver_class is None, "No driver found")
 
-    def test_get_settings(self):
-        drivers = Drivers.get_drivers()
-        self.fail_if(len(drivers) == 0, "Drivers required for this test")
-        for query in (drivers[0].id, drivers[0].get_class_name(), drivers[0].name):
-            self.log.debug(f"Get settings for {query}")
-            settings = Drivers.get_settings(query)
-            self.log.debug(f"Settings: {settings}")
-
-        self.log.debug("Get settings for unknown driver")
-        try:
-            settings = Drivers.get_settings("unknown driver")
-            self.fail("Expected an exception, but was not raised")
-        except Exception as e:
-            self.log.debug("Exception was raised, as expected")
-            self.log.debug(f"Message: {e}")
-            self.fail_if(str(e) != "No driver matching 'unknown driver'",
-                         "Invalid exception message")
-
-    # def test_get_driver
 
 if __name__ == "__main__":
 

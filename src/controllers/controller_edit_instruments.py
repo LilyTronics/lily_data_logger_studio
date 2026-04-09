@@ -93,6 +93,7 @@ class ControllerEditInstruments:
         instrument = self._configuration.get_instrument(self._selected_id)
         driver_class = Drivers.get_driver(instrument["driver_id"])
         instrument["driver_name"] = driver_class.name
+        instrument["driver_description"] = driver_class.description
         self._dlg.show_instrument(instrument, driver_class.driver_settings)
 
     ##################
@@ -108,8 +109,8 @@ class ControllerEditInstruments:
 
     def _on_driver_select(self, event):
         try:
-            settings = Drivers.get_settings(event.GetString())
-            self._dlg.show_driver_settings(settings)
+            driver_class = Drivers.get_driver(event.GetString())
+            self._dlg.show_driver_settings(driver_class.driver_settings, driver_class.description)
         except Exception as e:
             self._logger.error(f"Error loading setting: {e}")
             ViewDialogs.show_message(self._dlg, f"Error loading settings: {e}",

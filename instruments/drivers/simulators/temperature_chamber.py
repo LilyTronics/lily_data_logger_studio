@@ -13,6 +13,7 @@ class TemperatureChamber(DriverBase):
 
     id = "e5662459-c10d-4616-aa97-978024a825d0"
     name = "Temperature chamber simulator"
+    description = "Simulates a temperature chamber with ASCII protocol over IP/UDP"
 
     driver_settings = [
         DriverSetting("host", str, "localhost", DriverSetting.CTRL_TEXT),

@@ -72,12 +72,14 @@ class ViewEditInstruments(wx.Dialog):
         lbl_drivers = wx.StaticText(self, wx.ID_ANY, "Driver:")
         self._cmb_drivers = wx.ComboBox(self, IdManager.ID_INSTRUMENT_DRIVER,
                                         style=wx.CB_READONLY)
+        self._lbl_description = wx.StaticText(self, wx.ID_ANY, "")
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_name, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_name, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL | wx.EXPAND)
         grid.Add(lbl_drivers, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._cmb_drivers, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._lbl_description, (2, 1), wx.DefaultSpan, wx.EXPAND)
         grid.AddGrowableCol(1)
 
         return grid
@@ -126,9 +128,10 @@ class ViewEditInstruments(wx.Dialog):
         self._cmb_drivers.SetItems(driver_names)
         self.Layout()
 
-    def show_driver_settings(self, settings):
+    def show_driver_settings(self, settings, description):
         ViewCommon.create_settings_grid(settings, self._settings_grid, self,
                                         self._settings_controls)
+        self._lbl_description.SetLabel(description)
         self.Layout()
 
     def show_instrument(self, instrument, driver_settings):
@@ -137,7 +140,7 @@ class ViewEditInstruments(wx.Dialog):
             self._cmb_drivers.SetValue(instrument["driver_name"])
         else:
             self._cmb_drivers.SetSelection(wx.NOT_FOUND)
-        self.show_driver_settings(driver_settings)
+        self.show_driver_settings(driver_settings, instrument["driver_description"])
         for key, value in instrument["settings"].items():
             if key in self._settings_controls:
                 ctrl, _ctrl_type = self._settings_controls[key]

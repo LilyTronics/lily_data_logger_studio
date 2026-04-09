@@ -93,13 +93,6 @@ class Drivers:
         return cls._drivers
 
     @classmethod
-    def get_settings(cls, query):
-        driver = cls.get_driver(query)
-        if driver is None:
-            raise Exception(f"No driver matching '{query}'")
-        return driver.driver_settings
-
-    @classmethod
     def get_driver(cls, query):
         # Query can be ID, class name or driver name
         # Prio is ID
