@@ -34,7 +34,7 @@ class SimulatorTemperatureChamberTest(TestSuite):
     def test_id(self):
         self.log.debug("Connect to temperature chamber")
         self.client = UdpClient(SimulatorSettings.TemperatureChamber["host"],
-                       SimulatorSettings.TemperatureChamber["port"])
+                                SimulatorSettings.TemperatureChamber["port"])
         sim_id = self.client.send_command(b"id?")
         self.log.debug(f"ID: {sim_id}")
         self.fail_if(sim_id != b"Temperature chamber", f"Unexpected simulator ID: {sim_id}")
