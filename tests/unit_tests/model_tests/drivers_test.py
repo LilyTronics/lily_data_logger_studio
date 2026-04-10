@@ -2,27 +2,54 @@
 Unit test for the drivers model only (not the drivers itself).
 """
 
+import os
+
+import src.app_data as AppData
+
 from src.models.drivers import Drivers
 from tests.lib.test_suite import TestSuite
 
 
 class DriversTest(TestSuite):
 
-    _EXPECTED_NR_FOF_DRIVERS = 2
+    expected_nr_of_drivers = 0
 
-    def _on_progress(self, *params):
-        self.log.debug(f"Loading: {params}")
+    def setup(self):
+        for item in os.listdir(AppData.DRIVERS_PATH):
+            folder = os.path.join(AppData.DRIVERS_PATH, item)
+            if os.path.isdir(folder):
+                for current_folder, sub_folders, filenames in os.walk(folder):
+                    sub_folders.sort()
+                    if "__pycache__" in current_folder:
+                        continue
+                    for filename in filenames:
+                        if filename == "__init__.py" or not filename.endswith(".py"):
+                            continue
+                        fullname = os.path.join(current_folder, filename)
+                        if self.is_driver(fullname):
+                            self.expected_nr_of_drivers += 1
+        self.log.debug(f"Expected number of drivers: {self.expected_nr_of_drivers}")
+
+    def is_driver(self, filename):
+        with open(filename, "r", encoding="utf-8") as fp:
+            for line in fp.readlines():
+                if line.startswith("class ") and "(DriverBase):" in line:
+                    return True
+        return False
+
+    def on_progress(self, *params):
+        self.log.debug(f"(Progress) Loading: {params[1]}")
 
     def test_list_drivers(self):
-        Drivers.load(self._on_progress)
+        Drivers.load(self.on_progress)
         drivers = Drivers.get_drivers()
         self.log.debug(f"Drivers: {drivers}")
-        self.fail_if(len(drivers) != self._EXPECTED_NR_FOF_DRIVERS,
-            f"The numbers of drivers is not correct. Expected: {self._EXPECTED_NR_FOF_DRIVERS}")
+        self.fail_if(len(drivers) != self.expected_nr_of_drivers,
+            f"The numbers of drivers is not correct. Expected: {self.expected_nr_of_drivers}")
 
     def test_reload_drivers(self):
         self.log.debug("Reload drivers")
-        Drivers.load(self._on_progress)
+        Drivers.load(self.on_progress)
         drivers = Drivers.get_drivers()
         self.log.debug(f"Drivers: {drivers}")
 
