@@ -34,7 +34,9 @@
       "settings": {
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sps",
-        "value": 1
+        "params": {
+          "value": 1
+        }
       }
     },
     {
@@ -44,7 +46,9 @@
       "settings": {
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sts",
-        "value": 35
+        "params": {
+          "value": 35
+        }
       }
     },
     {
@@ -76,7 +80,9 @@
       "settings": {
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sts",
-        "value": 20
+        "params": {
+          "value": 20
+        }
       }
     },
     {

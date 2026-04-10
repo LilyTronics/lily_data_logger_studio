@@ -55,8 +55,8 @@ class ProcessStepSetOutput(ProcessStepBase):
         settings = self.step_data["settings"]
         instrument = InstrumentPool.get_instrument(settings["instrument_id"])
         self.logger.debug(f"Step {step_index + 1}: set output: {instrument.name}, "
-                          f"{settings["channel_id"]}, {settings["value"]}")
-        instrument.process_channel(settings["channel_id"], settings["value"])
+                          f"{settings["channel_id"]}, {settings["params"]}")
+        instrument.process_channel(settings["channel_id"], settings["params"])
         return step_index + 1
 
 
