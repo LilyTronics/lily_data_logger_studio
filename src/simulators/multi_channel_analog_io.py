@@ -33,7 +33,7 @@ class MultiChannelAnalogIo(SimulatorBase):
         if self._conn is None:
             try:
                 self._conn, _ = self._sock.accept()
-            except (BlockingIOError):
+            except BlockingIOError:
                 pass
 
         if self._conn is not None:
@@ -55,7 +55,7 @@ class MultiChannelAnalogIo(SimulatorBase):
 
                 response += self._TERMINATOR
                 self._conn.sendall(response)
-            except (BlockingIOError):
+            except BlockingIOError:
                 pass
 
     def cleanup(self):
