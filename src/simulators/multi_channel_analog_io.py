@@ -14,7 +14,6 @@ class MultiChannelAnalogIo(SimulatorBase):
 
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = b"\n"
-    _TIMEOUT = 0.1
 
     def __init__(self):
         super().__init__()
@@ -24,7 +23,6 @@ class MultiChannelAnalogIo(SimulatorBase):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._sock.setblocking(False)
-        self._sock.settimeout(self._TIMEOUT)
         self._sock.bind((SimulatorSettings.AnalogIo["host"],
                          SimulatorSettings.AnalogIo["port"]))
         self._sock.listen(1)
@@ -35,10 +33,11 @@ class MultiChannelAnalogIo(SimulatorBase):
         if self._conn is None:
             try:
                 self._conn, _ = self._sock.accept()
-            except (BlockingIOError, TimeoutError):
+            except (BlockingIOError):
                 pass
 
         if self._conn is not None:
+            self._conn.setblocking(False)
             try:
                 data = self._conn.recv(self._RX_BUFFER_SIZE)
                 if data == b"":
@@ -56,7 +55,7 @@ class MultiChannelAnalogIo(SimulatorBase):
 
                 response += self._TERMINATOR
                 self._conn.sendall(response)
-            except TimeoutError:
+            except (BlockingIOError):
                 pass
 
     def cleanup(self):
