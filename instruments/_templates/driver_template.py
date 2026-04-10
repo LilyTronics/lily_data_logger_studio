@@ -39,9 +39,9 @@ class DriverTemplate(DriverBase):
     }
 
 
-    def build_command(self, channel, value):
+    def build_command(self, channel, params):
         command = b""
-        # Build your command here depending on the channel properties and value
+        # Build your command here depending on the channel properties and params
         return command
 
     def parse_response(self, channel, response):
