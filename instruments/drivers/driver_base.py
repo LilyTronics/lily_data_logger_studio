@@ -183,7 +183,8 @@ class DriverBase(ABC):
         return None if len(matches) != 1 else matches[0]
 
     @final
-    def process_channel(self, channel_query, value=None, callback=None, callback_params=None):
+    def process_channel(self, channel_query, params=None, callback=None, callback_params=None):
+        params = {} if params is None else params
         self.log_debug(f"Get channel for query: '{channel_query}'")
         channel = self.get_channel(channel_query)
         if channel is None:
@@ -191,7 +192,7 @@ class DriverBase(ABC):
                 f"(Driver) Channel '{channel_query}' not found in driver {self.get_class_name()}"
             )
         self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
-        command = self.build_command(channel, value)
+        command = self.build_command(channel, params)
         if not isinstance(command, bytes):
             raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
@@ -217,7 +218,7 @@ class DriverBase(ABC):
     #############
 
     @abstractmethod
-    def build_command(self, channel, value):
+    def build_command(self, channel, params):
         pass
 
     @abstractmethod
