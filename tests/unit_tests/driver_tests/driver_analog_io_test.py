@@ -48,6 +48,23 @@ class DriverAnalogIoTest(TestSuite):
         if not self.wait_for(self.async_response, True, 2, 0.1):
             self._fail("No async response received")
 
+    def test_set_output(self):
+        params = {
+            "channel": 1,
+            "value": 7
+        }
+        response = self.driver.process_channel("so", params)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(response != "ok", "Invalid response")
+
+    def test_get_input(self):
+        params = {
+            "channel": 1
+        }
+        response = self.driver.process_channel("gi", params)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(not isinstance(response, float), "Invalid response")
+
 
 if __name__ == "__main__":
 

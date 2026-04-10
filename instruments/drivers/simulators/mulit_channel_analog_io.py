@@ -22,6 +22,8 @@ class MultiChannelAnalogIo(DriverBase):
 
     channels = [
         DriverChannel("gid", "get instrument ID", [], None, str),
+        DriverChannel("so", "set output", [], float, str),
+        DriverChannel("gi", "get input", [], None, float)
     ]
 
     transport = TransportTcp
@@ -37,10 +39,21 @@ class MultiChannelAnalogIo(DriverBase):
 
     is_simulator = True
 
-    def build_command(self, channel, value):
+    def build_command(self, channel, params):
+        value = params.get("value", None)
+        ch = params.get("channel", None)
+
         match channel.channel_id:
             case "gid":
                 return b"id?"
+            case "so":
+                if None in (channel, value):
+                    raise ValueError(f"Wrong values for channel and or value: {ch}, {value}")
+                return b"so,%d,%f" % (ch, value)
+            case "gi":
+                if channel is None:
+                    raise ValueError(f"Wrong value for channel: {ch}")
+                return b"gi,%d" % ch
 
         raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
                             f"driver {self.get_class_name()}")
