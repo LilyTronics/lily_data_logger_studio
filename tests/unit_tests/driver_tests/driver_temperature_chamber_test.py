@@ -50,7 +50,7 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug(f"Response: {set_point}")
         self.fail_if(not isinstance(set_point, float), "The response is not a float")
         set_point += 5
-        response = self.driver.process_channel("sts", set_point)
+        response = self.driver.process_channel("sts", {"value": set_point})
         self.log.debug(f"Response: {response}")
         self.fail_if(response != "ok", "The response is not 'ok'")
         response = self.driver.process_channel("gts")
@@ -63,9 +63,9 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug(f"Response: {state}")
         self.fail_if(not isinstance(state, int), "The response is not an int")
         state = 1 - state
-        response = self.driver.process_channel("sps", state)
+        response = self.driver.process_channel("sps", {"value": state})
         self.log.debug(f"Response: {response}")
-        self.fail_if(response is not None, "The response is not Non")
+        self.fail_if(response is not None, "The response is not None")
         response = self.driver.process_channel("gps")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != state, "The power state was not updated correctly")

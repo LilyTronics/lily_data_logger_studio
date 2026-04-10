@@ -42,8 +42,9 @@ class TemperatureChamber(DriverBase):
 
     is_simulator = True
 
-    def build_command(self, channel, value):
-        if channel.value_type is not None:
+    def build_command(self, channel, params):
+        value = params.get("value", None)
+        if value is not None and channel.value_type is not None:
             value = channel.value_type(value)
 
         match channel.channel_id:
@@ -54,10 +55,14 @@ class TemperatureChamber(DriverBase):
             case "gts":
                 return b"tset?"
             case "sts":
+                if value is None:
+                    raise ValueError("Invalid value")
                 return f"temp={value:.1f}".encode("utf-8")
             case "gps":
                 return b"pwr?"
             case "sps":
+                if value is None:
+                    raise ValueError("Invalid value")
                 return f"pwr={value}".encode("utf-8")
 
         raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
