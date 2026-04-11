@@ -9,7 +9,7 @@ from instruments.transport.transport_base import TransportBase
 
 class TransportTcp(TransportBase):
 
-    socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socket = None
 
     _BUFFER_SIZE = 1500
     _DEFAULT_PORT = 50000
@@ -17,16 +17,17 @@ class TransportTcp(TransportBase):
     def is_connection_ready(self):
         try:
             address = self.socket.getpeername()
-            self.log_debug(f"Connect to: {address[0]}:{address[1]}")
+            self.log_debug(f"Connected to: {address[0]}:{address[1]}")
             return True
         except:
             return False
 
     def connect(self):
-        self.socket.connect((
-            self.transport_settings.get("host", ""),
-            self.transport_settings.get("port", self._DEFAULT_PORT)
-        ))
+        host = self.transport_settings.get("host", "")
+        port = self.transport_settings.get("port", self._DEFAULT_PORT)
+        self.log_debug(f"Connect to: {host}:{port}")
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect((host, port))
         # Small receiver timeout
         self.socket.settimeout(0.001)
 
