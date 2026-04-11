@@ -138,8 +138,8 @@ class ControllerMain:
 
     def _start_monitor_thread(self):
         if not (self._monitor_thread is not None and self._monitor_thread.is_alive()):
-            self._monitor_thread = threading.Thread(name="Data logger monitor",
-                                                    target=self._data_logger_monitor,
+            self._monitor_thread = threading.Thread(target=self._data_logger_monitor,
+                                                    name="DataLoggerMonitor",
                                                     daemon=True)
             self._monitor_thread.start()
 

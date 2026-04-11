@@ -137,7 +137,7 @@ class ControllerDataLogger:
         dlg = ViewDialogCheckInstruments(self._parent_view)
         dlg.add_instruments(instruments)
         threading.Thread(
-            target=self._run_check_instruments, args=(dlg,), daemon=True
+            target=self._run_check_instruments, name="CheckInstruments", args=(dlg,), daemon=True
         ).start()
         dlg.ShowModal()
         dlg.Destroy()

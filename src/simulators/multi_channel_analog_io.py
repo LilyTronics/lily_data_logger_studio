@@ -12,7 +12,7 @@ from src.simulators.simulator_settings import SimulatorSettings
 
 class MultiChannelAnalogIo(SimulatorBase):
 
-    NAME = "Multi channel analog IO"
+    NAME = "SimulatorMultiChannelAnalogIo"
 
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = b"\n"
@@ -29,7 +29,8 @@ class MultiChannelAnalogIo(SimulatorBase):
         self._inputs = [0, 0]
         self._sock = None
         self._lock = threading.RLock()
-        self._analog_thread = threading.Thread(target=self._process_analog, daemon=True)
+        self._analog_thread = threading.Thread(target=self._process_analog,
+                                               name="SimulatorAnalogIoProcess", daemon=True)
         self._analog_thread.start()
 
     ###########

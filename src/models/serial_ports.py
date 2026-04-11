@@ -22,7 +22,8 @@ def get_available_serial_ports():
         if not any(q in (p.description or "").lower() for q in ignore)
     ]
     for port in serial_ports:
-        t = threading.Thread(target=_check_serial_port, args=(lock, port, ports))
+        t = threading.Thread(target=_check_serial_port, name="CheckSerialPort",
+                             args=(lock, port, ports))
         t.daemon = True
         t.start()
         threads.append(t)

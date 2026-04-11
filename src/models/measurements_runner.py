@@ -47,9 +47,9 @@ class MeasurementsRunner:
         TestRuns.store_measurement(self._run_id, params["request_time"],
                                     params["measurement_id"], value)
 
-    def _run_measurement(self):
+    def _run_measurements(self):
         time.sleep(0.1)
-        self._logger.debug("Measurement runner started")
+        self._logger.debug("Measurements runner started")
         settings = self._configuration.get_settings()
         end_time = 0
         if settings["continuous_mode"]:
@@ -77,7 +77,7 @@ class MeasurementsRunner:
         while time.time() - sample_start < settings["sample_time"]:
             time.sleep(0.1)
         self._update_callback(TestRuns.get_test_run(self._run_id))
-        self._logger.debug("Measurment runner stopped")
+        self._logger.debug("Measurments runner stopped")
 
     ##########
     # Public #
@@ -86,7 +86,7 @@ class MeasurementsRunner:
     def start(self):
         if self._thread is None or not self._thread.is_alive():
             self._stop_event.clear()
-            self._thread = threading.Thread(target=self._run_measurement)
+            self._thread = threading.Thread(target=self._run_measurements, name="RunMeasurements")
             self._thread.daemon = True
             self._thread.start()
 

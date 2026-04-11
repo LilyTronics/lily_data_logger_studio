@@ -61,7 +61,7 @@ class ProcessRunner:
     def start(self):
         if self._thread is None or not self._thread.is_alive():
             self._stop_event.clear()
-            self._thread = threading.Thread(target=self._run_process)
+            self._thread = threading.Thread(target=self._run_process, name="ProcessRunner")
             self._thread.daemon = True
             self._thread.start()
 
