@@ -40,7 +40,7 @@ class DriverAnalogIoTest(TestSuite):
         self.log.debug("Get ID")
         response = self.driver.process_channel("gid")
         self.log.debug(f"Response: {response}")
-        self.fail_if(response != "Multi channel analog IO", "The ID is not correct")
+        self.fail_if(response != "SimulatorMultiChannelAnalogIo", "The ID is not correct")
 
     def test_get_id_async(self):
         self.async_response[0] = False
