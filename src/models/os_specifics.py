@@ -4,6 +4,7 @@ OS Specifics.
 
 import os
 import sys
+import threading
 
 from pathlib import Path
 
@@ -34,8 +35,15 @@ def get_platform_info():
 def is_valid_display_session():
     return get_display_session_type().lower() != "wayland"
 
+def show_threads():
+    print("Threads:")
+    for t in threading.enumerate():
+        print(f" - name: {t.name} - running: {t.is_alive()} - "
+              f"process: {t.native_id} - daemon: {t.daemon}")
+
 
 if __name__ =="__main__":
     print("User data dir:", get_user_data_dir())
     print("Platform info:", get_platform_info())
     print("Valid display session:", is_valid_display_session())
+    show_threads()
