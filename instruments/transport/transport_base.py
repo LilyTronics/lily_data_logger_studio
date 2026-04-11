@@ -35,11 +35,13 @@ class TransportBase(ABC):
     @final
     def transceive(self, channel, tx_packet, validate_response):
         self.log_debug(f"Process packet: {tx_packet}")
-        self.log_debug(f"Connection ready: {self.is_connection_ready()}")
-        if not self.is_connection_ready():
+        is_ready = self.is_connection_ready()
+        self.log_debug(f"Connection ready: {is_ready}")
+        if not is_ready:
             self.connect()
-        self.log_debug(f"Connection ready: {self.is_connection_ready()}")
-        if not self.is_connection_ready():
+        is_ready = self.is_connection_ready()
+        self.log_debug(f"Connection ready: {is_ready}")
+        if not is_ready:
             self.log_debug("Connect to instrument")
             raise ConnectionError("(Transport) No connection could be established")
         self.log_debug(f"Send packet: {tx_packet}")
