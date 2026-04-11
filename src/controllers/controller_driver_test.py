@@ -4,6 +4,8 @@ Controller for the driver test application.
 
 import wx
 
+from copy import deepcopy
+
 import src.app_data as AppData
 import src.models.id_manager as IdManager
 
@@ -61,30 +63,32 @@ class ControllerDriverTest:
     ###########
 
     def _test_driver(self, settings):
-        driver_name = settings.get("driver", {}).get("name", None)
-        driver_settings = settings.get("driver", {}).get("settings", {})
-        self._logger.debug(f"Driver: '{driver_name}'")
-        self._logger.debug(f"Driver settings: {driver_settings}")
-        channel_name = settings.get("channel", {}).get("name", None)
-        channel_settings = settings.get("channel", {}).get("settings", {})
-        self._logger.debug(f"Channel: '{channel_name}'")
-        self._logger.debug(f"Channel settings: {channel_settings}")
-        driver_class = Drivers.get_driver(driver_name)
-        if driver_class is None:
-            raise Exception(f"Driver '{driver_name}' not found")
-        driver = driver_class(driver_settings)
-        channel = driver.get_channel(channel_name)
-        if channel is None:
-            raise Exception(f"Channel '{channel_name}' not found in driver '{driver_name}'")
-        if driver.is_simulator:
-            start_simulators()
-        value = None
-        if "value" in channel_settings:
-            value = channel_settings["value"]
-            del channel_settings["value"]
-        self._logger.debug("Process channel")
-        result = driver.process_channel(channel_name, value)
-        self._logger.debug(f"Result: {result}")
+        driver = None
+        try:
+            driver_name = settings.get("driver", {}).get("name", None)
+            driver_settings = settings.get("driver", {}).get("settings", {})
+            self._logger.debug(f"Driver: '{driver_name}'")
+            self._logger.debug(f"Driver settings: {driver_settings}")
+            channel_name = settings.get("channel", {}).get("name", None)
+            channel_params = settings.get("channel", {}).get("params", {})
+            self._logger.debug(f"Channel: '{channel_name}'")
+            self._logger.debug(f"Channel parameters: {channel_params}")
+            driver_class = Drivers.get_driver(driver_name)
+            if driver_class is None:
+                raise Exception(f"Driver '{driver_name}' not found")
+            driver = driver_class(driver_settings)
+            channel = driver.get_channel(channel_name)
+            if channel is None:
+                raise Exception(f"Channel '{channel_name}' not found in driver '{driver_name}'")
+            if driver.is_simulator:
+                start_simulators()
+            self._logger.debug("Process channel")
+            result = driver.process_channel(channel_name, channel_params)
+            self._logger.debug(f"Result: {result}")
+        finally:
+            if driver is not None:
+                driver.close()
+            stop_simulators()
 
     ##################
     # Event handlers #
@@ -122,13 +126,13 @@ class ControllerDriverTest:
                 channel = self._driver_class.get_channel(channel_name)
                 if channel is None:
                     raise Exception(f"Channel '{event.GetString()}' not found")
-                setting_class = self._driver_class.get_driver_setting_class()
-                settings = []
+                params = deepcopy(channel.parameters)
                 if channel.direction == channel.DIR_OUTPUT:
-                    settings.append(setting_class(
+                    setting_class = self._driver_class.get_driver_setting_class()
+                    params.append(setting_class(
                         "value", channel.value_type, None, setting_class.CTRL_TEXT
                     ))
-                self._view.show_channel_settings(settings)
+                self._view.show_channel_settings(params)
             except Exception as e:
                 self._logger.error(f"Error loading channel: {e}")
                 ViewDialogs.show_message(self._view, f"Error loading channel: {e}",
@@ -145,8 +149,6 @@ class ControllerDriverTest:
             self._logger.error(f"Error testing driver: {e}")
             ViewDialogs.show_message(self._view, f"Error testing driver: {e}",
                                         "Test driver", wx.ICON_EXCLAMATION)
-        finally:
-            stop_simulators()
         self._logger.info("Driver test completed")
         event.Skip()
 

@@ -122,7 +122,7 @@ class ViewFrameDriverTest(wx.Frame):
             },
             "channel": {
                 "name": self._lst_channels.GetStringSelection(),
-                "settings": {
+                "params": {
                     name: ctrl[1](ctrl[0].GetValue())
                             for name, ctrl in self._channel_settings.items()
                 }

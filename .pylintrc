@@ -13,7 +13,8 @@ disable = attribute-defined-outside-init,
           too-many-branches,
           too-many-instance-attributes,
           too-many-locals,
-          too-many-public-methods
+          too-many-public-methods,
+          wrong-import-order
 
 [TYPECHECK]
 ignored-modules = wx,
