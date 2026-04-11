@@ -211,6 +211,7 @@ class DriverBase(ABC):
 
     @final
     def close(self):
+        self.protocol.close()
         self.transport.close()
 
     #############

@@ -76,6 +76,12 @@ class ProtocolBase(ABC):
         # No callback, process immediately
         return self._process_command(channel, command)
 
+    @final
+    def close(self):
+        if self._thread.is_alive():
+            self._stop_event.set()
+            self._thread.join()
+
     #############
     # Overrides #
     #############
