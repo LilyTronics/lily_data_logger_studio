@@ -4,6 +4,8 @@ Driver channel object.
 
 import re
 
+from instruments.drivers.driver_settings import DriverSetting
+
 
 class DriverChannel:
 
@@ -11,8 +13,9 @@ class DriverChannel:
     DIR_OUTPUT = "output"
     SUPPORTED_TYPES = [float, int, str]
 
-    def __init__(self, channel_id, name, parameters, value_type, response_type,
-                 expect_response=True):
+    def __init__(self, channel_id, name, value_type, response_type,
+                 expect_response=True, parameters=None):
+        parameters = [] if parameters is None else parameters
         if not isinstance(channel_id, str):
             raise TypeError("(Channel) Channel ID must be a string")
         if channel_id == "":
@@ -32,10 +35,10 @@ class DriverChannel:
         if not isinstance(parameters, list):
             raise TypeError("(Channel) Parameter must be a list")
         for p in parameters:
-            if not isinstance(p, dict):
-                raise TypeError("(Channel) Parameters must be a list of dictionaries")
+            if not isinstance(p, DriverSetting):
+                raise TypeError("(Channel) Parameters must be a list of driver setting")
         if value_type is not None and value_type not in self.SUPPORTED_TYPES:
-            raise ValueError(f"(Channel) Value type {response_type} is not supported")
+            raise ValueError(f"(Channel) Value type {value_type} is not supported")
         if response_type is not None and response_type not in self.SUPPORTED_TYPES:
             raise ValueError(f"(Channel) Response type {response_type} is not supported")
         if not isinstance(expect_response, bool):

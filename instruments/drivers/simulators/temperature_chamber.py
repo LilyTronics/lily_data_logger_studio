@@ -21,12 +21,12 @@ class TemperatureChamber(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", [], None, str),
-        DriverChannel("gat", "get actual temperature", [], None, float),
-        DriverChannel("gts", "get temperature setpoint", [], None, float),
-        DriverChannel("sts", "set temperature setpoint", [], float, str),
-        DriverChannel("gps", "get power state", [], None, int),
-        DriverChannel("sps", "set power state", [], int, None, False)
+        DriverChannel("gid", "get instrument ID", None, str),
+        DriverChannel("gat", "get actual temperature", None, float),
+        DriverChannel("gts", "get temperature setpoint", None, float),
+        DriverChannel("sts", "set temperature setpoint", float, str),
+        DriverChannel("gps", "get power state", None, int),
+        DriverChannel("sps", "set power state", int, None, False)
     ]
 
     transport = TransportUdp

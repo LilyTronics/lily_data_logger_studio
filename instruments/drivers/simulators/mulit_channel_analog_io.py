@@ -21,9 +21,13 @@ class MultiChannelAnalogIo(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", [], None, str),
-        DriverChannel("so", "set output", [], float, str),
-        DriverChannel("gi", "get input", [], None, float)
+        DriverChannel("gid", "get instrument ID", None, str),
+        DriverChannel("so", "set output", float, str, True, [
+            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
+        ]),
+        DriverChannel("gi", "get input", None, float, True, [
+            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
+        ])
     ]
 
     transport = TransportTcp

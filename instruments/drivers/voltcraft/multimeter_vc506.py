@@ -24,7 +24,7 @@ class VoltcraftVC506(DriverBase):
     ]
 
     channels = [
-        DriverChannel("meas", "get measurement", [], None, float),
+        DriverChannel("meas", "get measurement", None, float),
     ]
 
     transport = TransportSerial
