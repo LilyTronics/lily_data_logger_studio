@@ -39,7 +39,7 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug("Get ID")
         response = self.driver.process_channel("gid")
         self.log.debug(f"Response: {response}")
-        self.fail_if(response != "Temperature chamber", "The ID is not correct")
+        self.fail_if(response != "SimulatorTemperatureChamber", "The ID is not correct")
 
     def test_get_actual_temperature(self):
         self.log.debug("Get actual temperature")
