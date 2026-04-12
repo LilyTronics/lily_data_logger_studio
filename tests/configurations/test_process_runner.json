@@ -23,7 +23,8 @@
       "channel_id": "gat",
       "unit": "\u00b0C",
       "gain": 1.0,
-      "offset": 0.0
+      "offset": 0.0,
+      "params": {}
     }
   ],
   "process": [

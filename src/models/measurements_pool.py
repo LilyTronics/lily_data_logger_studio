@@ -63,8 +63,8 @@ class MeasurementsPool:
                 "callback_params": callback_params
             }
             callback = cls._process_callback
-        value = instrument.process_channel(measurement["channel_id"], callback=callback,
-                                           callback_params=callback_params)
+        value = instrument.process_channel(measurement["channel_id"], measurement["params"],
+                                           callback=callback, callback_params=callback_params)
         return cls.convert_value(value, measurement)
 
 

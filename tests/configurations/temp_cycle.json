@@ -23,7 +23,8 @@
       "channel_id": "gat",
       "unit": "\u00b0C",
       "gain": 1.0,
-      "offset": 0.0
+      "offset": 0.0,
+      "params": {}
     }
   ],
   "process": [
@@ -34,7 +35,9 @@
       "settings": {
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sps",
-        "value": 1
+        "params": {
+          "value": 1
+        }
       }
     },
     {
@@ -42,9 +45,11 @@
       "name": "Set temperature to 40",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": 40.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sts"
+        "channel_id": "sts",
+        "params": {
+          "value": 40.0
+        }
       }
     },
     {
@@ -74,9 +79,11 @@
       "name": "Set temperature to -10",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": -10.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sts"
+        "channel_id": "sts",
+        "params": {
+          "value": -10.0
+        }
       }
     },
     {
@@ -115,9 +122,11 @@
       "label": "",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": 20.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sts"
+        "channel_id": "sts",
+        "params": {
+          "value": 20.0
+        }
       }
     },
     {
@@ -138,9 +147,11 @@
       "label": "",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": 0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sps"
+        "channel_id": "sps",
+        "params": {
+          "value": 0
+        }
       }
     }
   ],
