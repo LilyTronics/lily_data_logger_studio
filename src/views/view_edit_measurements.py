@@ -61,7 +61,7 @@ class ViewEditMeasurements(wx.Dialog):
         return grid
 
     def _create_controls(self):
-        # Placeholder for channel settings
+        # Placeholder for channel parameters
         self._params_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         self._params_grid.Add(wx.Panel(self), (0, 0))
 
