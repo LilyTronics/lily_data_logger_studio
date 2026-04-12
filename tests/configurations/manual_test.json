@@ -13,6 +13,15 @@
         "host": "localhost",
         "port": 51000
       }
+    },
+    {
+      "id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+      "name": "Analog IO",
+      "driver_id": "24debf6c-9022-45cf-9900-99913c382dee",
+      "settings": {
+        "host": "localhost",
+        "port": 51100
+      }
     }
   ],
   "measurements": [
@@ -23,7 +32,20 @@
       "channel_id": "gat",
       "unit": "\u00b0C",
       "gain": 1.0,
-      "offset": 0.0
+      "offset": 0.0,
+      "params": {}
+    },
+    {
+      "id": "aca62f3b-97e0-4f65-a711-71245f0d2484",
+      "name": "Voltage CH1",
+      "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+      "channel_id": "gi",
+      "unit": "V",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {
+        "channel": 1
+      }
     }
   ],
   "process": [
