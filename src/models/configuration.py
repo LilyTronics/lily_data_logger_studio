@@ -46,7 +46,8 @@ class Configuration:
         "channel_id": "",
         "unit": "",
         "gain": 1.0,
-        "offset": 0.0
+        "offset": 0.0,
+        "params": {}
     }
 
     _STEP = {
@@ -214,7 +215,7 @@ class Configuration:
             matches = [x for x in self.get_measurements() if x["name"] == query]
         return None if len(matches) != 1 else deepcopy(matches[0])
 
-    def add_measurement(self, name, instrument_id, channel_id, unit, gain, offset):
+    def add_measurement(self, name, instrument_id, channel_id, unit, gain, offset, params):
         if self.get_measurement(name) is not None:
             raise Exception("A measurement with this name already exists")
         measurement = deepcopy(self._MEASUREMENT)
@@ -225,10 +226,11 @@ class Configuration:
         measurement["unit"] = unit
         measurement["gain"] = gain
         measurement["offset"] = offset
+        measurement["params"] = params
         self._configuration["measurements"].append(measurement)
 
     def update_measurement(self, measurement_id, name, instrument_id, channel_id, unit, gain,
-                           offset):
+                           offset, params):
         i = self._get_index_of_measurement(measurement_id)
         measurement = self.get_measurement(name)
         if measurement is not None and measurement["id"] != measurement_id:
@@ -239,6 +241,7 @@ class Configuration:
         self._configuration["measurements"][i]["unit"] = unit
         self._configuration["measurements"][i]["gain"] = gain
         self._configuration["measurements"][i]["offset"] = offset
+        self._configuration["measurements"][i]["params"] = params
 
     def delete_measurement(self, measurement_id):
         i = self._get_index_of_measurement(measurement_id)

@@ -86,7 +86,7 @@ class ControllerEditMeasurements:
             driver = driver_class(instrument.get("settings", {}))
             channel_name = settings.get("channel_name")
             self._log_to_console(f"Get value for channel: {channel_name}")
-            value = driver.process_channel(channel_name)
+            value = driver.process_channel(channel_name, settings.get("params", {}))
             self._log_to_console(f"Value from channel: {value}")
             if isinstance(value, (int, float)):
                 unit = settings.get("unit")
@@ -117,6 +117,7 @@ class ControllerEditMeasurements:
         measurement["unit"] = settings["unit"]
         measurement["gain"] = settings["gain"]
         measurement["offset"] = settings["offset"]
+        measurement["params"] = settings["params"]
         if measurement["name"] == "":
             raise Exception("Name cannot be empty")
         return measurement
@@ -162,13 +163,13 @@ class ControllerEditMeasurements:
             if self._selected_id is None:
                 self._configuration.add_measurement(measurement["name"],
                     measurement["instrument_id"],measurement["channel_id"], measurement["unit"],
-                    measurement["gain"], measurement["offset"])
+                    measurement["gain"], measurement["offset"], measurement["params"])
                 measurement = self._configuration.get_measurement(measurement["name"])
                 self._selected_id = measurement["id"]
             else:
                 self._configuration.update_measurement(self._selected_id, measurement["name"],
                     measurement["instrument_id"],measurement["channel_id"], measurement["unit"],
-                    measurement["gain"], measurement["offset"])
+                    measurement["gain"], measurement["offset"], measurement["params"])
         except Exception as e:
             self._logger.error(f"Error saving measurement: {e}")
             ViewDialogs.show_message(self._dlg, f"Error saving measurement: {e}",

@@ -151,7 +151,7 @@ class ConfigurationTest(TestSuite):
 
         self.log.debug("Add measurement")
         self._configuration.add_measurement("test measurement 1", "instr-1234", "ch-1",
-                                            "V", 1.0, 0.0)
+                                            "V", 1.0, 0.0, {})
         measurements = self._configuration.get_measurements()
         self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 1, "Measurement was not added")
@@ -159,7 +159,7 @@ class ConfigurationTest(TestSuite):
         self.log.debug("Add measurement with same name")
         try:
             self._configuration.add_measurement("test measurement 1", "instr-1234", "ch-1",
-                                                "V", 1.0, 0.0)
+                                                "V", 1.0, 0.0, {})
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
@@ -177,7 +177,7 @@ class ConfigurationTest(TestSuite):
 
         self.log.debug("Add another measurement")
         self._configuration.add_measurement("test measurement 2", "instr-1234", "ch-2",
-                                            "V", 1.0, 0.0)
+                                            "V", 1.0, 0.0, {})
         measurements = self._configuration.get_measurements()
         self._log_list("Measurements", measurements)
         self.fail_if(len(measurements) != 2, "Measurement was not added")
@@ -187,7 +187,8 @@ class ConfigurationTest(TestSuite):
         self._configuration.update_measurement(measurement["id"], "Test measurement 3",
                                                measurement["instrument_id"],
                                                measurement["channel_id"], measurement["unit"],
-                                               measurement["gain"], measurement["offset"])
+                                               measurement["gain"], measurement["offset"],
+                                               measurement["params"])
         measurements = self._configuration.get_measurements()
         self._log_list("Measurements", measurements)
 
@@ -197,7 +198,8 @@ class ConfigurationTest(TestSuite):
             self._configuration.update_measurement(measurement["id"], measurements[1]["name"],
                                                    measurement["instrument_id"],
                                                    measurement["channel_id"], measurement["unit"],
-                                                   measurement["gain"], measurement["offset"])
+                                                   measurement["gain"], measurement["offset"],
+                                                   measurement["params"])
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")
@@ -213,7 +215,8 @@ class ConfigurationTest(TestSuite):
             self._configuration.update_measurement("invalid ID", measurement["name"],
                                                    measurement["instrument_id"],
                                                    measurement["channel_id"], measurement["unit"],
-                                                   measurement["gain"], measurement["offset"])
+                                                   measurement["gain"], measurement["offset"],
+                                                   measurement["params"])
             self.fail("Expected an exception, but was not raised")
         except Exception as e:
             self.log.debug("Exception was raised, as expected")

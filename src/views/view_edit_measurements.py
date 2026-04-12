@@ -8,18 +8,20 @@ import src.models.id_manager as IdManager
 import src.models.images as Images
 import src.views.gui_sizes as GuiSizes
 
+from src.views.view_common import create_settings_grid
+
 
 class ViewEditMeasurements(wx.Dialog):
 
     _TITLE = "Measurements"
-    _WINDOW_SIZE = (800, 500)
+    _WINDOW_SIZE = (800, 600)
     _COL_WIDTH = 180
     _COLOR_DEFAULT = "#000"
     _COLOR_ERROR = "#f60"
 
     def __init__(self, parent):
         super().__init__(parent, title=self._TITLE)
-        self._settings_controls = {}
+        self._params_controls = {}
         self._channels = []
 
         icon = wx.Icon()
@@ -60,12 +62,12 @@ class ViewEditMeasurements(wx.Dialog):
 
     def _create_controls(self):
         # Placeholder for channel settings
-        self._settings_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
-        self._settings_grid.Add(wx.Panel(self), (0, 0))
+        self._params_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
+        self._params_grid.Add(wx.Panel(self), (0, 0))
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(self._create_general_controls(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
-        box.Add(self._settings_grid, 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._params_grid, 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(self._create_conversion_settings(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(self._create_test_console(), 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(self._create_buttons(), 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
@@ -139,26 +141,7 @@ class ViewEditMeasurements(wx.Dialog):
         return grid
 
     def _show_channel_parameters(self, parameters):
-        # Show channel settings
-        self._settings_controls.clear()
-        self._settings_grid.Clear(True)
-        if len(parameters) == 0:
-            self._settings_grid.Add(wx.Panel(self), (0, 0))
-        else:
-            try:
-                for i, param in enumerate(parameters):
-                    lbl = wx.StaticText(self, wx.ID_ANY, f"{param.name}:")
-                    ctrl_class = getattr(wx, param.gui_control)
-                    ctrl = ctrl_class(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
-                    ctrl.SetValue(str(param.default_value))
-                    self._settings_grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                    self._settings_grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-                    self._settings_controls[param.name] = (ctrl, param.type)
-            except:
-                # Restore layout
-                self._settings_grid.Add(wx.Panel(self), (0, 0))
-                self.Layout()
-                raise
+        create_settings_grid(parameters, self._params_grid, self, self._params_controls)
         self.Layout()
 
     ##################
@@ -209,6 +192,7 @@ class ViewEditMeasurements(wx.Dialog):
                 self._cmb_channels.SetSelection(wx.NOT_FOUND)
         else:
             self._cmb_instruments.SetSelection(wx.NOT_FOUND)
+            self._cmb_channels.SetSelection(wx.NOT_FOUND)
         self._txt_unit.SetValue(measurement["unit"])
         self._txt_gain.SetValue(str(measurement["gain"]))
         self._txt_offset.SetValue(str(measurement["offset"]))
@@ -221,13 +205,13 @@ class ViewEditMeasurements(wx.Dialog):
             "unit": self._txt_unit.GetValue().strip(),
             "gain": float(self._txt_gain.GetValue().strip()),
             "offset": float(self._txt_offset.GetValue().strip()),
-            "settings": {}
+            "params": {}
         }
-        for key, (ctrl, ctrl_type) in self._settings_controls.items():
+        for key, (ctrl, ctrl_type) in self._params_controls.items():
             value = None
             try:
                 value = ctrl.GetValue().strip()
-                settings["settings"][key] = ctrl_type(value)
+                settings["params"][key] = ctrl_type(value)
             except Exception as e:
                 raise ValueError(
                     f"Invalid value for setting {key}: '{value}'. "
