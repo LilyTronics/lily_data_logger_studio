@@ -18,6 +18,7 @@ import time
 
 from abc import ABC
 from abc import abstractmethod
+from copy import deepcopy
 from typing import final
 
 from src.models.instrument_pool import InstrumentPool
@@ -54,9 +55,12 @@ class ProcessStepSetOutput(ProcessStepBase):
     def execute(self, step_index):
         settings = self.step_data["settings"]
         instrument = InstrumentPool.get_instrument(settings["instrument_id"])
+        params = deepcopy(settings)
+        del params["instrument_id"]
+        del params["channel_id"]
         self.logger.debug(f"Step {step_index + 1}: set output: {instrument.name}, "
-                          f"{settings["channel_id"]}, {settings["params"]}")
-        instrument.process_channel(settings["channel_id"], settings["params"])
+                          f"{settings["channel_id"]}, {params}")
+        instrument.process_channel(settings["channel_id"], params)
         return step_index + 1
 
 
