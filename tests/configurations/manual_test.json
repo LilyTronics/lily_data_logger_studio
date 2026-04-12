@@ -54,9 +54,9 @@
       "name": "Turn on temperature chamber",
       "type": "ProcessStepSetOutput",
       "settings": {
+        "value": 1,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sps",
-        "value": 1
+        "channel_id": "sps"
       }
     },
     {
@@ -64,9 +64,9 @@
       "name": "Set temperature to 35",
       "type": "ProcessStepSetOutput",
       "settings": {
+        "value": 35.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sts",
-        "value": 35
+        "channel_id": "sts"
       }
     },
     {
@@ -75,11 +75,11 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "measurement",
-        "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
-        "min_value": 34,
-        "max_value": 36,
+        "min_value": 34.0,
+        "max_value": 36.0,
         "poll_interval": 2,
-        "timeout": 10
+        "timeout": 10,
+        "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
       }
     },
     {
@@ -96,9 +96,9 @@
       "name": "Set temperature to 20",
       "type": "ProcessStepSetOutput",
       "settings": {
+        "value": 20.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
-        "channel_id": "sts",
-        "value": 20
+        "channel_id": "sts"
       }
     },
     {
@@ -107,11 +107,11 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "measurement",
-        "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f",
-        "min_value": 19,
-        "max_value": 21,
+        "min_value": 19.0,
+        "max_value": 21.0,
         "poll_interval": 2,
-        "timeout": 10
+        "timeout": 10,
+        "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
       }
     },
     {
@@ -128,8 +128,8 @@
       "name": "Loop cyclus",
       "type": "ProcessStepLoop",
       "settings": {
-        "count": 3,
-        "loop_from": "start cycle"
+        "loop_from": "start cycle",
+        "count": 3
       }
     }
   ],

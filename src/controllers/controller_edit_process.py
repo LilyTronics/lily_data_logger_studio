@@ -21,7 +21,7 @@ class ControllerEditProcess:
         self._selected_index = None
 
         self._dlg = ViewEditProcess(parent_view)
-        self._dlg.set_step_names([x.name for x in STEP_CLASSES])
+        self._dlg.set_step_names(sorted([x.name for x in STEP_CLASSES]))
         self._update_steps()
 
         self._dlg.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_activated,
@@ -66,31 +66,30 @@ class ControllerEditProcess:
             raise Exception(f"instrument not found for {instrument_query}")
         return instrument
 
-    def _get_channels(self, instrument, name_filter=None):
-        driver_class = Drivers.get_driver(instrument.get("driver_id"))
-        if driver_class is None:
-            raise Exception(f"driver not found for {instrument["name"]}")
-        channels = [x for x in driver_class.get_output_channels()
-                        if name_filter is None or x.name == name_filter]
-        if len(channels) == 0:
-            raise Exception("No channels available")
-        return channels
-
-    def _get_channel_names(self, instrument_query, id_filter=None):
-        names = []
+    def _get_channels(self, instrument_query, channel_filter=None):
+        channels = []
         try:
             instrument = self._get_instrument(instrument_query)
-            channels = self._get_channels(instrument)
-            names = [x.name for x in channels if id_filter is None or x.channel_id == id_filter]
+            driver_class = Drivers.get_driver(instrument.get("driver_id"))
+            if driver_class is None:
+                raise Exception(f"driver not found for {instrument["name"]}")
+            channels = [
+                x for x in driver_class.get_output_channels()
+                if channel_filter is None or
+                   x.channel_id == channel_filter or
+                   x.name == channel_filter
+            ]
+            if len(channels) == 0:
+                raise Exception("No channels available")
         except Exception as e:
             self._logger.error(f"Error loading channels: {e}")
             ViewDialogs.show_message(self._dlg, f"Error loading channels: {e}",
                                      "Select instrument", wx.ICON_EXCLAMATION)
-        return names
+        return channels
 
     def _get_channel_name(self, instrument_id, channel_id):
-        channels = self._get_channel_names(instrument_id, channel_id)
-        return "" if len(channels) != 1 else channels[0]
+        channels = self._get_channels(instrument_id, channel_id)
+        return "" if len(channels) != 1 else channels[0].name
 
     def _get_measurement_names(self):
         measurements = self._configuration.get_measurements()
@@ -103,6 +102,16 @@ class ControllerEditProcess:
     def _get_measurement_id(self, measurement_name):
         measurement = self._configuration.get_measurement(measurement_name)
         return "" if measurement is None else measurement["id"]
+
+    def _get_driver_class(self, instrument_query):
+        driver_class = None
+        instrument = self._configuration.get_instrument(instrument_query)
+        if instrument is None:
+            raise Exception("instrument not found in the configuration")
+        driver_class = Drivers.get_driver(instrument.get("driver_id"))
+        if driver_class is None:
+            raise Exception(f"driver not found for {instrument_query}")
+        return driver_class
 
     def _update_steps(self, selected_index=-1):
         steps = self._configuration.get_process_steps()
@@ -120,7 +129,8 @@ class ControllerEditProcess:
             if "instrument_id" in step.get("settings", {}):
                 instrument_id = step["settings"]["instrument_id"]
                 step["selected_instrument"] = self._get_instrument_name(instrument_id)
-                step["channels"] = self._get_channel_names(instrument_id)
+                step["driver_class"] = self._get_driver_class(instrument_id)
+                step["channels"] = self._get_channels(instrument_id)
                 if "channel_id" in step.get("settings", {}):
                     channel_id = step["settings"]["channel_id"]
                     step["selected_channel"] = self._get_channel_name(instrument_id, channel_id)
@@ -138,28 +148,26 @@ class ControllerEditProcess:
         if len(matches) != 1:
             raise Exception(f"No step class found for step {settings["step_name"]}")
         step_settings = settings["settings"]
-        value_type = None
+        # Loop
+        if "loop_from" in step_settings:
+            if step_settings["loop_from"] == "":
+                raise Exception("Loop from cannot be empty")
+        # Set output
         if "instrument_name" in step_settings:
             instrument = self._get_instrument(step_settings["instrument_name"])
             step_settings["instrument_id"] = instrument["id"]
             del step_settings["instrument_name"]
             if "channel_name" in step_settings:
-                channel = self._get_channels(instrument, step_settings["channel_name"])
+                channel = self._get_channels(instrument["id"], step_settings["channel_name"])
                 if len(channel) == 1:
                     step_settings["channel_id"] = channel[0].channel_id
-                    value_type = channel[0].value_type
                 del step_settings["channel_name"]
-        if "value" in step_settings:
-            if value_type is None:
-                raise Exception("The value type is not defined for this channel")
-            step_settings["value"] = value_type(step_settings["value"])
+        # Wait for measurement
         if "measurement_name" in step_settings:
             step_settings["measurement_id"] = self._get_measurement_id(
                 step_settings["measurement_name"])
             del step_settings["measurement_name"]
-        if "loop_from" in step_settings:
-            if step_settings["loop_from"] == "":
-                raise Exception("Loop from cannot be empty")
+        # Wait for time, as is
         step = self._configuration.get_new_process_step()
         step["insert"] = settings["insert"]
         step["name"] = settings["name"]
@@ -188,7 +196,16 @@ class ControllerEditProcess:
 
     def _on_instrument_select(self, event):
         instrument_name = event.GetString()
-        self._dlg.update_settings({"channels": self._get_channel_names(instrument_name)})
+        try:
+            driver_class = self._get_driver_class(instrument_name)
+            self._dlg.update_settings({
+                "channels": driver_class.get_output_channels(),
+                "driver_class": driver_class
+            })
+        except Exception as e:
+            self._logger.error(f"Error loading channels: {e}")
+            ViewDialogs.show_message(self._dlg, f"Error loading channels: {e}",
+                                     "Select instrument", wx.ICON_EXCLAMATION)
         event.Skip()
 
     def _on_new(self, event):

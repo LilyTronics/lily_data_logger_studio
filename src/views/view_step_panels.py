@@ -4,10 +4,13 @@ View with settings for each process step.
 
 import wx
 
-from src.models.time_converter import TimeConverter
+from copy import deepcopy
 
 import src.models.id_manager as IdManager
 import src.views.gui_sizes as GuiSizes
+
+from src.models.time_converter import TimeConverter
+from src.views.view_common import create_settings_grid
 
 
 class ViewStepPanel(wx.Panel):
@@ -25,44 +28,74 @@ class ViewStepPanelSetOutput(ViewStepPanel):
 
     name = "Set output"
 
+    _driver_class = None
+    _channels = []
+    _params_controls = {}
+
+    def _on_channel_select(self, event):
+        self._show_channel_parameters(event.GetString())
+
+    def _show_channel_parameters(self, channel_name):
+        channel = [x for x in self._channels if x.name == channel_name]
+        if len(channel) > 0:
+            params = deepcopy(channel[0].parameters)
+            setting_class = self._driver_class.get_driver_setting_class()
+            params.append(setting_class(
+                "value", channel[0].value_type, None, setting_class.CTRL_TEXT
+            ))
+            create_settings_grid(params, self._params_grid, self, self._params_controls)
+            self.Layout()
+
     def create_controls(self):
         lbl_instrument = wx.StaticText(self, wx.ID_ANY, "Instrument:")
         self._cmb_instruments = wx.ComboBox(self, IdManager.ID_PROCESS_INSTRUMENTS,
                                             style=wx.CB_READONLY)
         lbl_channel = wx.StaticText(self, wx.ID_ANY, "Channel:")
         self._cmb_channels = wx.ComboBox(self, wx.ID_ANY, style=wx.CB_READONLY)
-        lbl_value = wx.StaticText(self, wx.ID_ANY, "Value:")
-        self._txt_value = wx.TextCtrl(self, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
+        self._cmb_channels.Bind(wx.EVT_COMBOBOX, self._on_channel_select)
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         grid.Add(lbl_instrument, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._cmb_instruments, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(lbl_channel, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._cmb_channels, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(lbl_value, (2, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(self._txt_value, (2, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
 
-        return grid
+        # Placeholder for channel paramters
+        self._params_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
+        self._params_grid.Add(wx.Panel(self), (0, 0))
+
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(grid, 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+        box.Add(self._params_grid, 0, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
+
+        return box
 
     def update_settings(self, settings):
         if "instruments" in settings:
             self._cmb_instruments.SetItems(sorted(settings["instruments"]))
         if "channels" in settings:
-            self._cmb_channels.SetItems(sorted(settings["channels"]))
+            self._channels = settings["channels"]
+            channel_names = [x.name for x in self._channels]
+            self._cmb_channels.SetItems(sorted(channel_names))
+            self._driver_class = settings.get("driver_class", self._driver_class)
         if "selected_instrument" in settings:
             if settings["selected_instrument"] in self._cmb_instruments.GetItems():
                 self._cmb_instruments.SetValue(settings["selected_instrument"])
         if "selected_channel" in settings:
             if settings["selected_channel"] in self._cmb_channels.GetItems():
                 self._cmb_channels.SetValue(settings["selected_channel"])
-        if "value" in settings.get("settings", {}):
-            self._txt_value.SetValue(str(settings["settings"]["value"]))
+                self._show_channel_parameters(settings["selected_channel"])
+                for key, ctrl in self._params_controls.items():
+                    if key in settings["settings"]:
+                        ctrl[0].SetValue(str(settings["settings"][key]))
+        self.Layout()
 
     def get_settings(self):
         return {
             "instrument_name": self._cmb_instruments.GetValue(),
             "channel_name": self._cmb_channels.GetValue(),
-            "value": self._txt_value.GetValue().strip()
+        } | {
+            name: ctrl[1](ctrl[0].GetValue()) for name, ctrl in self._params_controls.items()
         }
 
 
