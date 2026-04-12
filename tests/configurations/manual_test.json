@@ -1,7 +1,7 @@
 {
   "settings": {
     "sample_time": 3,
-    "end_time": 60,
+    "end_time": 600,
     "continuous_mode": false
   },
   "instruments": [
@@ -16,7 +16,7 @@
     },
     {
       "id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
-      "name": "Analog IO",
+      "name": "Mulit channel analog IO (sim)",
       "driver_id": "24debf6c-9022-45cf-9900-99913c382dee",
       "settings": {
         "host": "localhost",
@@ -46,6 +46,18 @@
       "params": {
         "channel": 1
       }
+    },
+    {
+      "id": "59fac1ac-610f-40af-8d92-0c88375fc511",
+      "name": "Voltage CH2",
+      "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+      "channel_id": "gi",
+      "unit": "V",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {
+        "channel": 2
+      }
     }
   ],
   "process": [
@@ -61,12 +73,34 @@
     },
     {
       "label": "start cycle",
-      "name": "Set temperature to 35",
+      "name": "Set temperature",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": 35.0,
+        "value": 60.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Set voltage CH1",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 1,
+        "value": 4.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
+      }
+    },
+    {
+      "name": "Set voltage CH2",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 2,
+        "value": 12.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
       }
     },
     {
@@ -75,11 +109,33 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "measurement",
-        "min_value": 34.0,
-        "max_value": 36.0,
+        "min_value": 59.0,
+        "max_value": 61.0,
         "poll_interval": 2,
-        "timeout": 10,
+        "timeout": 60,
         "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
+      }
+    },
+    {
+      "name": "Set voltage CH1",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 1,
+        "value": 2.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
+      }
+    },
+    {
+      "name": "Set voltage CH2",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 2,
+        "value": 4.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
       }
     },
     {
@@ -88,17 +144,39 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "time",
-        "wait_time": 10
+        "wait_time": 60
       }
     },
     {
       "label": "",
-      "name": "Set temperature to 20",
+      "name": "Set temperature",
       "type": "ProcessStepSetOutput",
       "settings": {
-        "value": 20.0,
+        "value": -20.0,
         "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
         "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Set voltage CH1",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 1,
+        "value": 4.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
+      }
+    },
+    {
+      "name": "Set voltage CH2",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 2,
+        "value": 12.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
       }
     },
     {
@@ -107,11 +185,33 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "measurement",
-        "min_value": 19.0,
-        "max_value": 21.0,
+        "min_value": -21.0,
+        "max_value": -19.0,
         "poll_interval": 2,
-        "timeout": 10,
+        "timeout": 60,
         "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
+      }
+    },
+    {
+      "name": "Set voltage CH1",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 1,
+        "value": 2.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
+      }
+    },
+    {
+      "name": "Set voltage CH2",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "channel": 2,
+        "value": 4.0,
+        "instrument_id": "8cd1412e-27b6-40d1-a4d7-83d7b728a9e0",
+        "channel_id": "so"
       }
     },
     {
@@ -120,7 +220,7 @@
       "type": "ProcessStepWait",
       "settings": {
         "wait_for": "time",
-        "wait_time": 10
+        "wait_time": 60
       }
     },
     {
@@ -131,18 +231,63 @@
         "loop_from": "start cycle",
         "count": 3
       }
+    },
+    {
+      "name": "Set temperature",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 20.0,
+        "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+        "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Wait for temperature to reach set point",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "measurement",
+        "min_value": 19.0,
+        "max_value": 21.0,
+        "poll_interval": 2,
+        "timeout": 60,
+        "measurement_id": "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
+      }
+    },
+    {
+      "name": "Turn off temperature chamber",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 0,
+        "instrument_id": "857e73ea-415f-4ea6-ad92-8a16ae7024cf",
+        "channel_id": "sps"
+      }
     }
   ],
   "graphs": [
     {
-      "name": "Graph 1",
+      "name": "Temperature",
       "measurements": [
         "abbd4c1c-10d8-4b60-8723-0438fc914d5f"
       ],
       "settings": {
         "log_scale": false,
-        "min_scale": 10.0,
-        "max_scale": 40.0
+        "min_scale": -30.0,
+        "max_scale": 70.0
+      }
+    },
+    {
+      "name": "Voltage",
+      "measurements": [
+        "aca62f3b-97e0-4f65-a711-71245f0d2484",
+        "59fac1ac-610f-40af-8d92-0c88375fc511"
+      ],
+      "settings": {
+        "log_scale": false,
+        "min_scale": 0.0,
+        "max_scale": 10.0
       }
     }
   ]
