@@ -1,5 +1,5 @@
 """
-View for the configuration.
+View side panel.
 """
 
 import wx
@@ -7,7 +7,7 @@ import wx
 import src.models.images as Images
 
 
-class ViewPanelConfiguration(wx.Panel):
+class ViewPanelSide(wx.Panel):
 
     def __init__(self, parent):
         super().__init__(parent)

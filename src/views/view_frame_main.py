@@ -11,7 +11,7 @@ import src.models.id_manager as IdManager
 import src.models.images as Images
 
 from src.models.time_converter import TimeConverter
-from src.views.view_panel_configuration import ViewPanelConfiguration
+from src.views.view_panel_side import ViewPanelSide
 from src.views.view_panel_data_table import ViewPanelDataTable
 from src.views.view_panel_graphs import ViewPanelGraphs
 from src.views.view_panel_log_messages import ViewPanelLogMessages
@@ -146,7 +146,7 @@ class ViewFrameMain(wx.Frame):
         self._left_win.SetOrientation(wx.adv.LAYOUT_VERTICAL)
         self._left_win.SetAlignment(wx.adv.LAYOUT_LEFT)
         self._left_win.SetSashVisible(wx.adv.SASH_RIGHT, True)
-        self._configuration_panel = ViewPanelConfiguration(self._left_win)
+        self._side_panel = ViewPanelSide(self._left_win)
 
         self._main_win = wx.Panel(self, wx.ID_ANY)
 
@@ -286,7 +286,7 @@ class ViewFrameMain(wx.Frame):
             self._bot_win.SetDefaultSize((-1, height))
 
     def update_configuration(self, configuration):
-        self._configuration_panel.update_tree(configuration)
+        self._side_panel.update_tree(configuration)
         self._graphs_panel.update(configuration)
         self._process_panel.update(configuration)
         self._data_table_panel.update(configuration)
