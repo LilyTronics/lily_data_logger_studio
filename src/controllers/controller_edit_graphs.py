@@ -63,8 +63,8 @@ class ControllerEditGraphs:
     def _show_graph_data(self, index):
         self._selected_index = None
         graphs = self._configuration.get_graphs()
-        if 0 <= index  < len(graphs):
-            graph = graphs[0]
+        if 0 <= index < len(graphs):
+            graph = graphs[index]
             measurements = self._configuration.get_measurements()
             names = []
             for measurement_id in graph["measurements"]:
