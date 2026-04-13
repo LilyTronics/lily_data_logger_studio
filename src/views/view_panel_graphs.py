@@ -5,7 +5,7 @@ Maximum of 12 graphs are supported.
 
 import wx
 
-from src.views.view_plot_canvas import ViewPlotCanvas
+from src.views.view_panel_plot_canvas import ViewPanelPlotCanvas
 
 
 class ViewPanelGraphs(wx.Panel):
@@ -68,7 +68,7 @@ class ViewPanelGraphs(wx.Panel):
                 meas = configuration.get_measurement(m)
                 if meas is not None:
                     labels.append(f"{meas['name']} [{meas['unit']}]")
-            self._graphs.append(ViewPlotCanvas(self, graph["name"], labels))
+            self._graphs.append(ViewPanelPlotCanvas(self, graph["name"], labels))
         self._show_graphs()
 
     def update_graphs(self, graphs_data):
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     from src.models.configuration import Configuration
     from src.models.test_options import TestOptions
 
-    RUN_TEST_APP = False
+    RUN_TEST_APP = True
 
     if RUN_TEST_APP:
         class TestFrame(wx.Frame):

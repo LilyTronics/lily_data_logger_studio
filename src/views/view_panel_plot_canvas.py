@@ -5,7 +5,7 @@ Plot view.
 import wx.lib.plot
 
 
-class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
+class ViewPanelPlotCanvas(wx.Panel):
 
     _LINE_COLORS =[
         "#0000cc",
@@ -15,26 +15,28 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
         "#00cccc",
         "#cc00cc"
     ]
+    _SPACING = 5
+
 
     def __init__(self, parent, title, labels):
         self.title = title
         self.labels = labels
         super().__init__(parent)
-        self.SetFont(wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
 
-        # Names from WX python are not conform the Pyhton standard
-        # pylint: disable=invalid-name
-        self.fontSizeLegend = 8
-        self.fontSizeAxis = 8
-        self.fontSizeTitle = 10
-        self.enableLegend = True
-        self.enableTicks = (True, True, False, False)
-        self.enableAntiAliasing = True
-        self.enableYAxisLabel = False
-        self.enableXAxisLabel = True
-        self.xSpec = "auto"
-        self.ySpec = "auto"
-        # pylint: enable=invalid-name
+        self._plot = wx.lib.plot.PlotCanvas(self)
+        self._plot.SetFont(
+            wx.Font(10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        )
+        self._plot.fontSizeLegend = 8
+        self._plot.fontSizeAxis = 8
+        self._plot.fontSizeTitle = 10
+        self._plot.enableLegend = True
+        self._plot.enableTicks = (True, True, False, False)
+        self._plot.enableAntiAliasing = True
+        self._plot.enableYAxisLabel = False
+        self._plot.enableXAxisLabel = True
+        self._plot.xSpec = "auto"
+        self._plot.ySpec = "auto"
 
         lines = []
         for index, label in enumerate(self.labels):
@@ -45,7 +47,13 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
                 width=2
             ))
         gc = wx.lib.plot.PlotGraphics(lines, title, "Time [s]")
-        self.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))
+        self._plot.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))
+
+        self.SetBackgroundColour(self._plot.GetBackgroundColour())
+
+        box = wx.BoxSizer(wx.VERTICAL)
+        box.Add(self._plot, 1, wx.EXPAND | wx.ALL, self._SPACING)
+        self.SetSizer(box)
 
     ##########
     # Public #
@@ -60,7 +68,7 @@ class ViewPlotCanvas(wx.lib.plot.PlotCanvas):
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
-        self.Draw(wx.lib.plot.PlotGraphics(lines, self.title, x_label))
+        self._plot.Draw(wx.lib.plot.PlotGraphics(lines, self.title, x_label))
 
 
 if __name__ == "__main__":
@@ -76,8 +84,8 @@ if __name__ == "__main__":
         line_data["data"] = [(x, y) for x in range(50) for y in random.sample(range(10), 1)]
         test_data.append(line_data)
     app = wx.App(False)
-    frame = wx.Frame(None, title="Test ViewPlot", size=(800, 600))
-    plot_view = ViewPlotCanvas(frame, "Sample Plot", names)
+    frame = wx.Frame(None, title="Test ViewPanelPlotCanvas", size=(800, 600))
+    plot_view = ViewPanelPlotCanvas(frame, "Sample Plot", names)
     frame.Show()
     wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]")
     app.MainLoop()
