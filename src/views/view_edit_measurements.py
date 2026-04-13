@@ -140,18 +140,22 @@ class ViewEditMeasurements(wx.Dialog):
 
         return grid
 
-    def _show_channel_parameters(self, parameters):
-        create_settings_grid(parameters, self._params_grid, self, self._params_controls)
-        self.Layout()
+    def _show_channel_parameters(self, channel_name, params):
+        channel = [x for x in self._channels if x.name == channel_name]
+        if len(channel) > 0:
+            create_settings_grid(channel[0].parameters, self._params_grid,
+                                 self, self._params_controls)
+            for key, value in params.items():
+                if key in self._params_controls:
+                    self._params_controls[key][0].SetValue(str(value))
+            self.Layout()
 
     ##################
     # Event handlers #
     ##################
 
     def _on_channel_select(self, event):
-        channel = [x for x in self._channels if x.name == event.GetString()]
-        if len(channel) > 0:
-            self._show_channel_parameters(channel[0].parameters)
+        self._show_channel_parameters(event.GetString(), {})
 
     ##########
     # Public #
@@ -188,6 +192,8 @@ class ViewEditMeasurements(wx.Dialog):
             self.update_channels(measurement["channels"])
             if measurement["channel_name"] in self._cmb_channels.GetItems():
                 self._cmb_channels.SetValue(measurement["channel_name"])
+                self._show_channel_parameters(measurement["channel_name"],
+                                              measurement["params"])
             else:
                 self._cmb_channels.SetSelection(wx.NOT_FOUND)
         else:
