@@ -142,13 +142,12 @@ class ViewEditMeasurements(wx.Dialog):
 
     def _show_channel_parameters(self, channel_name, params):
         channel = [x for x in self._channels if x.name == channel_name]
-        if len(channel) > 0:
-            create_settings_grid(channel[0].parameters, self._params_grid,
-                                 self, self._params_controls)
-            for key, value in params.items():
-                if key in self._params_controls:
-                    self._params_controls[key][0].SetValue(str(value))
-            self.Layout()
+        parameters = None if len(channel) != 1 else channel[0].parameters
+        create_settings_grid(parameters, self._params_grid, self, self._params_controls)
+        for key, value in params.items():
+            if key in self._params_controls:
+                self._params_controls[key][0].SetValue(str(value))
+        self.Layout()
 
     ##################
     # Event handlers #
@@ -186,6 +185,7 @@ class ViewEditMeasurements(wx.Dialog):
         self.Layout()
 
     def show_measurement(self, measurement):
+        no_channel = False
         self._txt_name.SetValue(measurement["name"])
         if measurement["instrument_name"] in self._cmb_instruments.GetItems():
             self._cmb_instruments.SetValue(measurement["instrument_name"])
@@ -195,10 +195,13 @@ class ViewEditMeasurements(wx.Dialog):
                 self._show_channel_parameters(measurement["channel_name"],
                                               measurement["params"])
             else:
-                self._cmb_channels.SetSelection(wx.NOT_FOUND)
+                no_channel = True
         else:
             self._cmb_instruments.SetSelection(wx.NOT_FOUND)
+            no_channel = True
+        if no_channel:
             self._cmb_channels.SetSelection(wx.NOT_FOUND)
+            self._show_channel_parameters(None, {})
         self._txt_unit.SetValue(measurement["unit"])
         self._txt_gain.SetValue(str(measurement["gain"]))
         self._txt_offset.SetValue(str(measurement["offset"]))
