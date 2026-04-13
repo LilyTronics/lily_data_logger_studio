@@ -125,8 +125,10 @@ class ViewEditGraphs(wx.Dialog):
         self._txt_name.SetValue(settings["name"])
         self._lst_measurements.SetCheckedStrings(settings["measurements"])
         self._ckh_log_scale.SetValue(settings["settings"].get("log_scale", False))
-        self._txt_y_min.SetValue(str(settings["settings"].get("min_scale", "")))
-        self._txt_y_max.SetValue(str(settings["settings"].get("max_scale", "")))
+        self._txt_y_min.SetValue("" if settings["settings"].get("min_scale") is None else
+                                 str(settings["settings"].get("min_scale", "")))
+        self._txt_y_max.SetValue("" if settings["settings"].get("max_scale") is None else
+                                 str(settings["settings"].get("max_scale", "")))
 
 
 if __name__ == "__main__":
