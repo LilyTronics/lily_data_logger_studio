@@ -68,6 +68,14 @@ class Configuration:
         self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
         self._is_changed = False
 
+    def __str__(self):
+        output = f"Settings     : {self._configuration["settings"]}\n"
+        output += f"Instruments  : {len(self._configuration["instruments"])}\n"
+        output += f"Process steps: {len(self._configuration["process"])}\n"
+        output += f"Measurements : {len(self._configuration["measurements"])}\n"
+        output += f"Graphs       : {len(self._configuration["graphs"])}"
+        return output
+
     ###########
     # Private #
     ###########
@@ -105,6 +113,9 @@ class Configuration:
 
     def get_filename(self):
         return self._NO_FILENAME if self._filename is None else self._filename
+
+    def new(self):
+        self._configuration = deepcopy(self._DEFAULT_CONFIGURATION)
 
     def load(self, filename):
         self._filename = None

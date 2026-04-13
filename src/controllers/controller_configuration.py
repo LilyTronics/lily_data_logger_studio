@@ -4,16 +4,15 @@ Controller for the configuration.
 
 import wx
 
-from src.models.configuration import Configuration
 from src.views.view_dialogs import ViewDialogs
 
 
 class ControllerConfiguration:
 
     @staticmethod
-    def new(logger):
+    def new(configuration, logger):
         logger.info("Create new configuration")
-        return Configuration()
+        configuration.new()
 
     @staticmethod
     def load(parent_view, configuration, logger):

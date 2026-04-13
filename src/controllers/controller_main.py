@@ -209,7 +209,7 @@ class ControllerMain:
         event.Skip()
 
     def _on_new_config(self, event):
-        self._configuration = ControllerConfiguration.new(self._logger)
+        ControllerConfiguration.new(self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
@@ -224,6 +224,7 @@ class ControllerMain:
         event.Skip()
 
     def _on_data_logger_start(self, event):
+        print(self._configuration)
         self._controller_data_logger.start()
         event.Skip()
 
