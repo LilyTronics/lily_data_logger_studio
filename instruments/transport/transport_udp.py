@@ -43,7 +43,8 @@ class TransportUdp(TransportBase):
         return data
 
     def close(self):
-        self.socket.close()
+        if self.socket is not None:
+            self.socket.close()
 
 
 if __name__ == "__main__":

@@ -43,6 +43,11 @@ class InstrumentPoolTest(TestSuite):
         # We expect simulators to be present in the test configuration
         self.fail_if(not has_simulators, "Should have simulators in the test configuration")
 
+    def test_clear_instruments(self):
+        InstrumentPool.clear()
+        self.fail_if(len(InstrumentPool.get_instruments()) > 0,
+                     "Instruments were not cleared")
+
 
 if __name__ == "__main__":
 

@@ -15,7 +15,9 @@ class InstrumentPool:
 
     @classmethod
     def clear(cls):
-        cls._INSTRUMENTS = {}
+        for _, instrument in cls._INSTRUMENTS.items():
+            instrument.close()
+        cls._INSTRUMENTS.clear()
 
     @classmethod
     def get_instruments(cls):
