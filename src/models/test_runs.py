@@ -41,6 +41,10 @@ class TestRuns:
     ##########
 
     @classmethod
+    def get_test_runs(cls):
+        return deepcopy(cls._TEST_RUNS)
+
+    @classmethod
     def get_test_run(cls, run_id):
         matches = [x for x in cls._TEST_RUNS if x["id"] == run_id]
         return None if len(matches) != 1 else deepcopy(matches[0])

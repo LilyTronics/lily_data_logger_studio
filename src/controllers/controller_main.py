@@ -22,6 +22,7 @@ from src.models.configuration import Configuration
 from src.models.os_specifics import get_platform_info
 from src.models.os_specifics import is_valid_display_session
 from src.models.test_options import TestOptions
+from src.models.test_runs import TestRuns
 from src.views.view_frame_main import ViewFrameMain
 from src.views.view_dialogs import ViewDialogs
 
@@ -164,6 +165,7 @@ class ControllerMain:
                     update_main = True
                     self._logger.info("Data logger stopped")
                     wx.CallAfter(self._view.update_process, 0)
+                    wx.CallAfter(self._view.update_test_runs, TestRuns.get_test_runs())
 
                 if update_main:
                     wx.CallAfter(self._view.update_status, status)

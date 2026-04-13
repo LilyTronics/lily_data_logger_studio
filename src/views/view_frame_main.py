@@ -286,7 +286,7 @@ class ViewFrameMain(wx.Frame):
             self._bot_win.SetDefaultSize((-1, height))
 
     def update_configuration(self, configuration):
-        self._side_panel.update_tree(configuration)
+        self._side_panel.update_configuration(configuration)
         self._graphs_panel.update(configuration)
         self._process_panel.update(configuration)
         self._data_table_panel.update(configuration)
@@ -332,6 +332,9 @@ class ViewFrameMain(wx.Frame):
 
     def update_graphs(self, graphs_data):
         self._graphs_panel.update_graphs(graphs_data)
+
+    def update_test_runs(self, test_runs):
+        self._side_panel.update_test_runs(test_runs)
 
 
 if __name__ == "__main__":
