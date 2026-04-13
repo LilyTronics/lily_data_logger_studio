@@ -33,8 +33,9 @@ class ViewPanelPlotCanvas(wx.Panel):
         self._plot.enableLegend = True
         self._plot.enableTicks = (True, True, False, False)
         self._plot.enableAntiAliasing = True
+        self._plot.enableHiRes = False
         self._plot.enableYAxisLabel = False
-        self._plot.enableXAxisLabel = True
+        self._plot.enableXAxisLabel = False
         self._plot.xSpec = "auto"
         self._plot.ySpec = "auto"
 
@@ -46,13 +47,20 @@ class ViewPanelPlotCanvas(wx.Panel):
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
-        gc = wx.lib.plot.PlotGraphics(lines, title, "Time [s]")
+        gc = wx.lib.plot.PlotGraphics(lines, title)
         self._plot.Draw(gc, xAxis=(0, 1), yAxis=(0, 1))
 
         self.SetBackgroundColour(self._plot.GetBackgroundColour())
 
+        # X axis label fix, we add our own X axis label because the built-in one is not well placed
+        self._lbl_x_axis = wx.StaticText(self, label="Time [s]")
+        self._lbl_x_axis.SetFont(
+            wx.Font(8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        )
+
         box = wx.BoxSizer(wx.VERTICAL)
-        box.Add(self._plot, 1, wx.EXPAND | wx.ALL, self._SPACING)
+        box.Add(self._plot, 1, wx.EXPAND | wx.LEFT | wx.TOP | wx.RIGHT, self._SPACING)
+        box.Add(self._lbl_x_axis, 0, wx.ALIGN_CENTER | wx.BOTTOM, self._SPACING)
         self.SetSizer(box)
 
     ##########
@@ -68,7 +76,8 @@ class ViewPanelPlotCanvas(wx.Panel):
                 colour=wx.Colour(self._LINE_COLORS[index % len(self._LINE_COLORS)]),
                 width=2
             ))
-        self._plot.Draw(wx.lib.plot.PlotGraphics(lines, self.title, x_label))
+        self._plot.Draw(wx.lib.plot.PlotGraphics(lines, self.title))
+        self._lbl_x_axis.SetLabel(x_label)
 
 
 if __name__ == "__main__":
