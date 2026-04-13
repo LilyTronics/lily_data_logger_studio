@@ -120,6 +120,9 @@ class ControllerEditInstruments:
     def _on_new(self, event):
         instrument = self._configuration.get_new_instrument()
         self._selected_id = None
+        instrument["driver_name"] = ""
+        instrument["driver_description"] = ""
+        del instrument["driver_id"]
         self._dlg.show_instrument(instrument, None)
         event.Skip()
 
