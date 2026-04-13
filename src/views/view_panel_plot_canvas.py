@@ -67,7 +67,7 @@ class ViewPanelPlotCanvas(wx.Panel):
     # Public #
     ##########
 
-    def draw_lines(self, graph_data, x_label):
+    def draw_lines(self, graph_data, x_label, properties):
         lines = []
         for index, graph in enumerate(graph_data):
             lines.append(wx.lib.plot.PolyLine(
@@ -77,6 +77,12 @@ class ViewPanelPlotCanvas(wx.Panel):
                 width=2
             ))
         self._plot.Draw(wx.lib.plot.PlotGraphics(lines, self.title))
+        self._plot.logScale = (False, properties["log_scale"])
+        y_spec = (properties["y_min"], properties["y_max"])
+        if None not in y_spec:
+            self._plot.ySpec = y_spec
+        else:
+            self._plot.ySpec = "auto"
         self._lbl_x_axis.SetLabel(x_label)
 
 
@@ -96,5 +102,5 @@ if __name__ == "__main__":
     frame = wx.Frame(None, title="Test ViewPanelPlotCanvas", size=(800, 600))
     plot_view = ViewPanelPlotCanvas(frame, "Sample Plot", names)
     frame.Show()
-    wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]")
+    wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]", {})
     app.MainLoop()

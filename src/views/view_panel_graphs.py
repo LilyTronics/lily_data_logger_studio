@@ -75,16 +75,12 @@ class ViewPanelGraphs(wx.Panel):
         for key, graph_data in graphs_data.items():
             matches = [g for g in self._graphs if g.title == key]
             if len(matches) == 1:
-                matches[0].draw_lines(graph_data["lines"], graph_data["x_label"])
-                matches[0].logScale = (False, graph_data["settings"].get("log_scale", False))
-                y_spec = (
-                    graph_data["settings"].get("min_scale", None),
-                    graph_data["settings"].get("max_scale", None)
-                )
-                if None not in y_spec:
-                    matches[0].ySpec = y_spec
-                else:
-                    matches[0].ySpec = "auto"
+                properties = {
+                    "log_scale": graph_data["settings"].get("log_scale", False),
+                    "y_min": graph_data["settings"].get("min_scale", None),
+                    "y_max": graph_data["settings"].get("max_scale", None)
+                }
+                matches[0].draw_lines(graph_data["lines"], graph_data["x_label"], properties)
 
 
 if __name__ == "__main__":
