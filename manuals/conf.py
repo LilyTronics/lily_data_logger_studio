@@ -8,19 +8,23 @@ https://www.sphinx-doc.org/en/master/usage/configuration.html
 https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 """
 
+from datetime import date
+
+import src.app_data as AppData
+
+
 # Disable message for naming convention in this file,
 # because we must comply to the sphinx naming convention
 # pylint: disable=invalid-name
 # pylint: disable=redefined-builtin
 
-project = 'Lily Data Logger Studio'
-copyright = '2026, LilyTronics'
-author = 'LilyTronics'
-release = '0.1'
+project = AppData.APP_NAME
+copyright = f"{date.today().year} {AppData.COMPANY}"
+author = AppData.COMPANY
+release = AppData.VERSION
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
