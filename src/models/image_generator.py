@@ -10,6 +10,7 @@ Toolbar: 24px
 image name        : icon name
 configuration     : settings 4
 data table        : grid
+database          : database 4
 graph             : use graphs, remove bottom line, center top line
 graphs            : line
 instrument        : chip 2 (make it solid, and add pin 1 mark from processor)
