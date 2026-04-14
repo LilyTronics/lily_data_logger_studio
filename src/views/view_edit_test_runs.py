@@ -101,6 +101,11 @@ class ViewEditTestRuns(wx.Dialog):
     def update_test_runs(self, test_runs):
         self._lst_test_runs.DeleteAllItems()
         self._lst_test_runs.id_map.clear()
+        self._lbl_start.SetLabel("")
+        self._lbl_end.SetLabel("")
+        self._lbl_duration.SetLabel("")
+        self._lbl_samples.SetLabel("")
+        self._lst_measurements.Clear()
         for test_run in test_runs:
             timestamps = test_run["timestamps"]
             if len(timestamps) > 0:

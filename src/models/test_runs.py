@@ -78,6 +78,16 @@ class TestRuns:
             if index < len(matches[0]["values"]):
                 matches[0]["values"][index] = value
 
+    @classmethod
+    def delete(cls, run_id):
+        index = next(
+            (i for i, d in enumerate(cls._TEST_RUNS)
+                if d["id"] == run_id),
+            -1
+        )
+        if 0 <= index < len(cls._TEST_RUNS):
+            cls._TEST_RUNS.pop(index)
+
 
 if __name__ == "__main__":
 
