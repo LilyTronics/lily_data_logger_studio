@@ -85,7 +85,6 @@ class ViewPanelSide(wx.Panel):
         self._config_tree.ExpandAll()
 
     def update_test_runs(self, test_runs):
-        print(test_runs)
         root = self._test_runs_tree.GetRootItem()
         self._test_runs_tree.DeleteChildren(root)
         for test_run in test_runs:
