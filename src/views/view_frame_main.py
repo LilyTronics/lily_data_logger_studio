@@ -100,6 +100,8 @@ class ViewFrameMain(wx.Frame):
                    "Edit process")
         tb.AddTool(IdManager.ID_SHOW_EDIT_GRAPHS, "", Images.graphs_24.GetBitmap(),
                    "Edit graphs")
+        tb.AddTool(IdManager.ID_SHOW_EDIT_TEST_RUNS, "", Images.database_24.GetBitmap(),
+                   "Manage test run data")
         tb.AddSeparator()
         tb.AddTool(IdManager.ID_START_LOGGER, "", Images.start_24.GetBitmap(),
                    "Start data logger")

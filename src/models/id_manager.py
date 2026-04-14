@@ -15,6 +15,7 @@ ID_SHOW_EDIT_INSTRUMENTS = wx.NewIdRef()
 ID_SHOW_EDIT_PROCESS = wx.NewIdRef()
 ID_SHOW_EDIT_MEASUREMENTS = wx.NewIdRef()
 ID_SHOW_EDIT_GRAPHS = wx.NewIdRef()
+ID_SHOW_EDIT_TEST_RUNS = wx.NewIdRef()
 ID_START_LOGGER = wx.NewIdRef()
 ID_STOP_LOGGER = wx.NewIdRef()
 ID_RESTORE_LAYOUT = wx.NewIdRef()
@@ -61,6 +62,14 @@ ID_GRAPH_DELETE = wx.NewIdRef()
 ID_GRAPH_SAVE = wx.NewIdRef()
 ID_GRAPH_CANCEL = wx.NewIdRef()
 ID_GRAPH_CLOSE = wx.NewIdRef()
+
+# Edit test runs
+ID_TEST_RUNS_LIST = wx.NewIdRef()
+ID_TEST_RUNS_CLOSE = wx.NewIdRef()
+ID_TEST_RUNS_DELETE = wx.NewIdRef()
+ID_TEST_RUNS_LOAD = wx.NewIdRef()
+ID_TEST_RUNS_EXPORT = wx.NewIdRef()
+ID_TEST_RUNS_IMPORT = wx.NewIdRef()
 
 # Drivers test view
 ID_DRIVER_TEST_RELOAD_DRIVERS = wx.NewIdRef()

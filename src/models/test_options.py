@@ -12,5 +12,6 @@ class TestOptions:
     show_edit_measurements = False
     show_edit_process = False
     show_edit_settings = False
+    show_edit_test_runs = False
 
     suppress_loading_drivers = False

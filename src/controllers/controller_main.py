@@ -17,6 +17,7 @@ from src.controllers.controller_edit_instruments import ControllerEditInstrument
 from src.controllers.controller_edit_measurements import ControllerEditMeasurements
 from src.controllers.controller_edit_process import ControllerEditProcess
 from src.controllers.controller_edit_settings import ControllerEditSettings
+from src.controllers.controller_edit_test_runs import ControllerEditTestRuns
 from src.models.application_settings import ApplicationSettings
 from src.models.configuration import Configuration
 from src.models.os_specifics import get_platform_info
@@ -103,6 +104,8 @@ class ControllerMain:
                         id=IdManager.ID_SHOW_EDIT_PROCESS)
         self._view.Bind(wx.EVT_TOOL, self._show_edit_graphs,
                         id=IdManager.ID_SHOW_EDIT_GRAPHS)
+        self._view.Bind(wx.EVT_TOOL, self._show_manage_test_runs,
+                        id=IdManager.ID_SHOW_EDIT_TEST_RUNS)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_start, id=IdManager.ID_START_LOGGER)
         self._view.Bind(wx.EVT_TOOL, self._on_data_logger_stop, id=IdManager.ID_STOP_LOGGER)
 
@@ -135,6 +138,11 @@ class ControllerMain:
         if test_options.show_edit_graphs:
             self._logger.debug("Test option: show edit graphs")
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_GRAPHS)
+            wx.PostEvent(self._view.GetEventHandler(), event)
+
+        if test_options.show_edit_test_runs:
+            self._logger.debug("Test option: show edit test runs")
+            event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_TEST_RUNS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
     def _start_monitor_thread(self):
@@ -206,6 +214,11 @@ class ControllerMain:
         self._view.update_configuration(self._configuration)
         event.Skip()
 
+    def _show_manage_test_runs(self, event):
+        ControllerEditTestRuns(self._view, self._logger)
+        self._view.update_test_runs(TestRuns.get_test_runs())
+        event.Skip()
+
     def _on_reload_drivers(self, event):
         self._controller_drivers.load()
         event.Skip()
@@ -226,7 +239,6 @@ class ControllerMain:
         event.Skip()
 
     def _on_data_logger_start(self, event):
-        print(self._configuration)
         self._controller_data_logger.start()
         event.Skip()
 
