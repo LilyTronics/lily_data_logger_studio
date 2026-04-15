@@ -6,6 +6,8 @@ import uuid
 
 from copy import deepcopy
 
+from src.models.sqlite_handler import SQLiteHandler
+
 
 class TestRuns:
 
@@ -87,6 +89,20 @@ class TestRuns:
         )
         if 0 <= index < len(cls._TEST_RUNS):
             cls._TEST_RUNS.pop(index)
+
+    @classmethod
+    def export_test_run(cls, run_id, data_filename):
+        test_run = cls.get_test_run(run_id)
+        if test_run is not None:
+            if data_filename.endswith(".sqlite"):
+                SQLiteHandler.export_test_run(data_filename, test_run)
+
+    @classmethod
+    def import_test_run(cls, data_filename):
+        if data_filename.endswith(".sqlite"):
+            test_run_data = SQLiteHandler.import_test_run(data_filename)
+            test_run_data["id"] = str(uuid.uuid4())
+            cls._TEST_RUNS.append(test_run_data)
 
 
 if __name__ == "__main__":

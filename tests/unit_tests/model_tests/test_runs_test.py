@@ -2,6 +2,7 @@
 Unit test for the test runs model.
 """
 
+import os
 import random
 import time
 
@@ -16,9 +17,15 @@ class TestRunsTest(TestSuite):
 
     run_id = None
     config = Configuration()
+    data_filename = None
 
     def setup(self):
         self.config.load(AppData.TEST_CONFIGURATION)
+        self.data_filename = "data_file.sqlite"
+
+    def teardown(self):
+        if os.path.isfile(self.data_filename):
+            os.remove(self.data_filename)
 
     def test_new_test_run(self):
         self.run_id = TestRuns.new_test_run(self.config.get_measurements())
@@ -46,6 +53,34 @@ class TestRunsTest(TestSuite):
             matches = [x for x in test_run["measurements"] if x["id"] == m["id"]]
             self.fail_if(len(matches) != 1, "Measurement not in test runs")
             self.fail_if(len(matches[0]["values"]) != 10, "Values were not added")
+
+    def test_export_import_sqlite(self):
+        test_runs = TestRuns.get_test_runs()
+        n_test_runs = len(test_runs)
+        self.fail_if(n_test_runs == 0, "No test runs available")
+        self.log.debug(f"Export test run to: {self.data_filename}")
+        TestRuns.export_test_run(test_runs[0]["id"], self.data_filename)
+        self.log.debug(f"Import test run from: {self.data_filename}")
+        TestRuns.import_test_run(self.data_filename)
+        test_runs = TestRuns.get_test_runs()
+        self.fail_if(len(test_runs) != n_test_runs + 1, "Test was not imported")
+        # Check if test runs are equal
+        org_test = test_runs[0]
+        imp_test = test_runs[-1]
+        # IDs should not be the same
+        self.fail_if(org_test["id"] == imp_test["id"], "The IDs are the same")
+        del org_test["id"]
+        del imp_test["id"]
+        # Now they should be the same
+        self.fail_if(org_test != imp_test, "Data is not the same")
+
+    def test_delete_test_run(self):
+        test_runs = TestRuns.get_test_runs()
+        n_test_runs = len(test_runs)
+        self.fail_if(n_test_runs == 0, "No test runs available")
+        TestRuns.delete(test_runs[0]["id"])
+        test_runs = TestRuns.get_test_runs()
+        self.fail_if(len(test_runs) != n_test_runs - 1, "Test run was not deleted")
 
 
 if __name__ == "__main__":
