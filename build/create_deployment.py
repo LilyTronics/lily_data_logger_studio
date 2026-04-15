@@ -155,6 +155,7 @@ def _build_executable(output_folder, dist_path, app_id, app_name, exe_name):
         f"--specpath={work_path}",
         f"--distpath={dist_path}",
         "--hidden-import=queue",
+        "--hidden-import=serial",
         "--hidden-import=uuid"
     ])
 
