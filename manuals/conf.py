@@ -50,3 +50,7 @@ html_favicon = ''
 html_copy_source = False
 html_show_sourcelink = False
 html_show_sphinx = False
+
+html_theme_options = {
+    "collapse_navigation": False,
+}
