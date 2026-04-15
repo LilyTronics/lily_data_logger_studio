@@ -16,15 +16,34 @@ from instruments.transport.transport_base import TransportBase
 
 
 class DriverBase(ABC):
+    """
+    Base class for all drivers.
 
+    :param settings:    Instrument specific settings like port, baudrate, etc.
+    :param debug:       Debug options ('D': Driver, 'P': Protocol, 'T': Transport)
+                        (e.g.: "DT": show debug output for driver and transport)
+    """
+
+    #: Driver ID. Must be a valid UUID V4 string.
     id = None
+    #: Driver name. This name is used in the application to identify the driver.
     name = "base class"
+    #: Driver description. Short description of the instrument.
     description = "Base class for all drivers"
+    #: Driver settings. Dictionary of setting that are required to configure the driver.
     driver_settings = None
+    #: Channels. List of channel objects that represents the instrument's functionality.
+    # These are exposed in the application.
     channels = None
+    #: Internal channels (optional). List of channel objects that are used internally by the driver.
+    internal_channels = []
+    #: Transport class (not an instance). Must be a subclass of TransportBase.
     transport = None
+    #: Transport settings. Dictionary of settings that are required to configure the transport.
     transport_settings = {}
+    #: Protocol class (not an instance). Must be a subclass of ProtocolBase.
     protocol = None
+    #: Protocol settings. Dictionary of settings that are required to configure the protocol.
     protocol_settings = {}
     is_simulator = False
 
@@ -35,6 +54,7 @@ class DriverBase(ABC):
         self.transport = self.transport(self.transport_settings | self.user_settings, self.debug)
         self.protocol = self.protocol(self.transport, self.protocol_settings | self.user_settings,
                                       self.debug)
+        self.init_driver()
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -149,12 +169,19 @@ class DriverBase(ABC):
 
     @staticmethod
     @final
-    def get_driver_setting_class():
+    def get_driver_setting_class() -> type[DriverSetting]:
+        """
+        Returns the class used for driver settings.
+        Used for programmatically creating driver settings.
+        """
         return DriverSetting
 
     @classmethod
     @final
-    def get_class_name(cls):
+    def get_class_name(cls) -> str:
+        """
+        Returns the class name of the driver class.
+        """
         return cls.__name__
 
     @final
@@ -164,26 +191,59 @@ class DriverBase(ABC):
 
     @classmethod
     @final
-    def get_input_channels(cls):
+    def get_input_channels(cls) -> list[DriverChannel]:
+        """
+        Returns a list of input channels.
+        """
         return cls._get_channels(DriverChannel.DIR_INPUT)
 
     @classmethod
     @final
-    def get_output_channels(cls):
+    def get_output_channels(cls) -> list[DriverChannel]:
+        """
+        Returns a list of output channels.
+        """
         return cls._get_channels(DriverChannel.DIR_OUTPUT)
 
     @classmethod
     @final
-    def get_channel(cls, query):
-        # Get channel by ID or by name
-        # Prio is ID
+    def get_channel(cls, query) -> DriverChannel | None:
+        """"
+        Returns the channel by ID or by name (query).
+        Prio is ID.
+        """
         matches = [x for x in cls.channels if x.channel_id == query]
         if len(matches) == 0:
             matches = [x for x in cls.channels if x.name == query]
         return None if len(matches) != 1 else matches[0]
 
     @final
-    def process_channel(self, channel_query, params=None, callback=None, callback_params=None):
+    def process_channel(self, channel_query, params=None,
+                        callback=None, callback_params=None) -> any:
+        """
+        Process a channel by ID or by name (prio is ID).
+
+        :param channel_query:       Channel ID or name.
+        :param params:              Dictionary with parameters for the channel (optional).
+        :param callback:            Callback function for asynchronous processing (optional).
+        :param callback_params:     Parameters for the callback function (optional).
+
+        :return:                    Response from the instrument or None if a callback is used.
+
+        The channel parameters must match with the channel parameters as defined in the list of
+        channels. For output channels there is at least one parameter: 'value'. This is the value
+        that is sent to the instrument. For input channels there are no mandatory parameters,
+        but the driver settings can define parameters.
+
+        If a channel is processed without a callback, the channel is processed immediately and
+        the response is returned. If the instrument responds slow, this can block the application.
+
+        If a channel is processed with a callback, the channel is processed in the background by
+        the protocol class and the response is passed to the callback function when it is received.
+
+        The callback function must have the following signature:
+        :code:`function_name(response, params)`
+        """
         params = {} if params is None else params
         self.log_debug(f"Get channel for query: '{channel_query}'")
         channel = self.get_channel(channel_query)
@@ -210,7 +270,10 @@ class DriverBase(ABC):
         return self._process_response(channel, response)
 
     @final
-    def close(self):
+    def close(self) -> None:
+        """
+        Closes the driver and the underlying protocol and transport connections.
+        """
         self.protocol.close()
         self.transport.close()
 
@@ -219,16 +282,46 @@ class DriverBase(ABC):
     #############
 
     @abstractmethod
-    def build_command(self, channel, params):
-        pass
+    def build_command(self, channel, params) -> bytes:
+        """
+        Builds the command to send to the instrument based on the channel and parameters.
+        Must be overridden by the driver class.
+
+        :param channel: Driver channel object.
+        :param params:  Dictionary with parameters for the channel.
+
+        :return: Data to send to the instrument.
+        """
 
     @abstractmethod
-    def parse_response(self, channel, response):
-        pass
+    def parse_response(self, channel, response) -> any:
+        """
+        Parses the response from the instrument based on the channel.
+        Must be overridden by the driver class.
+
+        :param channel:     Driver channel object.
+        :param response:    Response from the instrument.
+
+        :return: Parsed response. The type depends on the driver channel settings.
+        """
 
     @abstractmethod
     def test_driver(self):
-        pass
+        """
+        This method is used to test if the instrument is connected and responding correctly.
+        This should be a short test. For example, retrieving the instrument ID or a
+        simple status command.
+        Must be overridden by the driver class.
+        """
+
+    def init_driver(self):
+        """
+        This function is called after the driver is instantiated. It can be used to initialize
+        the instrument by sending some commands to the instrument.
+        Note that using this, the application needs to wait until the initialization is completed.
+        If this takes too long, it can block the application.
+        This is optional and can be overridden by the driver class if needed.
+        """
 
 
 if __name__ == "__main__":
