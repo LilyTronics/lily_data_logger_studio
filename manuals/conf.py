@@ -8,23 +8,37 @@ https://www.sphinx-doc.org/en/master/usage/configuration.html
 https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 """
 
-from datetime import date
-
-import src.app_data as AppData
-
-
 # Disable message for naming convention in this file,
 # because we must comply to the sphinx naming convention
 # pylint: disable=invalid-name
 # pylint: disable=redefined-builtin
 
+import os
+import sys
+
+from datetime import date
+
+import src.app_data as AppData
+
+
+source_path = os.path.abspath(os.path.join(
+    os.path.dirname(__file__),
+    '..',
+    'instruments'
+))
+sys.path.insert(0, source_path)
+print(sys.path)
+
 project = AppData.APP_NAME
 copyright = f"{date.today().year} {AppData.COMPANY}"
 author = AppData.COMPANY
-release = AppData.VERSION
+release = f"V{AppData.VERSION}"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+extensions = [
+    'sphinx.ext.autodoc'
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
