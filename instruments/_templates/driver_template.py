@@ -5,7 +5,7 @@ Driver template.
 # Basic import, always needed
 from instruments.drivers.driver_base import DriverBase
 from instruments.drivers.driver_channel import DriverChannel
-from instruments.drivers.driver_settings import DriverSetting
+from instruments.drivers.driver_setting import DriverSetting
 
 # Import the appropriate transport and protocol classes for your instrument.
 # Best is to reuse existing ones, but you can also create your own

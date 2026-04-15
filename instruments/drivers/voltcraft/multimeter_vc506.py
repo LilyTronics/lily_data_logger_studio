@@ -6,7 +6,7 @@ import re
 
 from instruments.drivers.driver_base import DriverBase
 from instruments.drivers.driver_channel import DriverChannel
-from instruments.drivers.driver_settings import DriverSetting
+from instruments.drivers.driver_setting import DriverSetting
 
 from instruments.transport.transport_serial import TransportSerial
 from instruments.protocol.protocol_ascii import ProtocolAscii

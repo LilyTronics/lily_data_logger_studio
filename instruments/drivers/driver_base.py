@@ -10,7 +10,7 @@ from abc import abstractmethod
 from typing import final
 
 from instruments.drivers.driver_channel import DriverChannel
-from instruments.drivers.driver_settings import DriverSetting
+from instruments.drivers.driver_setting import DriverSetting
 from instruments.protocol.protocol_base import ProtocolBase
 from instruments.transport.transport_base import TransportBase
 

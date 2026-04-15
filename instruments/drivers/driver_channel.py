@@ -4,7 +4,7 @@ Driver channel object.
 
 import re
 
-from instruments.drivers.driver_settings import DriverSetting
+from instruments.drivers.driver_setting import DriverSetting
 
 
 class DriverChannel:
