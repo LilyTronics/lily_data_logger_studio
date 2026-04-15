@@ -16,8 +16,6 @@ When using a USB to serial adapter, make sure that the adapter supports the nece
 on the RTS and DTR lines to power the serial interface in the multimeter.
 In case the communication does not work, check these levels or try an adapter from a different manufacturer.
 
-.. currentmodule:: drivers.voltcraft.multimeter_vc506
-
 Driver settings
 ---------------
 
