@@ -1,8 +1,13 @@
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Lily Data Logger Studio Driver Development
+==========================================
 
-   Introduction         <introduction.rst>
-   Driver class         <driver.rst>
-   Protocol classes     <protocol.rst>
-   Transport classes    <transport.rst>
+Lily Data Logger Studio relies on drivers to be able to communicate with different electronics instruments.
+It is impossible to create drivers for all the different instruments that are out there.
+This manual will help you create your own driver for your instrument.
+
+.. toctree::
+   :caption: Contents:
+   :glob:
+
+   development/*
+   api/index

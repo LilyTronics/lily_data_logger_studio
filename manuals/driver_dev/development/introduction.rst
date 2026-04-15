@@ -1,9 +1,5 @@
-Lily Data Logger Studio Driver Development
-==========================================
-
-Lily Data Logger Studio relies on drivers to be able to communicate with different electronics instruments.
-It is impossible to create drivers for all the different instruments that are out there.
-This manual will help you create your own driver for your instrument.
+Introduction
+============
 
 In this manual we will make a driver for communicating with an Arduino.
 The Arduino will be used as a simple data acquisition device.
@@ -17,6 +13,6 @@ For testing the driver a test application is provided.
 The name of the executable is: `LilyDataLoggerStudioDriverTest`.
 Below is a screenshot of the test application.
 
-.. image:: images/driver_test.png
+.. image:: ../images/driver_test.png
 
 More about this application later when we will use it to test our driver.
