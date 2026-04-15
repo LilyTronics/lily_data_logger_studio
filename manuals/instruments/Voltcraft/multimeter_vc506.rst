@@ -9,6 +9,12 @@ The multimeter must be setup manually:
 * Enable RS232 using the menu button on the multimeter.
 * Optionally enable the keep on function to prevent the multimeter from turning off after a certain time.
 
+The multimeter interface hardware is designed for old school serial ports
+(sub-D connectors with levels of ±3V up to ±15V).
+These voltages are used to power the serial interface in the multimeter.
+When using a USB to serial adapter, make sure that the adapter supports the necessary voltage levels
+on the RTS and DTR lines to power the serial interface in the multimeter.
+In case the communication does not work, check these levels or try an adapter from a different manufacturer.
 
 .. currentmodule:: drivers.voltcraft.multimeter_vc506
 
