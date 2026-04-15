@@ -8,6 +8,32 @@ from instruments.drivers.driver_settings import DriverSetting
 
 
 class DriverChannel:
+    """
+    Driver channel.
+
+    :param channel_id:          Unique identifier for the channel.
+    :param name:                Name of the channel.
+    :param value_type:          Type of the value to be sent. Set to None if no value is required.
+    :param response_type:       Type of the expected response.
+                                Set to None if no response is expected.
+    :param expect_response:     Whether a response is expected.
+    :param parameters:          List of additional parameters for the channel.
+                                Each parameter is a DriverSetting object.
+
+    The channel ID must be a string consisting of alphanumeric characters, underscores, or hyphens.
+    The channel ID must be unique for the instrument.
+
+    The channel name must be a string starting with "get " or "set ".
+    Based on the name, the channel direction is determined (get is input, set is output).
+
+    The value type and response type must be one of the supported types (float, int, str).
+
+    By default the expect_response parameter is set to True.
+    This must be explicitly set to False if no response is expected.
+
+    The channel parameters can be used to add extra parameters to the channel.
+    In case of an output channel, there is always a value parameter.
+    """
 
     DIR_INPUT = "input"
     DIR_OUTPUT = "output"
