@@ -20,10 +20,10 @@ def build_manual(src_name, doc_name):
 
     try:
         shutil.rmtree(build_dir, True)
-        subprocess.run(
+        result = subprocess.run(
             [
                 "sphinx-build",
-                "-b", "singlehtml",
+                "-b", "singlehtml",    # html, dirhtml or singlehtml?
                 "-c", manual_dir,
                 source_dir,
                 build_dir
@@ -32,6 +32,8 @@ def build_manual(src_name, doc_name):
             capture_output=True,
             text=True
         )
+        print(result.stdout)
+        print(result.stderr)
         # Remove files that are not needed
         shutil.rmtree(os.path.join(build_dir, ".doctrees"), True)
         os.remove(os.path.join(build_dir, ".buildinfo"))
