@@ -47,8 +47,9 @@ def build_manual(src_name, doc_name):
 def build_manuals():
     print("*** Build manuals ***")
     results = [
-        build_manual("main", "Data Logger Studio"),
-        build_manual("driver_dev", "Driver Development")
+        build_manual("main", "Lily Data Logger Studio"),
+        build_manual("driver_dev", "Driver development"),
+        build_manual("instruments", "Instruments package")
     ]
     print(f"Build results: {results}")
     return False not in results
