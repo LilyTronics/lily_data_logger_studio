@@ -3,6 +3,18 @@ Driver settings object.
 """
 
 class DriverSetting:
+    """
+    Driver setting.
+
+    :param name:            Name of the setting.
+    :param setting_type:    Type of the setting (str, int, float).
+    :param default_value:   Default value of the setting.
+    :param gui_control:     GUI control type for the setting.
+
+    The name is displayed in the GUI and is used as key for the settings dictionary.
+    The default value is used to intialize the contol in the GUI.
+    The GUI control type must be a wxPython GUI control type.
+    """
 
     CTRL_TEXT = "TextCtrl"
 
