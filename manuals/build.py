@@ -19,7 +19,6 @@ def build_manual(src_name, doc_name):
     print(f"Output : {build_dir}")
 
     try:
-        shutil.rmtree(build_dir, True)
         result = subprocess.run(
             [
                 "sphinx-build",
@@ -46,6 +45,11 @@ def build_manual(src_name, doc_name):
 
 def build_manuals():
     print("*** Build manuals ***")
+
+    manual_dir = os.path.abspath(os.path.dirname(__file__))
+    build_dir = os.path.join(manual_dir, "build")
+    shutil.rmtree(build_dir, True)
+
     results = [
         build_manual("main", "Lily Data Logger Studio"),
         build_manual("driver_dev", "Driver development"),
