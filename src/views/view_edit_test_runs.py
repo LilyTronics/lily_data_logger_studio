@@ -79,7 +79,7 @@ class ViewEditTestRuns(wx.Dialog):
 
     def _create_buttons(self):
         btn_delete = wx.Button(self, IdManager.ID_TEST_RUNS_DELETE, "Delete")
-        btn_load = wx.Button(self, IdManager.ID_TEST_RUNS_DELETE, "Load")
+        btn_load = wx.Button(self, IdManager.ID_TEST_RUNS_LOAD, "Load")
         btn_export = wx.Button(self, IdManager.ID_TEST_RUNS_EXPORT, "Export")
         btn_import = wx.Button(self, IdManager.ID_TEST_RUNS_IMPORT, "Import")
         btn_close = wx.Button(self, IdManager.ID_TEST_RUNS_CLOSE, "Close")
@@ -129,6 +129,12 @@ class ViewEditTestRuns(wx.Dialog):
                 f"{measurement["name"]} [{measurement["unit"]}] "
                 f"({len(measurement["values"])} values)"
             )
+
+    def get_checked_test_runs(self):
+        test_runs = [self._lst_test_runs.id_map[i]
+                     for i in range(self._lst_test_runs.GetItemCount())
+                     if self._lst_test_runs.IsItemChecked(i)]
+        return test_runs
 
 
 if __name__ == "__main__":

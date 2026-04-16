@@ -24,6 +24,7 @@ class ControllerEditTestRuns:
         self._dlg.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_activated,
                        id=IdManager.ID_TEST_RUNS_LIST)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_TEST_RUNS_DELETE)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_export, id=IdManager.ID_TEST_RUNS_EXPORT)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_TEST_RUNS_CLOSE)
 
         self._dlg.ShowModal()
@@ -58,6 +59,23 @@ class ControllerEditTestRuns:
                 except Exception as e:
                     self._logger.error(f"Error deleting test run: {e}")
                     ViewDialogs.show_message(self._dlg, f"Error deleting test run: {e}",
+                                            dlg_title, wx.ICON_EXCLAMATION)
+        event.Skip()
+
+    def _on_export(self, event):
+        ids = self._dlg.get_checked_test_runs()
+        if len(ids) > 0:
+            test_runs = [TestRuns.get_test_run(x) for x in ids]
+            if len(test_runs) > 0:
+                dlg_title = "Export test runs"
+                try:
+                    filename = ViewDialogs.show_save_file(self._dlg, dlg_title, "", "",
+                                                        "SQLite|*.sqlite|JSON|*.json|CSV|*.csv")
+                    if filename is not None:
+                        TestRuns.export_test_runs(test_runs, filename)
+                except Exception as e:
+                    self._logger.error(f"Error exporting test runs: {e}")
+                    ViewDialogs.show_message(self._dlg, f"Error exporting test runs: {e}",
                                             dlg_title, wx.ICON_EXCLAMATION)
         event.Skip()
 
