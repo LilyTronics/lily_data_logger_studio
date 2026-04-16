@@ -28,9 +28,9 @@ class TestRunsTest(TestSuite):
             os.remove(self.data_filename)
 
     def add_test_run(self, start_time):
-        self.run_id = TestRuns.new_test_run(self.config.get_measurements())
-        self.log.debug(f"Test run ID: {self.run_id}")
         measurements = self.config.get_measurements()
+        self.run_id = TestRuns.new_test_run(measurements)
+        self.log.debug(f"Test run ID: {self.run_id}")
         t = start_time
         for _ in range(10):
             self.log.debug("Initialize cycle")
