@@ -27,13 +27,11 @@ class TestRunsTest(TestSuite):
         if os.path.isfile(self.data_filename):
             os.remove(self.data_filename)
 
-    def test_new_test_run(self):
+    def add_test_run(self, start_time):
         self.run_id = TestRuns.new_test_run(self.config.get_measurements())
         self.log.debug(f"Test run ID: {self.run_id}")
-
-    def test_add_measurement_values(self):
         measurements = self.config.get_measurements()
-        t = int(time.time())
+        t = start_time
         for _ in range(10):
             self.log.debug("Initialize cycle")
             TestRuns.init_cycle(self.run_id, t)
@@ -53,26 +51,38 @@ class TestRunsTest(TestSuite):
             matches = [x for x in test_run["measurements"] if x["id"] == m["id"]]
             self.fail_if(len(matches) != 1, "Measurement not in test runs")
             self.fail_if(len(matches[0]["values"]) != 10, "Values were not added")
+        return t
 
     def test_export_import_sqlite(self):
+        start_time = int(time.time())
+        while len(TestRuns.get_test_runs()) < 2:
+            start_time = self.add_test_run(start_time)
         test_runs = TestRuns.get_test_runs()
         n_test_runs = len(test_runs)
-        self.fail_if(n_test_runs == 0, "No test runs available")
-        self.log.debug(f"Export test run to: {self.data_filename}")
-        TestRuns.export_test_run(test_runs[0]["id"], self.data_filename)
+        self.fail_if(n_test_runs < 2, "There must be at least two test runs")
+        self.log.debug(f"Export test runs to: {self.data_filename}")
+        TestRuns.export_test_runs(test_runs, self.data_filename)
         self.log.debug(f"Import test run from: {self.data_filename}")
-        TestRuns.import_test_run(self.data_filename)
+        TestRuns.import_test_runs(self.data_filename)
         test_runs = TestRuns.get_test_runs()
-        self.fail_if(len(test_runs) != n_test_runs + 1, "Test was not imported")
+        self.fail_if(len(test_runs) != n_test_runs + 2, "Test runs were not imported")
         # Check if test runs are equal
-        org_test = test_runs[0]
-        imp_test = test_runs[-1]
-        # IDs should not be the same
-        self.fail_if(org_test["id"] == imp_test["id"], "The IDs are the same")
-        del org_test["id"]
-        del imp_test["id"]
-        # Now they should be the same
-        self.fail_if(org_test != imp_test, "Data is not the same")
+        for i, run_i in enumerate(test_runs):
+            for _, run_j in enumerate(test_runs[i + 1:], start=i + 1):
+                self.fail_if(run_i["id"] == run_j["id"], "The IDs are the same")
+        # Remove ID, or else the compare will not work
+        for run in test_runs:
+            run["id"] = ""
+        # Check for equal 0 and 1 must match with 2 and 3
+        # But we not sure if 0 matches with 2 or 3 and 1 matches with 2 or 3
+        matches = []
+        for i in range(2):
+            for j in range(2, 4):
+                if test_runs[i] == test_runs[j]:
+                    matches.append((i, j))
+        self.fail_if(len(matches) != 2, "Data is not the same")
+        self.fail_if(matches[0] not in [(0, 2), (0, 3)], "Data is not the same")
+        self.fail_if(matches[1] not in [(1, 2), (1, 3)], "Data is not the same")
 
     def test_delete_test_run(self):
         test_runs = TestRuns.get_test_runs()

@@ -12,7 +12,8 @@ class SQLiteHandler:
         (
             "CREATE TABLE IF NOT EXISTS measurements ("
             "row_index INTEGER PRIMARY KEY AUTOINCREMENT, "
-            "id TEXT NOT NULL, "
+            "run_id TEXT NOT NULL, "
+            "measurement_id TEXT NOT NULL, "
             "name TEXT NOT NULL, "
             "unit TEXT NOT NULL"
             ")"
@@ -20,6 +21,7 @@ class SQLiteHandler:
         (
             "CREATE TABLE IF NOT EXISTS samples ("
             "row_index INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "run_id TEXT NOT NULL, "
             "measurement_id TEXT NOT NULL, "
             "timestamp INTEGER NOT NULL, "
             "value REAL"
@@ -41,33 +43,34 @@ class SQLiteHandler:
             cursor.close()
 
     @classmethod
-    def _insert_item(cls, conn, item_id, item_name, item_unit):
+    def _insert_measurement(cls, conn, run_id, measurement_id, item_name, item_unit):
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO measurements (id, name, unit) VALUES (?, ?, ?)",
-                (item_id, item_name, item_unit)
+                "INSERT INTO measurements (run_id, measurement_id, name, unit) VALUES (?, ?, ?, ?)",
+                (run_id, measurement_id, item_name, item_unit)
             )
         finally:
             cursor.close()
 
     @classmethod
-    def _insert_measurement(cls, conn, measurement_id, timestamp, value):
+    def _insert_sample(cls, conn, run_id, measurement_id, timestamp, value):
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO samples (measurement_id, timestamp, value) VALUES (?, ?, ?)",
-                (measurement_id, timestamp, value)
+                "INSERT INTO samples (run_id, measurement_id, timestamp, value) "
+                "VALUES (?, ?, ?, ?)",
+                (run_id, measurement_id, timestamp, value)
             )
         finally:
             cursor.close()
 
     @classmethod
-    def _get_measurements(cls, conn):
+    def _get_run_ids(cls, conn):
         results = []
         cursor = conn.cursor()
         try:
-            cursor.execute("SELECT * FROM measurements")
+            cursor.execute("SELECT run_id FROM measurements GROUP BY run_id")
             rows = cursor.fetchall()
             results = [dict(row) for row in rows]
         finally:
@@ -75,13 +78,28 @@ class SQLiteHandler:
         return results
 
     @classmethod
-    def _get_samples(cls, conn, measurement_id):
+    def _get_measurements(cls, conn, run_id):
         results = []
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "SELECT * FROM samples WHERE measurement_id = ?",
-                (measurement_id,)
+                "SELECT * FROM measurements WHERE run_id = ?",
+                (run_id,)
+            )
+            rows = cursor.fetchall()
+            results = [dict(row) for row in rows]
+        finally:
+            cursor.close()
+        return results
+
+    @classmethod
+    def _get_samples(cls, conn, run_id, measurement_id):
+        results = []
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                "SELECT * FROM samples WHERE run_id = ? AND measurement_id = ?",
+                (run_id, measurement_id,)
             )
             rows = cursor.fetchall()
             results = [dict(row) for row in rows]
@@ -94,51 +112,59 @@ class SQLiteHandler:
     ##########
 
     @classmethod
-    def export_test_run(cls, data_filename, test_run):
+    def export_test_runs(cls, data_filename, test_runs):
         if os.path.isfile(data_filename):
             os.remove(data_filename)
         conn = sqlite3.connect(data_filename)
         try:
             cls._create_tables(conn)
             conn.commit()
-            timestamps = test_run["timestamps"]
-            for measurement in test_run["measurements"]:
-                cls._insert_item(conn, measurement["id"], measurement["name"], measurement["unit"])
-                conn.commit()
-                for i, value in enumerate(measurement["values"]):
-                    cls._insert_measurement(conn, measurement["id"], timestamps[i], value)
+            for test_run in test_runs:
+                timestamps = test_run["timestamps"]
+                for measurement in test_run["measurements"]:
+                    cls._insert_measurement(conn, test_run["id"], measurement["id"],
+                                            measurement["name"], measurement["unit"])
                     conn.commit()
+                    for i, value in enumerate(measurement["values"]):
+                        cls._insert_sample(conn, test_run["id"], measurement["id"],
+                                           timestamps[i], value)
+                        conn.commit()
         finally:
             conn.close()
 
     @classmethod
-    def import_test_run(cls, data_filename):
-        test_run = {
-            "id": "",
-            "timestamps": [],
-            "measurements": []
-        }
+    def import_test_runs(cls, data_filename):
+        test_runs = []
         conn = sqlite3.connect(data_filename)
         conn.row_factory = sqlite3.Row
-        timestamps = set()
         try:
-            measurements = cls._get_measurements(conn)
-            for measurement in measurements:
-                data = {
-                    "id": measurement["id"],
-                    "name": measurement["name"],
-                    "unit": measurement["unit"],
-                    "values": []
+            test_run_ids = cls._get_run_ids(conn)
+            for test_run_id in test_run_ids:
+                timestamps = set()
+                test_run = {
+                    "id": "",
+                    "timestamps": [],
+                    "measurements": []
                 }
-                samples = cls._get_samples(conn, measurement["id"])
-                for sample in samples:
-                    timestamps.add(sample["timestamp"])
-                    data["values"].append(sample["value"])
-                test_run["measurements"].append(data)
-            test_run["timestamps"] = sorted(timestamps)
+                measurements = cls._get_measurements(conn, test_run_id["run_id"])
+                for measurement in measurements:
+                    data = {
+                        "id": measurement["measurement_id"],
+                        "name": measurement["name"],
+                        "unit": measurement["unit"],
+                        "values": []
+                    }
+                    samples = cls._get_samples(conn, test_run_id["run_id"],
+                                               measurement["measurement_id"])
+                    for sample in samples:
+                        timestamps.add(sample["timestamp"])
+                        data["values"].append(sample["value"])
+                    test_run["measurements"].append(data)
+                test_run["timestamps"] = sorted(timestamps)
+                test_runs.append(test_run)
         finally:
             conn.close()
-        return test_run
+        return test_runs
 
 
 if __name__ == "__main__":

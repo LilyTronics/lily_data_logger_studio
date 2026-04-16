@@ -37,7 +37,8 @@ class ViewEditTestRuns(wx.Dialog):
         self._lst_test_runs = wx.ListCtrl(self, IdManager.ID_TEST_RUNS_LIST,
                                           style=wx.LC_SINGLE_SEL | wx.LC_REPORT |
                                           wx.LC_NO_SORT_HEADER)
-        self._lst_test_runs.InsertColumn(0, "Test runs:", width=self._COL_WIDTH)
+        self._lst_test_runs.InsertColumn(0, "Test runs", width=self._COL_WIDTH)
+        self._lst_test_runs.EnableCheckBoxes(True)
         self._lst_test_runs.id_map = {}
         return self._lst_test_runs
 
