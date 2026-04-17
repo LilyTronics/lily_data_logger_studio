@@ -54,13 +54,13 @@ class SQLiteHandler:
             cursor.close()
 
     @classmethod
-    def _insert_sample(cls, conn, run_id, measurement_id, timestamp, value):
+    def _insert_samples(cls, conn, samples):
         cursor = conn.cursor()
         try:
-            cursor.execute(
+            cursor.executemany(
                 "INSERT INTO samples (run_id, measurement_id, timestamp, value) "
                 "VALUES (?, ?, ?, ?)",
-                (run_id, measurement_id, timestamp, value)
+                samples
             )
         finally:
             cursor.close()
@@ -125,10 +125,12 @@ class SQLiteHandler:
                     cls._insert_measurement(conn, test_run["id"], measurement["id"],
                                             measurement["name"], measurement["unit"])
                     conn.commit()
+                    samples = []
                     for i, value in enumerate(measurement["values"]):
-                        cls._insert_sample(conn, test_run["id"], measurement["id"],
-                                           timestamps[i], value)
-                        conn.commit()
+                        # Order: (run_id, measurement_id, timestamp, value)
+                        samples.append((test_run["id"], measurement["id"], timestamps[i], value))
+                    cls._insert_samples(conn, samples)
+                    conn.commit()
         finally:
             conn.close()
 
