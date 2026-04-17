@@ -25,6 +25,7 @@ class ControllerEditTestRuns:
                        id=IdManager.ID_TEST_RUNS_LIST)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_TEST_RUNS_DELETE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_export, id=IdManager.ID_TEST_RUNS_EXPORT)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_import, id=IdManager.ID_TEST_RUNS_IMPORT)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_TEST_RUNS_CLOSE)
 
         self._dlg.ShowModal()
@@ -79,6 +80,20 @@ class ControllerEditTestRuns:
                                             dlg_title, wx.ICON_EXCLAMATION)
         event.Skip()
 
+    def _on_import(self, event):
+        dlg_title = "Import test runs"
+        try:
+            filename = ViewDialogs.show_open_file(self._dlg, dlg_title, "", "",
+                                                  "SQLite|*.sqlite|JSON|*.json|CSV|*.csv")
+            if filename is not None:
+                TestRuns.import_test_runs(filename)
+        except Exception as e:
+            self._logger.error(f"Error importing test runs: {e}")
+            ViewDialogs.show_message(self._dlg, f"Error importing test runs: {e}",
+                                    dlg_title, wx.ICON_EXCLAMATION)
+        self._dlg.update_test_runs(TestRuns.get_test_runs())
+        event.Skip()
+
     def _on_close(self, event):
         self._dlg.Close()
         event.Skip()
@@ -92,5 +107,6 @@ if __name__ == "__main__":
     TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
     TestOptions.suppress_loading_drivers = True
+    TestOptions.show_edit_test_runs = True
 
     run_data_logger(TestOptions)

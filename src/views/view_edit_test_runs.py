@@ -145,5 +145,6 @@ if __name__ == "__main__":
     TestOptions.load_test_configuration = True
     TestOptions.log_to_stdout = True
     TestOptions.suppress_loading_drivers = True
+    TestOptions.show_edit_test_runs = True
 
     run_data_logger(TestOptions)
