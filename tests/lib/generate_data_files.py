@@ -12,14 +12,14 @@ from src.models.configuration import Configuration
 from src.models.test_runs import TestRuns
 
 
-def create_data_file(configuration, n_samples):
+def create_data_file(configuration, t_start, n_samples):
     measurements = configuration.get_measurements()
 
     TestRuns.clear()
     run_id = TestRuns.new_test_run(measurements)
 
     print("Generate test run")
-    t = int(time.time())
+    t = t_start
     for _ in range(n_samples):
         TestRuns.init_cycle(run_id, t)
         for m in measurements:
@@ -32,6 +32,7 @@ def create_data_file(configuration, n_samples):
         [TestRuns.get_test_run(run_id)],
         export_filename
     )
+    return t
 
 
 if __name__ == "__main__":
@@ -39,8 +40,9 @@ if __name__ == "__main__":
     config = Configuration()
     config.load(os.path.join(AppData.TEST_CONFIG_PATH, "manual_test.json"))
 
+    start_time = time.time()
     for n in (1000, 5000, 10000, 20000):
         start = time.time()
         print(f"Generate data file with {n} samples")
-        create_data_file(config, n)
+        start_time = create_data_file(config, start_time, n)
         print(f"{time.time() - start}")
