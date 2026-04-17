@@ -43,6 +43,10 @@ class TestRuns:
     ##########
 
     @classmethod
+    def clear(cls):
+        del cls._TEST_RUNS[:]
+
+    @classmethod
     def get_test_runs(cls):
         return deepcopy(cls._TEST_RUNS)
 
