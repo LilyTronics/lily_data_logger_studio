@@ -40,7 +40,7 @@ if __name__ == "__main__":
     config = Configuration()
     config.load(os.path.join(AppData.TEST_CONFIG_PATH, "manual_test.json"))
 
-    start_time = time.time()
+    start_time = int(time.time())
     for n in (1000, 5000, 10000, 20000):
         start = time.time()
         print(f"Generate data file with {n} samples")
