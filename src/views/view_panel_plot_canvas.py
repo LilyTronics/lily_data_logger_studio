@@ -84,6 +84,7 @@ class ViewPanelPlotCanvas(wx.Panel):
         else:
             self._plot.ySpec = "auto"
         self._lbl_x_axis.SetLabel(x_label)
+        self.Layout()
 
 
 if __name__ == "__main__":
@@ -102,5 +103,6 @@ if __name__ == "__main__":
     frame = wx.Frame(None, title="Test ViewPanelPlotCanvas", size=(800, 600))
     plot_view = ViewPanelPlotCanvas(frame, "Sample Plot", names)
     frame.Show()
-    wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]", {})
+    wx.CallAfter(plot_view.draw_lines, test_data, "Time [s]",
+                 {"log_scale": False, "y_min": -2, "y_max": 12})
     app.MainLoop()
