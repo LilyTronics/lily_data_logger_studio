@@ -11,7 +11,9 @@ class TimeConverter:
 
     TIME_UNIT_TO_FACTOR = {"seconds": 1, "minutes": 60, "hours": 3600, "days": 86400}
     TIME_UNITS = list(TIME_UNIT_TO_FACTOR.keys())
+
     _TIMESTAMP_FORMAT = "%Y-%m-%d %H:%M:%S"
+    _TIMESTAMP_SAVE_FORMAT = "%Y%m%d_%H%M%S"
 
     @staticmethod
     def create_duration_time_string(seconds):
@@ -44,7 +46,9 @@ class TimeConverter:
         return value
 
     @classmethod
-    def get_time_string(cls, timestamp=time.time()):
+    def get_time_string(cls, timestamp=time.time(), file_save = False):
+        if file_save:
+            return datetime.fromtimestamp(timestamp).strftime(cls._TIMESTAMP_SAVE_FORMAT)
         return datetime.fromtimestamp(timestamp).strftime(cls._TIMESTAMP_FORMAT)
 
 

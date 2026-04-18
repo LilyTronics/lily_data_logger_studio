@@ -26,6 +26,10 @@ class TestRunsTest(TestSuite):
         for filename in self.data_filenames:
             if os.path.isfile(filename):
                 os.remove(filename)
+        # Remove any CSV or TSV files
+        for item in os.listdir("."):
+            if item.endswith(".csv") or item.endswith(".tsv"):
+                os.remove(item)
 
     def add_test_run(self, start_time):
         measurements = self.config.get_measurements()
@@ -65,33 +69,41 @@ class TestRunsTest(TestSuite):
         self.fail_if(n_test_runs < 2, "There must be at least two test runs")
         self.log.debug(f"Export test runs to: {filename}")
         TestRuns.export_test_runs(test_runs, filename)
-        self.log.debug(f"Import test run from: {filename}")
-        TestRuns.import_test_runs(filename)
-        test_runs = TestRuns.get_test_runs()
-        self.fail_if(len(test_runs) != n_test_runs + 2, "Test runs were not imported")
-        # Check if test runs are equal
-        for i, run_i in enumerate(test_runs):
-            for _, run_j in enumerate(test_runs[i + 1:], start=i + 1):
-                self.fail_if(run_i["id"] == run_j["id"], "The IDs are the same")
-        # Remove ID, or else the compare will not work
-        for run in test_runs:
-            run["id"] = ""
-        # Check for equal 0 and 1 must match with 2 and 3
-        # But we not sure if 0 matches with 2 or 3 and 1 matches with 2 or 3
-        matches = []
-        for i in range(2):
-            for j in range(2, 4):
-                if test_runs[i] == test_runs[j]:
-                    matches.append((i, j))
-        self.fail_if(len(matches) != 2, "Data is not the same")
-        self.fail_if(matches[0] not in [(0, 2), (0, 3)], "Data is not the same")
-        self.fail_if(matches[1] not in [(1, 2), (1, 3)], "Data is not the same")
+        # We can only import from SQLite or JSON
+        if filename.endswith(".sqlite") or filename.endswith(".json"):
+            self.log.debug(f"Import test run from: {filename}")
+            TestRuns.import_test_runs(filename)
+            test_runs = TestRuns.get_test_runs()
+            self.fail_if(len(test_runs) != n_test_runs + 2, "Test runs were not imported")
+            # Check if test runs are equal
+            for i, run_i in enumerate(test_runs):
+                for _, run_j in enumerate(test_runs[i + 1:], start=i + 1):
+                    self.fail_if(run_i["id"] == run_j["id"], "The IDs are the same")
+            # Remove ID, or else the compare will not work
+            for run in test_runs:
+                run["id"] = ""
+            # Check for equal 0 and 1 must match with 2 and 3
+            # But we not sure if 0 matches with 2 or 3 and 1 matches with 2 or 3
+            matches = []
+            for i in range(2):
+                for j in range(2, 4):
+                    if test_runs[i] == test_runs[j]:
+                        matches.append((i, j))
+            self.fail_if(len(matches) != 2, "Data is not the same")
+            self.fail_if(matches[0] not in [(0, 2), (0, 3)], "Data is not the same")
+            self.fail_if(matches[1] not in [(1, 2), (1, 3)], "Data is not the same")
 
     def test_export_import_sqlite(self):
         self.export_import_test_runs("data_file.sqlite")
 
     def test_export_import_json(self):
         self.export_import_test_runs("data_file.json")
+
+    def test_export_to_csv(self):
+        self.export_import_test_runs("data_file.csv")
+
+    def test_export_to_tsv(self):
+        self.export_import_test_runs("data_file.tsv")
 
     def test_delete_test_run(self):
         test_runs = TestRuns.get_test_runs()

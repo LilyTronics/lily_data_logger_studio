@@ -85,7 +85,9 @@ class ControllerEditTestRuns:
                 dlg_title = "Export test runs"
                 try:
                     filename = ViewDialogs.show_save_file(self._dlg, dlg_title, "", "",
-                                                          "SQLite|*.sqlite|JSON|*.json|CSV|*.csv")
+                                                          "SQLite|*.sqlite|JSON|*.json|"
+                                                          "CSV (comma separated)|*.csv|"
+                                                          "TSV (tab separated|*.tsv")
                     if filename is not None:
                         TestRuns.export_test_runs(test_runs, filename)
                 except Exception as e:

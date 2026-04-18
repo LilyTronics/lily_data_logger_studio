@@ -6,6 +6,7 @@ import uuid
 
 from copy import deepcopy
 
+from src.models.file_handler_ctsv import CtsvHandler
 from src.models.file_handler_json import JsonHandler
 from src.models.file_handler_sqlite import SQLiteHandler
 
@@ -101,6 +102,8 @@ class TestRuns:
             SQLiteHandler.export_test_runs(data_filename, test_runs)
         elif data_filename.endswith(".json"):
             JsonHandler.export_test_runs(data_filename, test_runs)
+        elif data_filename.endswith(".csv") or data_filename.endswith(".tsv"):
+            CtsvHandler.export_test_runs(data_filename, test_runs)
 
     @classmethod
     def import_test_runs(cls, data_filename):
