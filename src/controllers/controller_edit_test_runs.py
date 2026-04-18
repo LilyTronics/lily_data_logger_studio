@@ -47,14 +47,15 @@ class ControllerEditTestRuns:
         event.Skip()
 
     def _on_delete(self, event):
-        if self._selected_id is not None:
+        run_id = self._dlg.get_selected_test_run()
+        if run_id is not None:
             dlg_title = "Delete test run"
             btn = ViewDialogs.show_confirm(self._dlg,
                                            "Are you sure you want to delete this test run?",
                                            dlg_title)
             if btn == wx.ID_YES:
                 try:
-                    TestRuns.delete(self._selected_id)
+                    TestRuns.delete(run_id)
                     self._selected_id = None
                     self._dlg.update_test_runs(TestRuns.get_test_runs())
                 except Exception as e:

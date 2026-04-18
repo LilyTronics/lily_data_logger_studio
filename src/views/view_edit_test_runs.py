@@ -130,6 +130,12 @@ class ViewEditTestRuns(wx.Dialog):
                 f"({len(measurement["values"])} values)"
             )
 
+    def get_selected_test_run(self):
+        index = self._lst_test_runs.GetFirstSelected()
+        if index >= 0:
+            return self._lst_test_runs.id_map[index]
+        return None
+
     def get_checked_test_runs(self):
         test_runs = [self._lst_test_runs.id_map[i]
                      for i in range(self._lst_test_runs.GetItemCount())
