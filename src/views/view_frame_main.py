@@ -47,6 +47,7 @@ class ViewFrameMain(wx.Frame):
 
     def __init__(self, title, log_filename, allow_docking):
         self._title = title
+        self._configuration = None
         super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
         self._allow_docking = allow_docking
         self._default_layout = ""
@@ -219,6 +220,59 @@ class ViewFrameMain(wx.Frame):
         # Store default layout for the resore layout button
         self._default_layout = self._aui_manager.SavePerspective()
 
+    def _update_data_table(self, test_run):
+        # Update data table:
+        table_data = {
+            "timestamps": test_run["timestamps"],
+            "measurements": {}
+        }
+        for m in test_run["measurements"]:
+            table_data["measurements"][m["name"]] = m["values"]
+        n_samples = len(table_data["timestamps"])
+        self._sb.SetStatusText(f"Number of samples: {n_samples}", self._SB_NR_OF_SAMPLES)
+        self._data_table_panel.update_data(table_data)
+
+    def _update_graphs(self, test_run):
+        # Update graphs
+        # We can only create a graph if we have 2 or more samples
+        if len(test_run["timestamps"]) < 2:
+            return
+
+        # Create x values for the graph
+        x_values = [0]
+        for i in range(1, len(test_run["timestamps"])):
+            x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
+        x_label = "Time [s]"
+        graphs = self._configuration.get_graphs()
+        print(graphs)
+        graphs_data = {}
+        for graph in graphs:
+            lines = []
+            for m in graph["measurements"]:
+                matches = [x for x in test_run["measurements"] if x["id"] == m]
+                if len(matches) != 1:
+                    continue
+                data = []
+                previous_value = 0
+                for i, value in enumerate(matches[0]["values"]):
+                    # We can only show int or floats in the graph
+                    if isinstance(value, (int, float)):
+                        previous_value = value
+                    else:
+                        value = previous_value
+                    data.append((x_values[i], value))
+                line_data = {
+                    "legend": f"{matches[0]['name']} [{matches[0]['unit']}]",
+                    "data": data
+                }
+                lines.append(line_data)
+            graphs_data[graph["name"]] = {
+                "x_label": x_label,
+                "lines": lines,
+                "settings": graph["settings"]
+            }
+        self._graphs_panel.update_graphs(graphs_data)
+
     ##################
     # Event handlers #
     ##################
@@ -288,12 +342,13 @@ class ViewFrameMain(wx.Frame):
             self._bot_win.SetDefaultSize((-1, height))
 
     def update_configuration(self, configuration):
-        self._side_panel.update_configuration(configuration)
-        self._graphs_panel.update(configuration)
-        self._process_panel.update(configuration)
-        self._data_table_panel.update(configuration)
+        self._configuration = configuration
+        self._side_panel.update_configuration(self._configuration)
+        self._graphs_panel.update(self._configuration)
+        self._process_panel.update(self._configuration)
+        self._data_table_panel.update(self._configuration)
 
-        settings = configuration.get_settings()
+        settings = self._configuration.get_settings()
         sample_time = settings["sample_time"]
         end_time = "-"
         total_samples = "-"
@@ -306,8 +361,8 @@ class ViewFrameMain(wx.Frame):
         self._sb.SetStatusText(f"End time: {end_time}", self._SB_END_TIME)
         self._sb.SetStatusText(f"Total samples: {total_samples}", self._SB_TOTAL_SAMPLES)
 
-        title = f"{self._title} - {configuration.get_filename()}"
-        title += "*" if configuration.is_changed() else ""
+        title = f"{self._title} - {self._configuration.get_filename()}"
+        title += "*" if self._configuration.is_changed() else ""
         self.SetTitle(title)
 
     def update_status(self, status):
@@ -325,15 +380,11 @@ class ViewFrameMain(wx.Frame):
         self._activity_led.Refresh()
 
     def update_process(self, step_index):
-        self._process_panel.update_progress(step_index)
+        wx.CallAfter(self._process_panel.update_progress, step_index + 1)
 
-    def update_data_table(self, table_data):
-        n_samples = len(table_data["timestamps"])
-        self._sb.SetStatusText(f"Number of samples: {n_samples}", self._SB_NR_OF_SAMPLES)
-        self._data_table_panel.update_data(table_data)
-
-    def update_graphs(self, graphs_data):
-        self._graphs_panel.update_graphs(graphs_data)
+    def update_test_run_data(self, test_run):
+        wx.CallAfter(self._update_data_table, test_run)
+        wx.CallAfter(self._update_graphs, test_run)
 
     def update_test_runs(self, test_runs):
         self._side_panel.update_test_runs(test_runs)
