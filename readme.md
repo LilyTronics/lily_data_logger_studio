@@ -35,7 +35,7 @@ Release 1.0:
 * Manage test runs (show, delete, export) ✅
 * Export to and import test runs from SQLite ✅
 * Export to and import test runs from JSON ✅
-* Export to CVS and TSV
+* Export to CVS and TSV ✅
 * User manual for data logger and for creating drivers.
 
 Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
