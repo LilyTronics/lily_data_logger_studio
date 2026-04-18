@@ -17,15 +17,15 @@ class TestRunsTest(TestSuite):
 
     run_id = None
     config = Configuration()
-    data_filename = None
+    data_filenames = []
 
     def setup(self):
         self.config.load(AppData.TEST_CONFIGURATION)
-        self.data_filename = "data_file.sqlite"
 
     def teardown(self):
-        if os.path.isfile(self.data_filename):
-            os.remove(self.data_filename)
+        for filename in self.data_filenames:
+            if os.path.isfile(filename):
+                os.remove(filename)
 
     def add_test_run(self, start_time):
         measurements = self.config.get_measurements()
@@ -53,17 +53,20 @@ class TestRunsTest(TestSuite):
             self.fail_if(len(matches[0]["values"]) != 10, "Values were not added")
         return t
 
-    def test_export_import_sqlite(self):
+    def export_import_test_runs(self, filename):
+        self.data_filenames.append(filename)
+        self.log.debug("Create test runs")
+        TestRuns.clear()
         start_time = int(time.time())
         while len(TestRuns.get_test_runs()) < 2:
             start_time = self.add_test_run(start_time)
         test_runs = TestRuns.get_test_runs()
         n_test_runs = len(test_runs)
         self.fail_if(n_test_runs < 2, "There must be at least two test runs")
-        self.log.debug(f"Export test runs to: {self.data_filename}")
-        TestRuns.export_test_runs(test_runs, self.data_filename)
-        self.log.debug(f"Import test run from: {self.data_filename}")
-        TestRuns.import_test_runs(self.data_filename)
+        self.log.debug(f"Export test runs to: {filename}")
+        TestRuns.export_test_runs(test_runs, filename)
+        self.log.debug(f"Import test run from: {filename}")
+        TestRuns.import_test_runs(filename)
         test_runs = TestRuns.get_test_runs()
         self.fail_if(len(test_runs) != n_test_runs + 2, "Test runs were not imported")
         # Check if test runs are equal
@@ -83,6 +86,9 @@ class TestRunsTest(TestSuite):
         self.fail_if(len(matches) != 2, "Data is not the same")
         self.fail_if(matches[0] not in [(0, 2), (0, 3)], "Data is not the same")
         self.fail_if(matches[1] not in [(1, 2), (1, 3)], "Data is not the same")
+
+    def test_export_import_sqlite(self):
+        self.export_import_test_runs("data_file.sqlite")
 
     def test_delete_test_run(self):
         test_runs = TestRuns.get_test_runs()
