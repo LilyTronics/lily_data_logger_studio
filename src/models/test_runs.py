@@ -6,7 +6,7 @@ import uuid
 
 from copy import deepcopy
 
-from src.models.sqlite_handler import SQLiteHandler
+from src.models.file_handler_sqlite import SQLiteHandler
 
 
 class TestRuns:
