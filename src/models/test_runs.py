@@ -6,6 +6,7 @@ import uuid
 
 from copy import deepcopy
 
+from src.models.file_handler_json import JsonHandler
 from src.models.file_handler_sqlite import SQLiteHandler
 
 
@@ -98,15 +99,20 @@ class TestRuns:
     def export_test_runs(cls, test_runs, data_filename):
         if data_filename.endswith(".sqlite"):
             SQLiteHandler.export_test_runs(data_filename, test_runs)
+        elif data_filename.endswith(".json"):
+            JsonHandler.export_test_runs(data_filename, test_runs)
 
     @classmethod
     def import_test_runs(cls, data_filename):
+        test_runs = []
         if data_filename.endswith(".sqlite"):
             test_runs = SQLiteHandler.import_test_runs(data_filename)
-            for test_run in test_runs:
-                # Make sure we have unique IDs
-                test_run["id"] = str(uuid.uuid4())
-                cls._TEST_RUNS.append(test_run)
+        elif data_filename.endswith(".json"):
+            test_runs = JsonHandler.import_test_runs(data_filename)
+        for test_run in test_runs:
+            # Make sure we have unique IDs
+            test_run["id"] = str(uuid.uuid4())
+            cls._TEST_RUNS.append(test_run)
 
 
 if __name__ == "__main__":

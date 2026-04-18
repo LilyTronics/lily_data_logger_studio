@@ -90,6 +90,9 @@ class TestRunsTest(TestSuite):
     def test_export_import_sqlite(self):
         self.export_import_test_runs("data_file.sqlite")
 
+    def test_export_import_json(self):
+        self.export_import_test_runs("data_file.json")
+
     def test_delete_test_run(self):
         test_runs = TestRuns.get_test_runs()
         n_test_runs = len(test_runs)
