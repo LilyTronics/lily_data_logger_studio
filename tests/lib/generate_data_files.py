@@ -23,7 +23,7 @@ def create_data_file(configuration, t_start, n_samples):
     for _ in range(n_samples):
         TestRuns.init_cycle(run_id, t)
         for m in measurements:
-            value = round(random.uniform(25, 30), 1)
+            value = round(random.uniform(6, 8), 1)
             TestRuns.store_measurement(run_id, t, m["id"], value)
         t += 3
     export_filename = os.path.join(AppData.TEST_CONFIG_PATH, f"test_run_{n_samples}.sqlite")
