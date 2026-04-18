@@ -14,16 +14,18 @@ from src.views.view_edit_test_runs import ViewEditTestRuns
 class ControllerEditTestRuns:
 
     def __init__(self, parent_view, logger):
+        self._parent_view = parent_view
         self._logger = logger
         self._logger.info("Edit test runs")
         self._selected_id = None
 
-        self._dlg = ViewEditTestRuns(parent_view)
+        self._dlg = ViewEditTestRuns(self._parent_view)
         self._dlg.update_test_runs(TestRuns.get_test_runs())
 
         self._dlg.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_activated,
                        id=IdManager.ID_TEST_RUNS_LIST)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_TEST_RUNS_DELETE)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_load, id=IdManager.ID_TEST_RUNS_LOAD)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_export, id=IdManager.ID_TEST_RUNS_EXPORT)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_import, id=IdManager.ID_TEST_RUNS_IMPORT)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_close, id=IdManager.ID_TEST_RUNS_CLOSE)
@@ -62,6 +64,17 @@ class ControllerEditTestRuns:
                     self._logger.error(f"Error deleting test run: {e}")
                     ViewDialogs.show_message(self._dlg, f"Error deleting test run: {e}",
                                             dlg_title, wx.ICON_EXCLAMATION)
+        event.Skip()
+
+    def _on_load(self, event):
+        run_id = self._dlg.get_selected_test_run()
+        if run_id is not None:
+            try:
+                self._parent_view.update_test_run_data(TestRuns.get_test_run(run_id))
+            except Exception as e:
+                self._logger.error(f"Error loading test run: {e}")
+                ViewDialogs.show_message(self._dlg, f"Error loading test run: {e}",
+                                         "Load test run", wx.ICON_EXCLAMATION)
         event.Skip()
 
     def _on_export(self, event):

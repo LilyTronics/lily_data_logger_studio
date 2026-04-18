@@ -244,7 +244,6 @@ class ViewFrameMain(wx.Frame):
             x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
         x_label = "Time [s]"
         graphs = self._configuration.get_graphs()
-        print(graphs)
         graphs_data = {}
         for graph in graphs:
             lines = []
