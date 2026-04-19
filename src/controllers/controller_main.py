@@ -187,6 +187,17 @@ class ControllerMain:
             time.sleep(0.05)
         self._logger.debug("Data logger monitor stopped")
 
+    def _check_to_save_configuration(self):
+        if self._configuration.is_changed():
+            btn = ViewDialogs.show_confirm(self._view,
+                                        "The configuration is changed. "
+                                        "Do you want to save the configuration?",
+                                        "Save configuration")
+            if btn == wx.ID_YES:
+                event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SAVE_CONFIG)
+                wx.PostEvent(self._view.GetEventHandler(), event)
+
+
     ##################
     # Event handlers #
     ##################
@@ -226,11 +237,13 @@ class ControllerMain:
         event.Skip()
 
     def _on_new_config(self, event):
+        self._check_to_save_configuration()
         ControllerConfiguration.new(self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
 
     def _on_open_config(self, event):
+        self._check_to_save_configuration()
         ControllerConfiguration.load(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         event.Skip()
@@ -241,6 +254,7 @@ class ControllerMain:
         event.Skip()
 
     def _on_data_logger_start(self, event):
+        self._check_to_save_configuration()
         self._controller_data_logger.start()
         event.Skip()
 
@@ -253,6 +267,7 @@ class ControllerMain:
         event.Skip()
 
     def _on_view_close(self, event):
+        self._check_to_save_configuration()
         self._stop_monitor_thread()
         self._logger.debug("Close main view")
         self._app_settings.store_main_window_maximized(self._view.IsMaximized())
