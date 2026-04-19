@@ -96,6 +96,14 @@ class ControllerEditInstruments:
         instrument["driver_description"] = driver_class.description
         self._dlg.show_instrument(instrument, driver_class.driver_settings)
 
+    def _show_new_instrument(self):
+        instrument = self._configuration.get_new_instrument()
+        self._selected_id = None
+        instrument["driver_name"] = ""
+        instrument["driver_description"] = ""
+        del instrument["driver_id"]
+        self._dlg.show_instrument(instrument, None)
+
     ##################
     # Event handlers #
     ##################
@@ -118,12 +126,7 @@ class ControllerEditInstruments:
         event.Skip()
 
     def _on_new(self, event):
-        instrument = self._configuration.get_new_instrument()
-        self._selected_id = None
-        instrument["driver_name"] = ""
-        instrument["driver_description"] = ""
-        del instrument["driver_id"]
-        self._dlg.show_instrument(instrument, None)
+        self._show_new_instrument()
         event.Skip()
 
     def _on_delete(self, event):
@@ -137,7 +140,7 @@ class ControllerEditInstruments:
             if btn == wx.ID_YES:
                 try:
                     self._configuration.delete_instrument(instrument["id"])
-                    self._selected_id = None
+                    self._show_new_instrument()
                     self._update_instruments()
                 except Exception as e:
                     self._logger.error(f"Error deleting instrument: {e}")

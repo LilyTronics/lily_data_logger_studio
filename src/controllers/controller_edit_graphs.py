@@ -75,6 +75,10 @@ class ControllerEditGraphs:
             self._dlg.update_settings(graph)
             self._selected_index = index
 
+    def _show_new_graph(self):
+        graph = self._configuration.get_new_graph()
+        self._dlg.update_settings(graph)
+        self._selected_index = None
 
     ##################
     # Event handlers #
@@ -85,9 +89,7 @@ class ControllerEditGraphs:
         event.Skip()
 
     def _on_new(self, event):
-        graph = self._configuration.get_new_graph()
-        self._dlg.update_settings(graph)
-        self._selected_index = None
+        self._show_new_graph()
         event.Skip()
 
     def _on_save(self, event):
@@ -137,7 +139,7 @@ class ControllerEditGraphs:
             if btn == wx.ID_YES:
                 try:
                     self._configuration.delete_graph(index)
-                    self._selected_index = None
+                    self._show_new_graph()
                     self._update_graphs()
                 except Exception as e:
                     self._logger.error(f"Error deleting graph: {e}")

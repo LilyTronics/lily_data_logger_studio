@@ -176,6 +176,11 @@ class ControllerEditProcess:
         step["settings"] = step_settings
         return step
 
+    def _show_new_step(self):
+        step = self._configuration.get_new_process_step()
+        self._dlg.update_settings(step, True)
+        self._selected_index = None
+
     ##################
     # Event handlers #
     ##################
@@ -209,9 +214,7 @@ class ControllerEditProcess:
         event.Skip()
 
     def _on_new(self, event):
-        step = self._configuration.get_new_process_step()
-        self._dlg.update_settings(step, True)
-        self._selected_index = None
+        self._show_new_step()
         event.Skip()
 
     def _on_down_up(self, event):
@@ -262,7 +265,7 @@ class ControllerEditProcess:
             if btn == wx.ID_YES:
                 try:
                     self._configuration.delete_process_step(index)
-                    self._selected_index = None
+                    self._show_new_step()
                     self._update_steps()
                 except Exception as e:
                     self._logger.error(f"Error deleting process step: {e}")

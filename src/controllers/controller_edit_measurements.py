@@ -122,6 +122,14 @@ class ControllerEditMeasurements:
             raise Exception("Name cannot be empty")
         return measurement
 
+    def _show_new_measurement(self):
+        measurement = self._configuration.get_new_measurement()
+        self._selected_id = None
+        measurement["instrument_name"] = ""
+        measurement["channels"] = []
+        measurement["channel_name"] = ""
+        self._dlg.show_measurement(measurement)
+
     ##################
     # Event handlers #
     ##################
@@ -144,12 +152,7 @@ class ControllerEditMeasurements:
         event.Skip()
 
     def _on_new(self, event):
-        measurement = self._configuration.get_new_measurement()
-        self._selected_id = None
-        measurement["instrument_name"] = ""
-        measurement["channels"] = []
-        measurement["channel_name"] = ""
-        self._dlg.show_measurement(measurement)
+        self._show_new_measurement()
         event.Skip()
 
     def _on_test(self, event):
@@ -192,7 +195,7 @@ class ControllerEditMeasurements:
             if btn == wx.ID_YES:
                 try:
                     self._configuration.delete_measurement(measurement["id"])
-                    self._selected_id = None
+                    self._show_new_measurement()
                     self._update_measurements()
                 except Exception as e:
                     self._logger.error(f"Error deleting measurement: {e}")
