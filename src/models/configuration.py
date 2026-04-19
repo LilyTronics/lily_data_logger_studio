@@ -9,6 +9,7 @@ Configurations contains:
 """
 
 import json
+import re
 import uuid
 
 from copy import deepcopy
@@ -101,11 +102,19 @@ class Configuration:
                 return i
         raise Exception("No instrument found for this ID")
 
+    def _check_if_id_is_used(self, id_query, item_type):
+        config = json.dumps(self._configuration)
+        matches = re.findall(id_query, config)
+        if len(matches) > 1:
+            raise Exception(f"This {item_type} is used and cannot be deleted.")
+
+
     def _get_index_of_measurement(self, measurement_id):
         for i in range(len(self._configuration["measurements"])):
             if self._configuration["measurements"][i]["id"] == measurement_id:
                 return i
         raise Exception("No measurement found for this ID")
+
 
     ##########
     # Public #
@@ -208,6 +217,7 @@ class Configuration:
         self._is_changed = True
 
     def delete_instrument(self, instrument_id):
+        self._check_if_id_is_used(instrument_id, "instrument")
         i = self._get_index_of_instrument(instrument_id)
         self._configuration["instruments"].pop(i)
         self._is_changed = True
@@ -260,6 +270,7 @@ class Configuration:
         self._is_changed = True
 
     def delete_measurement(self, measurement_id):
+        self._check_if_id_is_used(measurement_id, "measurement")
         i = self._get_index_of_measurement(measurement_id)
         self._configuration["measurements"].pop(i)
         self._is_changed = True
