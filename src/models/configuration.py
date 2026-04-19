@@ -195,6 +195,7 @@ class Configuration:
         instrument["driver_id"] = driver_id
         instrument["settings"] = deepcopy(settings)
         self._configuration["instruments"].append(instrument)
+        self._is_changed = True
 
     def update_instrument(self, instrument_id, name, driver_id, settings):
         i = self._get_index_of_instrument(instrument_id)
@@ -204,10 +205,12 @@ class Configuration:
         self._configuration["instruments"][i]["name"] = name
         self._configuration["instruments"][i]["driver_id"] = driver_id
         self._configuration["instruments"][i]["settings"] = settings
+        self._is_changed = True
 
     def delete_instrument(self, instrument_id):
         i = self._get_index_of_instrument(instrument_id)
         self._configuration["instruments"].pop(i)
+        self._is_changed = True
 
     ################
     # Measurements #
@@ -239,6 +242,7 @@ class Configuration:
         measurement["offset"] = offset
         measurement["params"] = params
         self._configuration["measurements"].append(measurement)
+        self._is_changed = True
 
     def update_measurement(self, measurement_id, name, instrument_id, channel_id, unit, gain,
                            offset, params):
@@ -253,10 +257,12 @@ class Configuration:
         self._configuration["measurements"][i]["gain"] = gain
         self._configuration["measurements"][i]["offset"] = offset
         self._configuration["measurements"][i]["params"] = params
+        self._is_changed = True
 
     def delete_measurement(self, measurement_id):
         i = self._get_index_of_measurement(measurement_id)
         self._configuration["measurements"].pop(i)
+        self._is_changed = True
 
     #################
     # Process steps #
@@ -293,6 +299,7 @@ class Configuration:
             self._configuration["process"].insert(position, step)
         else:
             self._configuration["process"].append(step)
+        self._is_changed = True
 
     def update_process_step(self, step_index, name, label, step_type, settings):
         if step_index < 0 or step_index >= len(self._configuration["process"]):
@@ -304,6 +311,7 @@ class Configuration:
         self._configuration["process"][step_index]["label"] = label
         self._configuration["process"][step_index]["type"] = step_type
         self._configuration["process"][step_index]["settings"] = settings
+        self._is_changed = True
 
     def move_process_step(self, step_index, direction):
         if ((step_index == 0 and direction < 0) or
@@ -319,11 +327,13 @@ class Configuration:
         self._configuration["process"].insert(
             new_index, self._configuration["process"].pop(step_index)
         )
+        self._is_changed = True
 
     def delete_process_step(self, step_index):
         if step_index < 0 or step_index >= len(self._configuration["process"]):
             raise Exception("The step index is invalid")
         self._configuration["process"].pop(step_index)
+        self._is_changed = True
 
     ##########
     # Graphs #
@@ -354,6 +364,7 @@ class Configuration:
         graph["measurements"] = measurements
         graph["settings"] = settings
         self._configuration["graphs"].append(graph)
+        self._is_changed = True
 
     def update_graph(self, graph_index, name, measurements, settings):
         if graph_index < 0 or graph_index >= len(self._configuration["graphs"]):
@@ -364,6 +375,7 @@ class Configuration:
         self._configuration["graphs"][graph_index]["name"] = name
         self._configuration["graphs"][graph_index]["measurements"] = measurements
         self._configuration["graphs"][graph_index]["settings"] = settings
+        self._is_changed = True
 
     def move_graph(self, graph_index, direction):
         if ((graph_index == 0 and direction < 0) or
@@ -379,11 +391,13 @@ class Configuration:
         self._configuration["graphs"].insert(
             new_index, self._configuration["graphs"].pop(graph_index)
         )
+        self._is_changed = True
 
     def delete_graph(self, graph_index):
         if graph_index < 0 or graph_index >= len(self._configuration["graphs"]):
             raise Exception("The graph index is invalid")
         self._configuration["graphs"].pop(graph_index)
+        self._is_changed = True
 
 
 if __name__ == "__main__":
