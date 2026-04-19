@@ -17,7 +17,9 @@ class DriverTemplate(DriverBase):
 
     # Generate a valid ID using the driver_id.py script
     id = "b265ba50-628a-40fc-99ef-9a0df21c156c"
-    name = "Driver template"
+    manufacturer = "Driver"
+    model = "template"
+    description = "Driver template"
 
     driver_settings = [
         DriverSetting("integer setting", int, 0, DriverSetting.CTRL_TEXT),
@@ -26,7 +28,7 @@ class DriverTemplate(DriverBase):
     ]
 
     channels = [
-        DriverChannel("channel_id", "get instrument ID", [], None, str),
+        DriverChannel("channel_id", "get instrument ID", None, str),
     ]
 
     transport = TransportTemplate
