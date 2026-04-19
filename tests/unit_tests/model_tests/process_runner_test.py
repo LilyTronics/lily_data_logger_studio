@@ -61,6 +61,7 @@ class ProcessRunnerTest(TestSuite):
         self.fail_if(is_running, "Process should not be running")
         self.fail_if(self.app_test_logger.errors > 0,
                      f"The logger reported {self.app_test_logger.errors} errors")
+        self.log.debug(f"Sequence: {self.indexes}")
         self.fail_if(self.indexes != self.EXPECTED_INDEXES,
                      "Sequency of indexes is not correct.")
 

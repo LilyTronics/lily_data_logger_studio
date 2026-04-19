@@ -174,7 +174,7 @@ class ControllerMain:
                     status = "idle"
                     update_main = True
                     self._logger.info("Data logger stopped")
-                    wx.CallAfter(self._view.update_process, 0)
+                    wx.CallAfter(self._view.update_process, -1)
                     wx.CallAfter(self._view.update_test_runs, TestRuns.get_test_runs())
 
                 if update_main:

@@ -394,7 +394,7 @@ class ViewFrameMain(wx.Frame):
         self._activity_led.Refresh()
 
     def update_process(self, step_index):
-        wx.CallAfter(self._process_panel.update_progress, step_index + 1)
+        wx.CallAfter(self._process_panel.update_progress, step_index)
 
     def update_test_run_data(self, test_run):
         wx.CallAfter(self._update_data_table, test_run)

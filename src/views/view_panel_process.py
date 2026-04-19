@@ -70,7 +70,7 @@ class ViewPanelProcess(wx.Panel):
 
     def update_progress(self, step_index):
         for i in range(self._lst_process.GetItemCount()):
-            if i == step_index - 1:
+            if i == step_index:
                 self._lst_process.SetItemBackgroundColour(i, wx.Colour(self._ACTIVE_COLOR))
                 self._lst_process.EnsureVisible(i)
             else:
