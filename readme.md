@@ -11,7 +11,7 @@ Log data from electronics instruments and control electronics instruments.
 ✅ Create, save and reload configurations \
 ✅ Setup instruments, measurements and process steps \
 ✅ Display results in data table and graphs (auto-update) \
-✅ Export measurement data to: SQLite, JSON, CSV and TSV
+✅ Export measurement data to: SQLite, JSON, CSV and TSV \
 ✅ Import measurement data from: SQLite and JSON \
 ✅ Backup and restore of your configuration and measurements \
 ✅ Python development environment for creatinfg drivers for your instruments \
@@ -25,8 +25,9 @@ Check the releases for the latest release: [releases](https://github.com/LilyTro
 
 Release candidate version 1.0.RC1 is there.
 
+Not yet included:
+
 * User manuals for the application and driver development
-* Testing the application
 
 Issues or feature requests can be submitted in the issue tracker: [issues](https://github.com/LilyTronics/lily_data_logger_studio/issues)
 
