@@ -16,7 +16,8 @@ class VoltcraftVC506(DriverBase):
 
     # Generate a valid ID using the driver_id.py script
     id = "2ecb8f48-2fb1-49e6-a3cc-a5d7bf489f2c"
-    name = "Voltcraft VC506"
+    manufacturer = "Voltcraft"
+    model = "VC506"
     description = "Multimeter Voltcraft VC506"
 
     driver_settings = [

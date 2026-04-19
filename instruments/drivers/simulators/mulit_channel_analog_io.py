@@ -12,7 +12,8 @@ from instruments.transport.transport_tcp import TransportTcp
 class MultiChannelAnalogIo(DriverBase):
 
     id = "24debf6c-9022-45cf-9900-99913c382dee"
-    name = "Multi channel analog IO simulator"
+    manufacturer = "Simulator"
+    model = "multi channel analog IO"
     description = "Simulates a multi channel analog IO device with ASCII protocol over IP/TCP"
 
     driver_settings = [

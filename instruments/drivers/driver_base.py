@@ -26,8 +26,10 @@ class DriverBase(ABC):
 
     #: Driver ID. Must be a valid UUID V4 string.
     id = None
-    #: Driver name. This name is used in the application to identify the driver.
-    name = "base class"
+    #: Driver manufacturer name.
+    manufacturer = "not set"
+    #: Driver model name.
+    model = "not set"
     #: Driver description. Short description of the instrument.
     description = "Base class for all drivers"
     #: Driver settings. Dictionary of setting that are required to configure the driver.
@@ -72,9 +74,14 @@ class DriverBase(ABC):
                 f"(Driver) Driver ID is not a valid UUID V4 in driver {cls.__name__}"
             ) from e
         # Driver name
-        if cls.name is DriverBase.name or not cls.name:
+        if cls.manufacturer is DriverBase.manufacturer or not cls.manufacturer:
             raise ValueError(
-                f"(Driver) Driver name is not set in driver {cls.__name__}"
+                f"(Driver) Driver manufacturer is not set in driver {cls.__name__}"
+            )
+        # Driver model
+        if cls.model is DriverBase.model or not cls.model:
+            raise ValueError(
+                f"(Driver) Driver manufacturer is not set in driver {cls.__name__}"
             )
         # Driver description
         if cls.description is DriverBase.description or not cls.description:
@@ -137,6 +144,8 @@ class DriverBase(ABC):
             raise TypeError(
                 f"(Driver) Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
             )
+
+        cls.name = f"{cls.manufacturer} {cls.model}"
 
     ###########
     # Private #
