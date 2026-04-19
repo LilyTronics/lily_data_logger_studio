@@ -3,42 +3,32 @@
 
 # Lily Data Logger Studio
 
-Universal data logger and process control software.
+Universal data logger (acquisition) and process control software.
+Log data from electronics instruments and control electronics instruments.
 
-Log data from electronic instruments and control electronics instruments.
-* Log measurements from electronic instruments (voltage, current, temperature, etc.).
-* Control electronic instruments (temperature chambers, power supplies, signal generators, etc.).
-* Output to table, graph and CSV file.
-* Write your own drivers using Python for any instrument. Templates and a VS Code workspace are included.
-* Tested on Windows and Ubuntu (probably can run on others).
+✅ Log measurements from electronics instruments (voltage, current, temperature, etc.). \
+✅ Control electronics instruments (temperature chambers, power supplies, signal generators, etc.). \
+✅ Create, save and reload configurations \
+✅ Setup instruments, measurements and process steps \
+✅ Display results in data table and graphs (auto-update) \
+✅ Export measurement data to: SQLite, JSON, CSV and TSV
+✅ Import measurement data from: SQLite and JSON \
+✅ Backup and restore of your configuration and measurements \
+✅ Python development environment for creatinfg drivers for your instruments \
+✅ Tested on Windows and Ubuntu (probably can run on others).
+
+Check the releases for the latest release: [releases](https://github.com/LilyTronics/lily_data_logger_studio/releases)
 
 ![main window](manuals/main/images/main_window.png)
 
-![driver test](manuals/driver_dev/images/driver_test.png)
-
 ## Road map
 
-Release 1.0:
-* Read and save configuration files. ✅
-* Change configuration settings. ✅
-* Load and reload drivers from the instruments package. ✅
-* Edit instruments in the configuration. ✅
-* Edit measurements. ✅
-* Start/stop data logger, runs measurements and process steps. ✅
-* Edit process steps for controlling instruments. ✅
-* Edit graphs in the configuration. ✅
-* Show measurements in the data table  ✅
-* Show measurements in graphs. ✅
-* Show live updates of the process. ✅
-* Application for testing created drivers. ✅
-* Templates and a VS code workspace included for creating drivers. ✅
-* Manage test runs (show, delete, export) ✅
-* Export to and import test runs from SQLite ✅
-* Export to and import test runs from JSON ✅
-* Export to CVS and TSV ✅
-* User manual for data logger and for creating drivers.
+Release candidate version 1.0.RC1 is there.
 
-Issues or feature requests can be submitted in the issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
+* User manuals for the application and driver development
+* Testing the application
+
+Issues or feature requests can be submitted in the issue tracker: [issues](https://github.com/LilyTronics/lily_data_logger_studio/issues)
 
 ## Contributing
 
