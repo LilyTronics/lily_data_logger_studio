@@ -45,6 +45,12 @@ class ViewFrameMain(wx.Frame):
     _TIMER_SPEED = 100
     _BLINK_SPEED = 5
 
+    # Time scale threshholds
+    _TIME_SCALE_THRESHOLD = {
+        90: (60, "Time [min]"),         # After this change to minutes
+        5400: (3600, "Time [hrs]")      # After this change to hours
+    }
+
     def __init__(self, title, log_filename, allow_docking):
         self._title = title
         self._configuration = None
@@ -243,6 +249,15 @@ class ViewFrameMain(wx.Frame):
         for i in range(1, len(test_run["timestamps"])):
             x_values.append(test_run["timestamps"][i] - test_run["timestamps"][0])
         x_label = "Time [s]"
+        t_factor = 1
+        # Scale time
+        for threshold, item in self._TIME_SCALE_THRESHOLD.items():
+            if max(x_values) > threshold:
+                t_factor = item[0]
+                x_label = item[1]
+        if t_factor > 1:
+            x_values = [x / t_factor for x in x_values]
+
         graphs = self._configuration.get_graphs()
         graphs_data = {}
         for graph in graphs:
