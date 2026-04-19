@@ -26,7 +26,7 @@ def create_data_file(configuration, t_start, n_samples):
             value = round(random.uniform(6, 8), 1)
             TestRuns.store_measurement(run_id, t, m["id"], value)
         t += 3
-    export_filename = os.path.join(AppData.TEST_CONFIG_PATH, f"test_run_{n_samples}.sqlite")
+    export_filename = os.path.join(AppData.TEST_DATA_PATH, f"test_run_{n_samples}.sqlite")
     print("Export to file")
     TestRuns.export_test_runs(
         [TestRuns.get_test_run(run_id)],
@@ -38,7 +38,7 @@ def create_data_file(configuration, t_start, n_samples):
 if __name__ == "__main__":
 
     config = Configuration()
-    config.load(os.path.join(AppData.TEST_CONFIG_PATH, "manual_test.json"))
+    config.load(os.path.join(AppData.TEST_CONFIGURATION))
 
     start_time = int(time.time())
     for n in (1000, 5000, 10000, 20000):

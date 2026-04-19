@@ -26,7 +26,7 @@ class ProcessRunnerTest(TestSuite):
     def setup(self):
         Drivers.load()
         config = Configuration()
-        config.load(os.path.join(AppData.TEST_CONFIG_PATH, "test_process_runner.json"))
+        config.load(os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_process_runner.json"))
         instruments = config.get_instruments()
         self.fail_if(len(instruments) == 0, "No instruments in the configuration")
         InstrumentPool.add_instruments(instruments)

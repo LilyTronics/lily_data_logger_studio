@@ -30,8 +30,9 @@ MANUALS_PATH = os.path.join(APP_PATH, "manuals")
 SETTINGS_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.json")
 APP_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{EXE_NAME}.log")
 DRIVER_TEST_LOG_FILE = os.path.join(get_user_data_dir(), EXE_NAME, f"{DRIVER_TEST_EXE_NAME}.log")
-TEST_CONFIG_PATH = os.path.join(APP_PATH, "tests", "configurations")
-TEST_CONFIGURATION = os.path.join(TEST_CONFIG_PATH, "manual_test.json")
+UNIT_TEST_CONFIG_PATH = os.path.join(APP_PATH, "tests", "configurations", "unit_test")
+TEST_CONFIGURATION = os.path.join(UNIT_TEST_CONFIG_PATH, "test_config.json")
+TEST_DATA_PATH = os.path.join(APP_PATH, "tests", "test_data")
 
 
 if __name__ == "__main__":

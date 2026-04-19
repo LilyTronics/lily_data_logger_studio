@@ -18,7 +18,7 @@ class InstrumentPoolTest(TestSuite):
 
     def setup(self):
         self.config = Configuration()
-        self.config.load(os.path.join(AppData.TEST_CONFIG_PATH, "test_instruments.json"))
+        self.config.load(os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_instruments.json"))
         Drivers.load()
 
     def test_add_instruments_from_config(self):

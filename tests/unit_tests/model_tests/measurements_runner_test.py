@@ -39,7 +39,7 @@ class MeasurementsRunnerTest(TestSuite):
         self.run_id = test_run["id"]
 
     def load_config(self, config_filename):
-        self.config.load(os.path.join(AppData.TEST_CONFIG_PATH, config_filename))
+        self.config.load(os.path.join(AppData.UNIT_TEST_CONFIG_PATH, config_filename))
         instruments = self.config.get_instruments()
         self.fail_if(len(instruments) == 0, "No instruments in the configuration")
         InstrumentPool.clear()

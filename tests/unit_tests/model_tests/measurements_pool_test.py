@@ -21,7 +21,9 @@ class MeasurementsPoolTest(TestSuite):
 
     def setup(self):
         self.config = Configuration()
-        self.config.load(os.path.join(AppData.TEST_CONFIG_PATH, "test_measurements_end_time.json"))
+        self.config.load(
+            os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_measurements_end_time.json")
+        )
         Drivers.load()
         instruments = self.config.get_instruments()
         self.fail_if(len(instruments) == 0, "No instruments in the configuration")
