@@ -17,7 +17,7 @@ class Drivers:
     _drivers = []
     _lock = threading.Lock()
 
-    _EXCLUDED_FILES = [ "driver_base", "driver_channel", "driver_id", "driver_settings"]
+    _EXCLUDED_FILES = [ "driver_base", "driver_channel", "driver_id", "driver_setting"]
 
     def __init__(self):
         raise Exception("This class should not be instantiated")
