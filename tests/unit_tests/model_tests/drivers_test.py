@@ -34,6 +34,8 @@ class DriversTest(TestSuite):
         n_drivers = 0
         with open(filename, "r", encoding="utf-8") as fp:
             for line in fp.readlines():
+                if "if __name__ == \"__main__\":" in line:
+                    break
                 if line.startswith("class ") and "DriverBase" in line:
                     n_drivers += 1
         return n_drivers
