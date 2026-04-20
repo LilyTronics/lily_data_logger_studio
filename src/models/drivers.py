@@ -60,7 +60,7 @@ class Drivers:
                 subfolders.sort()
                 for filename in filenames:
                     if (os.path.splitext(filename)[0] in cls._EXCLUDED_FILES or
-                        filename.startswith("_")):
+                        filename.startswith("_") or filename.endswith("_base.py")):
                         continue
                     full_path = os.path.join(current_path, filename)
                     if filename.endswith(".py") or filename.endswith(".pyc"):

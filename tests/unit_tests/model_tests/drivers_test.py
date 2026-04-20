@@ -13,7 +13,7 @@ from tests.lib.test_suite import TestSuite
 class DriversTest(TestSuite):
 
     expected_nr_of_drivers = 0
-    total_drivers = 0
+    total_driver_files = 0
 
     def setup(self):
         for item in os.listdir(AppData.DRIVERS_PATH):
@@ -27,37 +27,40 @@ class DriversTest(TestSuite):
                         if filename == "__init__.py" or not filename.endswith(".py"):
                             continue
                         fullname = os.path.join(current_folder, filename)
-                        if self.is_driver(fullname):
-                            self.expected_nr_of_drivers += 1
+                        self.expected_nr_of_drivers += self.get_driver_count(fullname)
         self.log.debug(f"Expected number of drivers: {self.expected_nr_of_drivers}")
 
-    def is_driver(self, filename):
+    def get_driver_count(self, filename):
+        n_drivers = 0
         with open(filename, "r", encoding="utf-8") as fp:
             for line in fp.readlines():
-                if line.startswith("class ") and "(DriverBase):" in line:
-                    return True
-        return False
+                if line.startswith("class ") and "DriverBase" in line:
+                    n_drivers += 1
+        return n_drivers
 
     def on_progress(self, count, message, total=0):
         if total > 0:
-            self.total_drivers = total
+            self.total_driver_files = total
         self.log.debug(f"(Progress): {count} - {message}")
 
     def test_list_drivers(self):
         Drivers.load(self.on_progress)
         drivers = Drivers.get_drivers()
-        self.log.debug(f"Drivers: {drivers}")
+        self.log.debug("Drivers:")
+        for d in drivers:
+            self.log.debug(f"{d}")
         self.fail_if(len(drivers) != self.expected_nr_of_drivers,
             f"The numbers of drivers is not correct. Expected: {self.expected_nr_of_drivers}")
-        print(f"Reported total: {self.total_drivers}")
-        self.fail_if(self.total_drivers != self.expected_nr_of_drivers,
+        print(f"Reported total: {self.total_driver_files}")
+        self.fail_if(self.total_driver_files != self.expected_nr_of_drivers,
                      "The reported total number of drivers is not correct")
 
     def test_reload_drivers(self):
         self.log.debug("Reload drivers")
         Drivers.load(self.on_progress)
         drivers = Drivers.get_drivers()
-        self.log.debug(f"Drivers: {drivers}")
+        for d in drivers:
+            self.log.debug(f"{d}")
 
     def test_get_driver(self):
         drivers = Drivers.get_drivers()
