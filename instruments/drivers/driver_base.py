@@ -158,6 +158,11 @@ class DriverBase(ABC):
             channels = [x for x in cls.channels if x.direction == direction]
         return channels
 
+    def _get_internal_channel(self, query):
+        # Internal channel always by ID
+        matches = [x for x in self.internal_channels if x.channel_id == query]
+        return None if len(matches) != 1 else matches[0]
+
     def _process_response(self, channel, response):
         if channel.expect_response:
             self.log_debug(f"Channel response: {response}")
@@ -170,7 +175,6 @@ class DriverBase(ABC):
     def _process_callback(self, response, params):
         response = self._process_response(params["channel"], response)
         params["callback"](response, params["callback_params"])
-
 
     ##########
     # Public #
@@ -256,6 +260,9 @@ class DriverBase(ABC):
         params = {} if params is None else params
         self.log_debug(f"Get channel for query: '{channel_query}'")
         channel = self.get_channel(channel_query)
+        if channel is None:
+            # Check internal channels
+            channel = self._get_internal_channel(channel_query)
         if channel is None:
             raise LookupError(
                 f"(Driver) Channel '{channel_query}' not found in driver {self.get_class_name()}"
