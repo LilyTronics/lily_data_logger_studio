@@ -15,6 +15,7 @@ import src.app_data as AppData
 class Drivers:
 
     _drivers = []
+    _simulators = []
     _lock = threading.Lock()
 
     _EXCLUDED_FILES = [ "driver_base", "driver_channel", "driver_id", "driver_setting"]
@@ -40,7 +41,10 @@ class Drivers:
         matches = [x for x in cls._drivers if x.name == attribute.name]
         if len(matches) > 0:
             raise Exception(f"Duplicate driver name: '{attribute.name}'")
-        cls._drivers.append(attribute)
+        if attribute.is_simulator:
+            cls._simulators.append(attribute)
+        else:
+            cls._drivers.append(attribute)
 
     ##########
     # Public #
@@ -52,6 +56,7 @@ class Drivers:
             progress_callback = cls._callback
         with cls._lock:
             del cls._drivers[:]
+            del cls._simulators[:]
             driver_files = []
             progress_callback(-1, f"Load drivers from: {AppData.DRIVERS_PATH}")
             for current_path, subfolders, filenames in os.walk(AppData.DRIVERS_PATH):
@@ -91,6 +96,7 @@ class Drivers:
                 except Exception as e:
                     exceptions.append((rel_path, str(e)))
             progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
+            cls._drivers.extend(cls._simulators)
             if len(exceptions) > 0:
                 message = "One or more drivers are not loaded due to errors:"
                 for path, error in exceptions:
