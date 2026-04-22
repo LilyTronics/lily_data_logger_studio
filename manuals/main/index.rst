@@ -1,12 +1,11 @@
-Lily Data Logger Studio
-=======================
-
-Universal data logger and process control for electronic instruments.
-
-.. image:: images/main_window.png
+Lily Data Logger Studio™
+========================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-    Home                            <self>
+   introduction.rst
+   download_installation.rst
+   application_settings.rst
+   main_window.rst
