@@ -4,17 +4,17 @@
 # Lily Data Logger Studio
 
 Universal data logger (acquisition) and process control software.
-Log data from electronics instruments and control electronics instruments.
+Log data from electronic instruments and control electronic instruments.
 
-✅ Log measurements from electronics instruments (voltage, current, temperature, etc.). \
-✅ Control electronics instruments (temperature chambers, power supplies, signal generators, etc.). \
+✅ Log measurements from electronic instruments (voltage, current, temperature, etc.). \
+✅ Control electronic instruments (temperature chambers, power supplies, signal generators, etc.). \
 ✅ Create, save and reload configurations \
 ✅ Setup instruments, measurements and process steps \
 ✅ Display results in data table and graphs (auto-update) \
 ✅ Export measurement data to: SQLite, JSON, CSV and TSV \
 ✅ Import measurement data from: SQLite and JSON \
 ✅ Backup and restore of your configuration and measurements \
-✅ Python development environment for creatinfg drivers for your instruments \
+✅ Python development environment for creating drivers for your instruments \
 ✅ Tested on Windows and Ubuntu (probably can run on others).
 
 Check the releases for the latest release: [releases](https://github.com/LilyTronics/lily_data_logger_studio/releases)
