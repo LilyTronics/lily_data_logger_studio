@@ -13,7 +13,7 @@ In this folder you can find the following files:
 * LilyDataLoggerStudioDriverTest.log: log file for the driver test application
 
 The settings file and log files can be deleted. This will not harm the applications.
-If the settings file is not present, they will use default settings.
+If the settings file is not present, the application will use default settings.
 The log files are created when the application starts. The previous log file is
-overwritten. If you want to j=keep settings and or a log file, you must copy them
+overwritten. If you want to keep settings and or log files, you must copy them
 after closing the application and before starting the application again.

@@ -17,3 +17,12 @@ The main window has the following parts:
 * Graphs panel: a panel containing the graphs.
 * Process panel: a panel containing the process control steps.
 * Measurements panel: a panel containing a table with the measurements.
+
+The left side can be resized by dragging the border between the tree views and the panels.
+The log window can be resized by dragging the border between the log window and the panels.
+
+The panels can be rearranged by moving the process panel and or the measurements panel.
+The graphs panel cannot be moved.
+All panels can be resized by dragging the borders between the panels.
+
+All changes in the main window are saved to the application settings file.

@@ -9,3 +9,5 @@ Lily Data Logger Studio™
    download_installation.rst
    application_settings.rst
    main_window.rst
+   drivers.rst
+   configurations.rst
