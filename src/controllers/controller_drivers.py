@@ -12,7 +12,7 @@ from src.views.view_dialog_progress import ViewDialogProgress
 class ControllerDrivers:
 
     _step_delay = 500
-    _item_delay = 250
+    _item_delay = 100
 
     def __init__(self, parent_view, logger, suppress_loading_drivers):
         self._parent_view = parent_view
@@ -24,17 +24,16 @@ class ControllerDrivers:
     # Private #
     ###########
 
-    def _update_view_progress(self, value, message, new_max=0):
+    def _update_view_progress(self, value, message):
         if self._view_progress is not None:
             t = self._item_delay
-            if value < 0:
+            if value < 0 or value == 100:
                 t = self._step_delay
-                value = 0
-            if new_max > 0:
-                self._view_progress.set_maximum(new_max)
-            self._view_progress.update(value, message)
-            wx.YieldIfNeeded()
-            wx.MilliSleep(t)
+            self._view_progress.update(int(value), message)
+            while t > 0:
+                wx.MilliSleep(10)
+                t -= 10
+                wx.Yield()
 
     ##########
     # Public #
@@ -43,16 +42,15 @@ class ControllerDrivers:
     def load(self):
         dlg_title = "Load drivers"
         if not self._suppress_loading_drivers:
-            self._view_progress = ViewDialogProgress(self._parent_view, dlg_title, 1, 500)
-            wx.Yield()
+            self._view_progress = ViewDialogProgress(self._parent_view, dlg_title, frame_width=500)
         try:
             Drivers.load(self._update_view_progress)
         except Exception as e:
             self._logger.error(f"Error loading drivers: {e}")
             ViewDialogs.show_message(self._parent_view, f"Error loading drivers: {e}",
                                      dlg_title, wx.ICON_EXCLAMATION)
-        if not self._suppress_loading_drivers:
-            self._view_progress.destroy()
+        if self._view_progress is not None:
+            self._view_progress.Destroy()
             self._view_progress = None
 
 

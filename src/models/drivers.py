@@ -71,12 +71,12 @@ class Drivers:
                     if filename.endswith(".py") or filename.endswith(".pyc"):
                         driver_files.append(full_path)
             total = len(driver_files)
-            progress_callback(-1, f"Load {total} drivers", total)
+            progress_callback(-1, f"Load {total} drivers")
             i = 0
             exceptions = []
             for i, filename in enumerate(driver_files):
                 rel_path = filename[len(AppData.INSTRUMENTS_PATH) + 1:]
-                progress_callback(i, f"Load driver from: {rel_path} ({i + 1}/{total})")
+                progress_callback(100 * i / total, f"Load driver from: {rel_path} ({i + 1}/{total})")
                 name = os.path.basename(filename).split(".")[0]
                 try:
                     spec = spec_from_file_location(name, str(filename))
@@ -95,7 +95,7 @@ class Drivers:
                                     cls._add_driver(attribute)
                 except Exception as e:
                     exceptions.append((rel_path, str(e)))
-            progress_callback(i, f"Drivers loaded ({i + 1}/{total})")
+            progress_callback(100 * (i + 1) / total, f"Drivers loaded ({i + 1}/{total})")
             cls._drivers.extend(cls._simulators)
             if len(exceptions) > 0:
                 message = "One or more drivers are not loaded due to errors:"
