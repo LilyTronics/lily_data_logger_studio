@@ -13,7 +13,6 @@ from tests.lib.test_suite import TestSuite
 class DriversTest(TestSuite):
 
     expected_nr_of_drivers = 0
-    total_driver_files = 0
 
     def setup(self):
         for item in os.listdir(AppData.DRIVERS_PATH):
@@ -40,9 +39,7 @@ class DriversTest(TestSuite):
                     n_drivers += 1
         return n_drivers
 
-    def on_progress(self, count, message, total=0):
-        if total > 0:
-            self.total_driver_files = total
+    def on_progress(self, count, message):
         self.log.debug(f"(Progress): {count} - {message}")
 
     def test_list_drivers(self):
@@ -53,9 +50,6 @@ class DriversTest(TestSuite):
             self.log.debug(f"{d}")
         self.fail_if(len(drivers) != self.expected_nr_of_drivers,
             f"The numbers of drivers is not correct. Expected: {self.expected_nr_of_drivers}")
-        print(f"Reported total: {self.total_driver_files}")
-        self.fail_if(self.total_driver_files != self.expected_nr_of_drivers,
-                     "The reported total number of drivers is not correct")
 
     def test_reload_drivers(self):
         self.log.debug("Reload drivers")
