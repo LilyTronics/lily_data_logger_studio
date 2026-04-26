@@ -22,7 +22,7 @@ class MeasurementsPoolTest(TestSuite):
     def setup(self):
         self.config = Configuration()
         self.config.load(
-            os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_measurements_end_time.json")
+            os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_measurements.json")
         )
         Drivers.load()
         instruments = self.config.get_instruments()
