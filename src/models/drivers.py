@@ -76,7 +76,8 @@ class Drivers:
             exceptions = []
             for i, filename in enumerate(driver_files):
                 rel_path = filename[len(AppData.INSTRUMENTS_PATH) + 1:]
-                progress_callback(100 * i / total, f"Load driver from: {rel_path} ({i + 1}/{total})")
+                progress_callback(100 * i / total,
+                                  f"Load driver from: {rel_path} ({i + 1}/{total})")
                 name = os.path.basename(filename).split(".")[0]
                 try:
                     spec = spec_from_file_location(name, str(filename))
