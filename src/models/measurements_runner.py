@@ -55,9 +55,9 @@ class MeasurementsRunner:
         do_sample = True
         while not self._stop_event.is_set():
             if do_sample:
-                self._update_callback(TestRuns.get_test_run(self._run_id))
                 sample_start = int(time.time())
                 TestRuns.init_cycle(self._run_id, sample_start)
+                self._update_callback(TestRuns.get_test_run(self._run_id))
                 self._request_measurements(sample_start)
                 do_sample = False
             if time.time() - sample_start >= settings["sample_time"]:
