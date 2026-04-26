@@ -25,7 +25,7 @@ class Configuration:
         "settings": {
             "sample_time": 3,
             "end_time": 60,
-            "continuous_mode": False
+            "mode": "fixed time"
         },
         "instruments": [],
         "measurements": [],

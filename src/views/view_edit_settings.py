@@ -31,6 +31,7 @@ class ViewEditSettings(wx.Dialog):
         self.Bind(wx.EVT_COMBOBOX, self._on_time_change, self._cmb_sample_time)
         self.Bind(wx.EVT_COMBOBOX, self._on_time_change, self._cmb_end_time)
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_end_time)
+        self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_process_end)
         self.Bind(wx.EVT_RADIOBUTTON, self._on_time_change, self._radio_continuous)
 
         val, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("sample_time", 3))
@@ -39,10 +40,12 @@ class ViewEditSettings(wx.Dialog):
         val, units = TimeConverter.convert_seconds_to_time_with_unit(settings.get("end_time", 60))
         self._txt_end_time.SetValue(str(val))
         self._cmb_end_time.SetValue(units)
-        if settings.get("continuous_mode", False):
+        mode = settings.get("mode", "fixed time")
+        self._radio_end_time.SetValue(True)
+        if mode == "process end":
+            self._radio_process_end.SetValue(True)
+        if mode == "continuous":
             self._radio_continuous.SetValue(True)
-        else:
-            self._radio_end_time.SetValue(True)
         self._update_total_samples()
 
         self.SetSizer(box)
@@ -50,31 +53,52 @@ class ViewEditSettings(wx.Dialog):
         self.CenterOnParent()
 
     def _create_controls(self, parent):
+        # Sample time
         lbl_sample_time = wx.StaticText(parent, wx.ID_ANY, "Sample interval:")
         self._txt_sample_time = wx.TextCtrl(parent, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_sample_time = wx.ComboBox(parent, wx.ID_ANY,
                                             style=wx.CB_READONLY, choices=TimeConverter.TIME_UNITS)
+        # End time
         self._radio_end_time = wx.RadioButton(parent, wx.ID_ANY, "Fixed end time:")
         self._radio_end_time.SetValue(True)
+        lbl_end_time_info = wx.StaticText(parent, wx.ID_ANY,
+                                          "Measurements and process stop at the given time.")
+        lbl_end_time = wx.StaticText(parent, wx.ID_ANY, "end time:")
         self._txt_end_time = wx.TextCtrl(parent, wx.ID_ANY, size=GuiSizes.WIDTH_SMALL)
         self._cmb_end_time = wx.ComboBox(parent, wx.ID_ANY, style=wx.CB_READONLY,
                                          choices=TimeConverter.TIME_UNITS)
-        self._radio_continuous = wx.RadioButton(parent, wx.ID_ANY, "Continuous mode:")
-        lbl_continuous = wx.StaticText(parent, wx.ID_ANY, "Process must be stopped manually.")
+        # Process end
+        self._radio_process_end = wx.RadioButton(parent, wx.ID_ANY, "Process end:")
+        lbl_process_end = wx.StaticText(parent, wx.ID_ANY,
+                                        "Measurements stop when the process is finished.")
+        # Continuous
+        self._radio_continuous = wx.RadioButton(parent, wx.ID_ANY, "Continuous:")
+        lbl_continuous = wx.StaticText(parent, wx.ID_ANY,
+                                       "Measurements and process must be stopped manually.")
+        # Total samples
         lbl_total_samples = wx.StaticText(parent, wx.ID_ANY, "Total samples:")
         self._lbl_total_samples = wx.StaticText(parent, wx.ID_ANY, "-")
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
+        # Sample time
         grid.Add(lbl_sample_time, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._txt_sample_time, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
         grid.Add(self._cmb_sample_time, (0, 2), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        # End time
         grid.Add(self._radio_end_time, (1, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(self._txt_end_time, (1, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(self._cmb_end_time, (1, 2), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
-        grid.Add(self._radio_continuous, (2, 0), wx.DefaultSpan, wx.ALIGN_TOP)
-        grid.Add(lbl_continuous, (2, 1), (1, 2), wx.ALIGN_TOP)
-        grid.Add(lbl_total_samples, (3, 0), wx.DefaultSpan)
-        grid.Add(self._lbl_total_samples, (3, 1), (1, 2))
+        grid.Add(lbl_end_time_info, (1, 1), (1, 2), wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(lbl_end_time, (2, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
+        grid.Add(self._txt_end_time, (2, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._cmb_end_time, (2, 2), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        # Process end
+        grid.Add(self._radio_process_end, (3, 0), wx.DefaultSpan, wx.ALIGN_TOP)
+        grid.Add(lbl_process_end, (3, 1), (1, 2), wx.ALIGN_TOP)
+        # Continuous
+        grid.Add(self._radio_continuous, (4, 0), wx.DefaultSpan, wx.ALIGN_TOP)
+        grid.Add(lbl_continuous, (4, 1), (1, 2), wx.ALIGN_TOP)
+        # Total samples
+        grid.Add(lbl_total_samples, (5, 0), wx.DefaultSpan)
+        grid.Add(self._lbl_total_samples, (5, 1), (1, 2))
 
         return grid
 
@@ -87,6 +111,14 @@ class ViewEditSettings(wx.Dialog):
         box.Add(btn_cancel, 0, wx.ALL, GuiSizes.GRID_SPACING)
 
         return box
+
+    def _get_mode(self):
+        mode = "fixed time"
+        if self._radio_process_end.GetValue():
+            mode = "process end"
+        elif self._radio_continuous.GetValue():
+            mode = "continuous"
+        return mode
 
     ##################
     # Event handlers #
@@ -112,7 +144,8 @@ class ViewEditSettings(wx.Dialog):
 
     def _update_total_samples(self):
         total_samples = "-"
-        if not self._radio_continuous.GetValue():
+        print(self._get_mode())
+        if self._get_mode() == "fixed time":
             sample_time = self._get_time(self._txt_sample_time, self._cmb_sample_time)
             if sample_time is None or sample_time <= 0:
                 total_samples = "Inavlid sample time"
@@ -143,7 +176,7 @@ class ViewEditSettings(wx.Dialog):
         return {
             "sample_time" : sample_time,
             "end_time" : end_time,
-            "continuous_mode" : self._radio_continuous.GetValue()
+            "mode" : self._get_mode()
         }
 
 
@@ -153,6 +186,7 @@ if __name__ == "__main__":
     from src.models.test_options import TestOptions
 
     TestOptions.log_to_stdout = True
-    TestOptions.show_view_settings = True
+    TestOptions.show_edit_settings = True
+    TestOptions.suppress_loading_drivers = True
 
     run_data_logger(TestOptions)

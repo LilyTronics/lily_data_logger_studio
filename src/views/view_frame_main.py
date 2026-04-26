@@ -366,7 +366,7 @@ class ViewFrameMain(wx.Frame):
         sample_time = settings["sample_time"]
         end_time = "-"
         total_samples = "-"
-        if not settings["continuous_mode"]:
+        if settings["mode"] == "fixed time":
             end_time = settings["end_time"]
             total_samples = int(end_time / sample_time) + 1
             end_time = TimeConverter.create_duration_time_string(end_time)

@@ -2,7 +2,7 @@
   "settings": {
     "sample_time": 2,
     "end_time": 10,
-    "continuous_mode": true
+    "mode": "continuous"
   },
   "instruments": [
     {
