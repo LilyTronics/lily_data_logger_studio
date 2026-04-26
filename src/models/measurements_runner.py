@@ -7,7 +7,6 @@ import time
 
 from src.models.measurements_pool import MeasurementsPool
 from src.models.test_runs import TestRuns
-from src.models.time_converter import TimeConverter
 
 
 class MeasurementsRunner:
@@ -52,15 +51,7 @@ class MeasurementsRunner:
         time.sleep(0.1)
         self._logger.debug("Measurements runner started")
         settings = self._configuration.get_settings()
-        end_time = 0
-        if settings["continuous_mode"]:
-            self._logger.debug("Running measurements in continuous mode")
-        else:
-            end_time = settings["end_time"]
-            self._logger.debug(
-                f"Running measurements for: {TimeConverter.create_duration_time_string(end_time)}")
         self._run_id = TestRuns.new_test_run(self._configuration.get_measurements())
-        start = int(time.time())
         do_sample = True
         while not self._stop_event.is_set():
             if do_sample:
@@ -71,9 +62,8 @@ class MeasurementsRunner:
                 do_sample = False
             if time.time() - sample_start >= settings["sample_time"]:
                 do_sample = True
-            elif 0 < end_time <= time.time() - start:
-                self._stop_event.set()
             time.sleep(0.01)
+        self._update_callback(TestRuns.get_test_run(self._run_id))
         self._logger.debug("Measurments runner stopped")
 
     ##########

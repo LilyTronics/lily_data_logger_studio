@@ -27,19 +27,7 @@ class MeasurementsRunnerTest(TestSuite):
     def setup(self):
         start_simulators()
         Drivers.load()
-        self.measurement_runner = MeasurementsRunner(self.config, self.app_test_logger,
-                                                     self.callback)
-
-    def teardown(self):
-        if self.measurement_runner is not None and self.measurement_runner.is_running():
-            self.measurement_runner.stop()
-        stop_simulators()
-
-    def callback(self, test_run):
-        self.run_id = test_run["id"]
-
-    def load_config(self, config_filename):
-        self.config.load(os.path.join(AppData.UNIT_TEST_CONFIG_PATH, config_filename))
+        self.config.load(os.path.join(AppData.UNIT_TEST_CONFIG_PATH, "test_measurements.json"))
         instruments = self.config.get_instruments()
         self.fail_if(len(instruments) == 0, "No instruments in the configuration")
         InstrumentPool.clear()
@@ -52,6 +40,16 @@ class MeasurementsRunnerTest(TestSuite):
         MeasurementsPool.add_measurements(measurements)
         self.fail_if(len(MeasurementsPool.get_measurements()) == 0,
                      "No measurements added to the pool")
+        self.measurement_runner = MeasurementsRunner(self.config, self.app_test_logger,
+                                                     self.callback)
+
+    def teardown(self):
+        if self.measurement_runner is not None and self.measurement_runner.is_running():
+            self.measurement_runner.stop()
+        stop_simulators()
+
+    def callback(self, test_run):
+        self.run_id = test_run["id"]
 
     def check_test_run_id(self):
         # We need to wait unit the process is running and the test run ID is created
@@ -77,22 +75,7 @@ class MeasurementsRunnerTest(TestSuite):
                      "Number of samples in the measurement are not consistent")
         n_samples = n_samples.pop()
 
-    def test_run_measurements_end_time(self):
-        self.load_config("test_measurements_end_time.json")
-        self.measurement_runner.start()
-        is_running = self.measurement_runner.is_running()
-        self.log.debug(f"Measurements running: {is_running}")
-        self.fail_if(not is_running, "Measurements should be running")
-        self.check_test_run_id()
-        result = self.wait_for(self.measurement_runner.is_running, False, 15, 1)
-        self.fail_if(not result, "Measurement runner did not stop")
-        is_running = self.measurement_runner.is_running()
-        self.log.debug(f"Measurements running: {is_running}")
-        self.fail_if(is_running, "Measurements should not be running")
-        self.check_test_run_data(6)
-
-    def test_run_measurements_continuously(self):
-        self.load_config("test_measurements_continuous.json")
+    def test_run_measurements(self):
         self.measurement_runner.start()
         is_running = self.measurement_runner.is_running()
         self.log.debug(f"Measurements running: {is_running}")
