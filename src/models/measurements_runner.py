@@ -48,7 +48,6 @@ class MeasurementsRunner:
         self._update_callback(TestRuns.get_test_run(self._run_id))
 
     def _run_measurements(self):
-        time.sleep(0.1)
         self._logger.debug("Measurements runner started")
         settings = self._configuration.get_settings()
         self._run_id = TestRuns.new_test_run(self._configuration.get_measurements())
@@ -71,17 +70,19 @@ class MeasurementsRunner:
     ##########
 
     def start(self):
-        if self._thread is None or not self._thread.is_alive():
-            self._stop_event.clear()
-            self._thread = threading.Thread(target=self._run_measurements, name="RunMeasurements")
-            self._thread.daemon = True
-            self._thread.start()
+        if self._thread is not None and self._thread.is_alive():
+            return
+        self._stop_event.clear()
+        self._thread = threading.Thread(target=self._run_measurements, name="RunMeasurements")
+        self._thread.daemon = True
+        self._thread.start()
 
     def stop(self):
-        if self._thread is not None and self._thread.is_alive():
-            self._stop_event.set()
-            self._thread.join()
-        self._thread = None
+        if self._thread is not None:
+            if self._thread.is_alive():
+                self._stop_event.set()
+                self._thread.join()
+            self._thread = None
 
     def is_running(self):
         return self._thread is not None and self._thread.is_alive()

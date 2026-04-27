@@ -3,7 +3,6 @@ Runs the process steps.
 """
 
 import threading
-import time
 
 import src.models.process_steps as ProcessSteps
 
@@ -23,7 +22,6 @@ class ProcessRunner:
     ###########
 
     def _run_process(self):
-        time.sleep(0.1)
         self._logger.debug("Process runner started")
         config_steps = self._configuration.get_process_steps()
         loop_steps = [x for x in config_steps if x["type"] == "ProcessStepLoop"]
@@ -59,17 +57,20 @@ class ProcessRunner:
     ##########
 
     def start(self):
-        if self._thread is None or not self._thread.is_alive():
-            self._stop_event.clear()
-            self._thread = threading.Thread(target=self._run_process, name="ProcessRunner")
-            self._thread.daemon = True
-            self._thread.start()
+        if self._thread is not None and self._thread.is_alive():
+            return
+
+        self._stop_event.clear()
+        self._thread = threading.Thread(target=self._run_process, name="ProcessRunner")
+        self._thread.daemon = True
+        self._thread.start()
 
     def stop(self):
-        if self._thread is not None and self._thread.is_alive():
-            self._stop_event.set()
-            self._thread.join()
-        self._thread = None
+        if self._thread is not None:
+            if self._thread.is_alive():
+                self._stop_event.set()
+                self._thread.join()
+            self._thread = None
 
     def is_running(self):
         return self._thread is not None and self._thread.is_alive()
