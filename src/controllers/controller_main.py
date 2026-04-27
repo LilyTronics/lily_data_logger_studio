@@ -45,9 +45,7 @@ class ControllerMain:
         self._controller_drivers = ControllerDrivers(self._view, self._logger,
                                                      test_options.suppress_loading_drivers)
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration,
-                                                            self._logger,
-                                                            self._view.update_test_run_data,
-                                                            self._view.update_process)
+                                                            self._logger)
 
         wx.CallAfter(self._view.update_configuration, self._configuration)
 

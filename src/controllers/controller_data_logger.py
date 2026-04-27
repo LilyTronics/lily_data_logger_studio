@@ -17,13 +17,14 @@ from src.views.view_dialogs import ViewDialogs
 
 class ControllerDataLogger:
 
-    def __init__(self, parent_view, configuration, logger, measurement_callback, process_callback):
+    def __init__(self, parent_view, configuration, logger):
         self._parent_view = parent_view
         self._configuration = configuration
         self._logger = logger
         self._measurements_runner = MeasurementsRunner(self._configuration, self._logger,
-                                                       measurement_callback)
-        self._process_runner = ProcessRunner(self._configuration, self._logger, process_callback)
+                                                       self._parent_view.update_test_run_data)
+        self._process_runner = ProcessRunner(self._configuration, self._logger,
+                                             self._parent_view.update_process)
         self._check_result = False
 
     ###########
