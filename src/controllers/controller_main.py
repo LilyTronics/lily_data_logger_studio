@@ -2,8 +2,6 @@
 Main controller.
 """
 
-import threading
-import time
 import wx
 
 import src.app_data as AppData
@@ -35,9 +33,6 @@ class ControllerMain:
         self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
-        self._view_progress = None
-        self._stop_event = threading.Event()
-        self._monitor_thread = None
 
         self._logger.debug("Load main view")
         self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session)
@@ -61,7 +56,6 @@ class ControllerMain:
         wx.PostEvent(self._view.GetEventHandler(), event)
 
         self._process_test_options(test_options)
-        wx.CallAfter(self._start_monitor_thread)
 
     ###########
     # Private #
@@ -147,46 +141,6 @@ class ControllerMain:
             event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SHOW_EDIT_TEST_RUNS)
             wx.PostEvent(self._view.GetEventHandler(), event)
 
-    def _start_monitor_thread(self):
-        if not (self._monitor_thread is not None and self._monitor_thread.is_alive()):
-            self._monitor_thread = threading.Thread(target=self._data_logger_monitor,
-                                                    name="DataLoggerMonitor",
-                                                    daemon=True)
-            self._monitor_thread.start()
-
-    def _stop_monitor_thread(self):
-        if self._monitor_thread is not None and self._monitor_thread.is_alive():
-            self._stop_event.set()
-            self._monitor_thread.join()
-
-    def _data_logger_monitor(self):
-        self._logger.debug("Data logger monitor started")
-        status= "idle"
-        update_main = True
-        while not self._stop_event.is_set():
-            try:
-                # Detect change
-                if self._controller_data_logger.is_running() and status == "idle":
-                    status = "running"
-                    update_main = True
-                    self._logger.info("Data logger started")
-                elif not self._controller_data_logger.is_running() and status == "running":
-                    status = "idle"
-                    update_main = True
-                    self._logger.info("Data logger stopped")
-                    wx.CallAfter(self._view.update_process, -1)
-                    wx.CallAfter(self._view.update_test_runs, TestRuns.get_test_runs())
-
-                if update_main:
-                    wx.CallAfter(self._view.update_status, status)
-                    update_main = False
-
-            except Exception as e:
-                self._logger.error("Error in data logger monitor thread:")
-                self._logger.error(str(e))
-            time.sleep(0.05)
-        self._logger.debug("Data logger monitor stopped")
-
     def _check_to_save_configuration(self):
         if self._configuration.is_changed():
             btn = ViewDialogs.show_confirm(self._view,
@@ -268,7 +222,6 @@ class ControllerMain:
 
     def _on_view_close(self, event):
         self._check_to_save_configuration()
-        self._stop_monitor_thread()
         self._logger.debug("Close main view")
         self._app_settings.store_main_window_maximized(self._view.IsMaximized())
         if not self._view.IsMaximized():
