@@ -1,0 +1,52 @@
+{
+  "settings": {
+    "sample_time": 2,
+    "end_time": 10,
+    "mode": "fixed time"
+  },
+  "instruments": [
+    {
+      "id": "d2e8acdf-286d-415f-84f8-6be5f1673b57",
+      "name": "Temperature chamber",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "b47e8a9e-c5a1-4d97-8fb1-1a5bf2c87c19",
+      "name": "Tamb",
+      "instrument_id": "d2e8acdf-286d-415f-84f8-6be5f1673b57",
+      "channel_id": "gat",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {}
+    }
+  ],
+  "process": [
+    {
+      "name": "Set temperature",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 80.0,
+        "instrument_id": "d2e8acdf-286d-415f-84f8-6be5f1673b57",
+        "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Wait",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "time",
+        "wait_time": 5
+      }
+    }
+  ],
+  "graphs": []
+}
