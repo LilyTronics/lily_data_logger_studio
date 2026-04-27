@@ -10,6 +10,7 @@ from src.models.instrument_pool import InstrumentPool
 from src.models.measurements_pool import MeasurementsPool
 from src.models.measurements_runner import MeasurementsRunner
 from src.models.process_runner import ProcessRunner
+from src.models.test_runs import TestRuns
 from src.models.time_converter import TimeConverter
 from src.simulators.run_simulators import start_simulators
 from src.simulators.run_simulators import stop_simulators
@@ -48,6 +49,7 @@ class ControllerDataLogger:
         self._logger.debug(f"Run mode: {mode}")
         if mode == "fixed time":
             self._logger.debug(f"End time: {TimeConverter.create_duration_time_string(end_time)}")
+        wx.CallAfter(self._parent_view.update_status, "running")
         start = time.time()
         while not self._stop_event.is_set():
             if mode == "fixed time" and time.time() - start > end_time:
@@ -57,6 +59,10 @@ class ControllerDataLogger:
                 self._logger.debug("Process ended")
                 break
             time.sleep(0.1)
+
+        wx.CallAfter(self._parent_view.update_status, "idle")
+        wx.CallAfter(self._parent_view.update_process, -1)
+        wx.CallAfter(self._parent_view.update_test_runs, TestRuns.get_test_runs())
 
         self._measurements_runner.stop()
         self._process_runner.stop()
