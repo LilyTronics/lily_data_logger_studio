@@ -153,7 +153,7 @@ class ControllerDataLogger:
             wx.CallAfter(dlg.update_instrument, key, results[-1], message)
         self._check_result = False not in results
         wx.Sleep(1)
-        if dlg:
+        if dlg and self._check_result:
             wx.CallAfter(dlg.Close)
 
     ##########
