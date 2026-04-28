@@ -10,6 +10,9 @@ import src.app_data as AppData
 
 class ApplicationSettings:
 
+    MAX_RECENT_CONFIGS = 10
+
+
     def __init__(self):
         self._filename = AppData.SETTINGS_FILE
         path = os.path.dirname(self._filename)
@@ -56,6 +59,22 @@ class ApplicationSettings:
 
     def store_check_display_session(self, do_check):
         self._store_property("general", "check_display_session", do_check)
+
+    def get_recent_configurations(self):
+        return self._get_property("general", "recent_configurations", [])
+
+    def store_recent_configuration(self, filename):
+        configs = self._get_property("general", "recent_configurations", [])
+        while filename in configs:
+            configs.remove(filename)
+        configs.insert(0, filename)
+        self._store_property("general", "recent_configurations", configs[:self.MAX_RECENT_CONFIGS])
+
+    def remove_recent_configuration(self, filename):
+        configs = self._get_property("general", "recent_configurations", [])
+        while filename in configs:
+            configs.remove(filename)
+        self._store_property("general", "recent_configurations", configs[:self.MAX_RECENT_CONFIGS])
 
     ########################
     # Main window settings #

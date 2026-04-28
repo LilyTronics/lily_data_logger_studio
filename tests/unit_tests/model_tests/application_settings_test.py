@@ -105,7 +105,40 @@ class ApplicationSettingsTest(TestSuite):
         self.log.debug(f"New maximized: {test_value}")
         self.fail_if(test_value != new_value, "Stored value is not correct")
 
+    def test_recent_fonfigurations(self):
+        configs = self._settings.get_recent_configurations()
+        self.log.debug(configs)
+        self.fail_if(len(configs) != 0, "There should be no recent configurations")
+        self.log.debug("Add configurations up to the max")
+        for i in range(self._settings.MAX_RECENT_CONFIGS):
+            self._settings.store_recent_configuration(f"file_{i}")
+            configs = self._settings.get_recent_configurations()
+            self.fail_if(len(configs) != i + 1,
+                         f"Expected {i + 1} configurations, have {len(configs)}")
+            self.log.debug(configs)
+        self.log.debug("Add extra")
+        while i < 12:
+            i += 1
+            self._settings.store_recent_configuration(f"file_{i}")
+            configs = self._settings.get_recent_configurations()
+            self.fail_if(len(configs) != self._settings.MAX_RECENT_CONFIGS,
+                         f"Expected {self._settings.MAX_RECENT_CONFIGS} configurations, "
+                         f"have {len(configs)}")
+            self.log.debug(configs)
+        self.log.debug("Add existing one")
+        filename = configs[2]
+        self._settings.store_recent_configuration(filename)
+        configs = self._settings.get_recent_configurations()
+        self.log.debug(configs)
+        self.fail_if(configs.count(filename) > 1, "filename more than one time in the list")
+        filename = configs[2]
+        self.log.debug(f"Remove {filename}")
+        self._settings.remove_recent_configuration(filename)
+        configs = self._settings.get_recent_configurations()
+        self.log.debug(configs)
+        self.fail_if(filename in configs, "Recent configuration was not removed")
+
 
 if __name__ == "__main__":
 
-    ApplicationSettingsTest().run(True)
+    ApplicationSettingsTest().run()

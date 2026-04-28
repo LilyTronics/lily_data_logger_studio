@@ -35,7 +35,8 @@ class ControllerMain:
         self._configuration = Configuration()
 
         self._logger.debug("Load main view")
-        self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session)
+        self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session,
+                                   self._on_select_config)
         self._prepare_view()
         self._logger.debug("Show main view")
         self._view.Show()
@@ -83,6 +84,7 @@ class ControllerMain:
         self._view.Maximize(self._app_settings.get_main_window_maximized())
         self._view.set_tree_width(self._app_settings.get_main_window_tree_width())
         self._view.set_log_height(self._app_settings.get_main_window_log_height())
+        self._view.update_recent_configurations(self._app_settings.get_recent_configurations())
 
         self._view.Bind(wx.EVT_CLOSE, self._on_view_close)
         self._view.Bind(wx.EVT_TOOL, self._on_new_config, id=IdManager.ID_NEW_CONFIG)
@@ -149,6 +151,9 @@ class ControllerMain:
                 event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_SAVE_CONFIG)
                 wx.PostEvent(self._view.GetEventHandler(), event)
 
+    def _update_recent_configurations(self, filename):
+        self._app_settings.store_recent_configuration(filename)
+        self._view.update_recent_configurations(self._app_settings.get_recent_configurations())
 
     ##################
     # Event handlers #
@@ -198,11 +203,29 @@ class ControllerMain:
         self._check_to_save_configuration()
         ControllerConfiguration.load(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
+        self._update_recent_configurations(self._configuration.get_filename())
         event.Skip()
 
     def _on_save_config(self, event):
         ControllerConfiguration.save(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
+        self._update_recent_configurations(self._configuration.get_filename())
+        event.Skip()
+
+    def _on_select_config(self, event):
+        item = event.GetEventObject().FindItemById(event.GetId())
+        if item:
+            try:
+                filename = item.GetItemLabelText()
+                self._logger.info(f"Load configuration from: {filename}")
+                self._configuration.load(filename)
+                self._view.update_configuration(self._configuration)
+                self._update_recent_configurations(filename)
+            except Exception as e:
+                self._logger.error(f"Error loading configuration: {e}")
+                ViewDialogs.show_message(self._view, f"Error loading configuration: {e}",
+                                         "Load configuration", wx.ICON_EXCLAMATION)
+                self._app_settings.remove_recent_configuration(filename)
         event.Skip()
 
     def _on_data_logger_start(self, event):

@@ -51,10 +51,11 @@ class ViewFrameMain(wx.Frame):
         5400: (3600, "Time [hrs]")      # After this change to hours
     }
 
-    def __init__(self, title, log_filename, allow_docking):
+    def __init__(self, title, log_filename, allow_docking, select_config_handler):
         self._title = title
-        self._configuration = None
         super().__init__(None, title=title, style=wx.DEFAULT_FRAME_STYLE)
+        self._configuration = None
+        self._select_config_handler = select_config_handler
         self._allow_docking = allow_docking
         self._default_layout = ""
         self._log_filename = log_filename
@@ -86,11 +87,14 @@ class ViewFrameMain(wx.Frame):
     ###########
 
     def _create_toolbar(self):
+        self._recent_configs = wx.Menu()
+
         tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT)
         tb.AddTool(IdManager.ID_NEW_CONFIG, "", Images.new_24.GetBitmap(),
                    "New configuration")
         tb.AddTool(IdManager.ID_OPEN_CONFIG, "", Images.open_24.GetBitmap(),
-                   "Open configuration")
+                   "Open configuration",kind=wx.ITEM_DROPDOWN)
+        tb.SetDropdownMenu(IdManager.ID_OPEN_CONFIG, self._recent_configs)
         tb.AddTool(IdManager.ID_SAVE_CONFIG, "", Images.save_24.GetBitmap(),
                    "Save configuration")
         tb.AddSeparator()
@@ -354,6 +358,18 @@ class ViewFrameMain(wx.Frame):
     def set_log_height(self, height):
         if height > self._DEFAULT_LOG_HEIGHT:
             self._bot_win.SetDefaultSize((-1, height))
+
+    def update_recent_configurations(self, filenames):
+        for item in self._recent_configs.GetMenuItems():
+            self._recent_configs.Unbind(wx.EVT_MENU, item, handler=self._select_config_handler)
+            self._recent_configs.DestroyItem(item)
+
+        if len(filenames) == 0:
+            self._recent_configs.Append(wx.ID_ANY, "Recent configurations")
+        else:
+            for filename in filenames:
+                item = self._recent_configs.Append(wx.ID_ANY, filename)
+                self._recent_configs.Bind(wx.EVT_MENU, self._select_config_handler, item)
 
     def update_configuration(self, configuration):
         self._configuration = configuration
