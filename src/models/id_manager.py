@@ -65,6 +65,7 @@ ID_GRAPH_CLOSE = wx.NewIdRef()
 
 # Edit test runs
 ID_TEST_RUNS_LIST = wx.NewIdRef()
+ID_TEST_RUNS_UPDATE = wx.NewIdRef()
 ID_TEST_RUNS_CLOSE = wx.NewIdRef()
 ID_TEST_RUNS_DELETE = wx.NewIdRef()
 ID_TEST_RUNS_LOAD = wx.NewIdRef()

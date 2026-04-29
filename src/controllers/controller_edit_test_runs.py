@@ -24,6 +24,7 @@ class ControllerEditTestRuns:
 
         self._dlg.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self._on_activated,
                        id=IdManager.ID_TEST_RUNS_LIST)
+        self._dlg.Bind(wx.EVT_BUTTON, self._on_update, id=IdManager.ID_TEST_RUNS_UPDATE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_delete, id=IdManager.ID_TEST_RUNS_DELETE)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_load, id=IdManager.ID_TEST_RUNS_LOAD)
         self._dlg.Bind(wx.EVT_BUTTON, self._on_export, id=IdManager.ID_TEST_RUNS_EXPORT)
@@ -47,6 +48,16 @@ class ControllerEditTestRuns:
             self._selected_id = run_id
             self._dlg.show_test_run(TestRuns.get_test_run(self._selected_id))
         event.Skip()
+
+    def _on_update(self, event):
+        run_id = self._dlg.get_selected_test_run()
+        if run_id is not None:
+            name = self._dlg.get_name()
+            if name != "":
+                TestRuns.rename_test_run(run_id, name)
+                self._dlg.update_test_runs(TestRuns.get_test_runs())
+                self._selected_id = run_id
+                self._dlg.show_test_run(TestRuns.get_test_run(self._selected_id))
 
     def _on_delete(self, event):
         run_id = self._dlg.get_selected_test_run()
