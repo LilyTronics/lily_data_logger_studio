@@ -15,6 +15,11 @@ def run_test_runner(path_to_tests):
     if not os.path.isdir(report_folder):
         os.makedirs(report_folder)
 
+    items = sorted(os.listdir(report_folder))
+    if len(items) > 5:
+        for item in items[:-5]:
+            os.remove(os.path.join(report_folder, item))
+
     print("\nStarting test runner")
     print(f"Run tests in: {path_to_tests}")
     options = {
