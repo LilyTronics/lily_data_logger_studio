@@ -88,14 +88,17 @@ class ViewPanelSide(wx.Panel):
         root = self._test_runs_tree.GetRootItem()
         self._test_runs_tree.DeleteChildren(root)
         for test_run in test_runs:
-            if len(test_run["timestamps"]) > 0:
-                timestamps = test_run["timestamps"]
-                timestamp = TimeConverter.get_time_string(timestamps[0])
-                item = self._test_runs_tree.AppendItem(root, str(timestamp), image=1)
+            timestamps = test_run["timestamps"]
+            item = self._test_runs_tree.AppendItem(root, test_run["name"], image=1)
+            duration = "-"
+            start = "-"
+            if len(timestamps) > 0:
+                start = TimeConverter.get_time_string(timestamps[0])
+            if len(timestamps) > 1:
                 duration = TimeConverter.create_duration_time_string(timestamps[-1] - timestamps[0])
-                self._config_tree.AppendItem(item, f"duration: {duration}", 2)
-                self._config_tree.AppendItem(item, f"samples: {len(timestamps)}", 3)
-
+            self._config_tree.AppendItem(item, f"start: {start}", 2)
+            self._config_tree.AppendItem(item, f"duration: {duration}", 2)
+            self._config_tree.AppendItem(item, f"samples: {len(timestamps)}", 3)
         self._test_runs_tree.ExpandAll()
 
 

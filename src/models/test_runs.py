@@ -17,6 +17,7 @@ class TestRuns:
 
     _TEST_RUN = {
         "id": "",
+        "name": "",
         "timestamps": [],
         "measurements": []
     }
@@ -61,6 +62,7 @@ class TestRuns:
     def new_test_run(cls, measurements):
         test_run = deepcopy(cls._TEST_RUN)
         test_run["id"] = str(uuid.uuid4())
+        test_run["name"] = f"Run {len(cls._TEST_RUNS) + 1}"
         for measurement in measurements:
             m = deepcopy(cls._MEASUREMENT)
             m["id"] = measurement["id"]
