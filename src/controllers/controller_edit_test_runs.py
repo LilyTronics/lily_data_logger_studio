@@ -58,6 +58,7 @@ class ControllerEditTestRuns:
                 self._dlg.update_test_runs(TestRuns.get_test_runs())
                 self._selected_id = run_id
                 self._dlg.show_test_run(TestRuns.get_test_run(self._selected_id))
+        event.Skip()
 
     def _on_delete(self, event):
         run_id = self._dlg.get_selected_test_run()
