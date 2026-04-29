@@ -17,7 +17,7 @@ def create_data_file(configuration, t_start, n_samples):
 
     TestRuns.clear()
     run_id = TestRuns.new_test_run(measurements)
-
+    TestRuns.rename_test_run(run_id, f"Sample run, {n_samples} samples")
     print("Generate test run")
     t = t_start
     for _ in range(n_samples):
