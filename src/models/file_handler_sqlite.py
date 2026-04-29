@@ -10,6 +10,13 @@ class SQLiteHandler:
 
     _TABLE_DEFS = [
         (
+            "CREATE TABLE IF NOT EXISTS properties ("
+            "row_index INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "run_id TEXT NOT NULL, "
+            "name  TEXT NOT NULL"
+            ")"
+        ),
+        (
             "CREATE TABLE IF NOT EXISTS measurements ("
             "row_index INTEGER PRIMARY KEY AUTOINCREMENT, "
             "run_id TEXT NOT NULL, "
@@ -43,6 +50,17 @@ class SQLiteHandler:
             cursor.close()
 
     @classmethod
+    def _insert_properties(cls, conn, run_id, name):
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO properties (run_id, name) VALUES (?, ?)",
+                (run_id, name)
+            )
+        finally:
+            cursor.close()
+
+    @classmethod
     def _insert_measurement(cls, conn, run_id, measurement_id, item_name, item_unit):
         cursor = conn.cursor()
         try:
@@ -66,11 +84,11 @@ class SQLiteHandler:
             cursor.close()
 
     @classmethod
-    def _get_run_ids(cls, conn):
+    def _get_test_runs(cls, conn):
         results = []
         cursor = conn.cursor()
         try:
-            cursor.execute("SELECT run_id FROM measurements GROUP BY run_id")
+            cursor.execute("SELECT run_id as id, name FROM properties")
             rows = cursor.fetchall()
             results = [dict(row) for row in rows]
         finally:
@@ -120,6 +138,7 @@ class SQLiteHandler:
             cls._create_tables(conn)
             conn.commit()
             for test_run in test_runs:
+                cls._insert_properties(conn, test_run["id"], test_run["name"])
                 timestamps = test_run["timestamps"]
                 for measurement in test_run["measurements"]:
                     cls._insert_measurement(conn, test_run["id"], measurement["id"],
@@ -140,15 +159,12 @@ class SQLiteHandler:
         conn = sqlite3.connect(data_filename)
         conn.row_factory = sqlite3.Row
         try:
-            test_run_ids = cls._get_run_ids(conn)
-            for test_run_id in test_run_ids:
+            test_run_records = cls._get_test_runs(conn)
+            for test_run in test_run_records:
                 timestamps = set()
-                test_run = {
-                    "id": "",
-                    "timestamps": [],
-                    "measurements": []
-                }
-                measurements = cls._get_measurements(conn, test_run_id["run_id"])
+                test_run["timestamps"] = []
+                test_run["measurements"] = []
+                measurements = cls._get_measurements(conn, test_run["id"])
                 for measurement in measurements:
                     data = {
                         "id": measurement["measurement_id"],
@@ -156,7 +172,7 @@ class SQLiteHandler:
                         "unit": measurement["unit"],
                         "values": []
                     }
-                    samples = cls._get_samples(conn, test_run_id["run_id"],
+                    samples = cls._get_samples(conn, test_run["id"],
                                                measurement["measurement_id"])
                     for sample in samples:
                         timestamps.add(sample["timestamp"])
