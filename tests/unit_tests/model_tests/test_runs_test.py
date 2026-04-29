@@ -105,6 +105,29 @@ class TestRunsTest(TestSuite):
     def test_export_to_tsv(self):
         self.export_import_test_runs("data_file.tsv")
 
+    def test_rename_test_runs(self):
+        test_runs = TestRuns.get_test_runs()
+        n_test_runs = len(test_runs)
+        self.fail_if(n_test_runs < 2, "At least two test runs are required")
+
+        self.log.debug("Rename test run")
+        TestRuns.rename_test_run(test_runs[0]["id"], "New name")
+        test_runs = TestRuns.get_test_runs()
+        self.fail_if(test_runs[0]["name"] != "New name", "Test run was not renamed")
+
+        self.log.debug("Rename test run with existing name")
+        try:
+            TestRuns.rename_test_run(test_runs[0]["id"], test_runs[1]["name"].upper())
+            self.fail("Expected an exception, but was not raised")
+        except Exception as e:
+            self.log.debug("Exception was raised, as expected")
+            self.log.debug(f"Message: {e}")
+            self.fail_if(str(e) != "A test run with this name already exists",
+                         "Invalid exception message")
+
+        self.log.debug("Rename test run with same name")
+        TestRuns.rename_test_run(test_runs[0]["id"], test_runs[0]["name"].upper())
+
     def test_delete_test_run(self):
         test_runs = TestRuns.get_test_runs()
         n_test_runs = len(test_runs)

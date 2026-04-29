@@ -73,6 +73,17 @@ class TestRuns:
         return test_run["id"]
 
     @classmethod
+    def rename_test_run(cls, run_id, name):
+        matches = [
+            r for r in cls._TEST_RUNS if r["name"].lower() == name.lower() and r["id"] != run_id
+        ]
+        if len(matches) > 0:
+            raise Exception("A test run with this name already exists")
+        test_run = cls._get_test_run_ref(run_id)
+        if test_run is not None:
+            test_run["name"] = name
+
+    @classmethod
     def init_cycle(cls, run_id, timestamp):
         test_run = cls._get_test_run_ref(run_id)
         test_run["timestamps"].append(timestamp)
