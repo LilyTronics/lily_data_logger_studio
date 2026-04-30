@@ -78,12 +78,16 @@ class ViewFrameDriverTest(wx.Frame):
         self._channel_grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
         self._channel_grid.Add(wx.Panel(parent), (0, 0))
 
+        lbl_debug = wx.StaticText(parent, wx.ID_ANY, "Low level debug:")
+        self._chk_debug = wx.CheckBox(parent)
         btn_test = wx.Button(parent, IdManager.ID_DRIVER_TEST_TEST, "Test")
         btn_driver_test = wx.Button(parent, IdManager.ID_DRIVER_TEST_DRIVER_TEST, "Driver test")
 
         grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
-        grid.Add(btn_test, (0, 0))
-        grid.Add(btn_driver_test, (0, 1))
+        grid.Add(lbl_debug, (0, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(self._chk_debug, (0, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
+        grid.Add(btn_test, (0, 4))
+        grid.Add(btn_driver_test, (0, 5))
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(lbl_driver_settings, 0, wx.EXPAND)
@@ -131,7 +135,8 @@ class ViewFrameDriverTest(wx.Frame):
                     name: ctrl[1](ctrl[0].GetValue())
                         for name, ctrl in self._channel_settings.items()
                 }
-            }
+            },
+            "debug": self._chk_debug.GetValue()
         }
 
 

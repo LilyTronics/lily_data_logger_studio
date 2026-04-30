@@ -65,6 +65,7 @@ class ControllerDriverTest:
     ###########
 
     def _test_driver(self, settings, run_test_driver):
+        debug = "DTP" if settings.get("debug", False) else ""
         driver = None
         try:
             driver_name = settings.get("driver", {}).get("name", None)
@@ -74,7 +75,7 @@ class ControllerDriverTest:
             driver_class = Drivers.get_driver(driver_name)
             if driver_class is None:
                 raise Exception(f"Driver '{driver_name}' not found")
-            driver = driver_class(driver_settings)
+            driver = driver_class(driver_settings, debug)
             if driver.is_simulator:
                 start_simulators()
 
