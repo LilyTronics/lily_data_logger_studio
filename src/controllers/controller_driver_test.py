@@ -47,6 +47,8 @@ class ControllerDriverTest:
                         id=IdManager.ID_DRIVER_TEST_LIST_CHANNELS)
         self._view.Bind(wx.EVT_BUTTON, self._on_test_driver,
                         id=IdManager.ID_DRIVER_TEST_TEST)
+        self._view.Bind(wx.EVT_BUTTON, self._on_test_driver,
+                        id=IdManager.ID_DRIVER_TEST_DRIVER_TEST)
 
         self._logger.debug("Show driver test view")
         self._view.Show()
@@ -62,29 +64,36 @@ class ControllerDriverTest:
     # Private #
     ###########
 
-    def _test_driver(self, settings):
+    def _test_driver(self, settings, run_test_driver):
         driver = None
         try:
             driver_name = settings.get("driver", {}).get("name", None)
             driver_settings = settings.get("driver", {}).get("settings", {})
             self._logger.debug(f"Driver: '{driver_name}'")
             self._logger.debug(f"Driver settings: {driver_settings}")
-            channel_name = settings.get("channel", {}).get("name", None)
-            channel_params = settings.get("channel", {}).get("params", {})
-            self._logger.debug(f"Channel: '{channel_name}'")
-            self._logger.debug(f"Channel parameters: {channel_params}")
             driver_class = Drivers.get_driver(driver_name)
             if driver_class is None:
                 raise Exception(f"Driver '{driver_name}' not found")
             driver = driver_class(driver_settings)
-            channel = driver.get_channel(channel_name)
-            if channel is None:
-                raise Exception(f"Channel '{channel_name}' not found in driver '{driver_name}'")
             if driver.is_simulator:
                 start_simulators()
-            self._logger.debug("Process channel")
-            result = driver.process_channel(channel_name, channel_params)
-            self._logger.debug(f"Result: {result}")
+
+            if run_test_driver:
+                self._logger.debug("Run driver test")
+                driver.test_driver()
+
+            else:
+                channel_name = settings.get("channel", {}).get("name", None)
+                channel_params = settings.get("channel", {}).get("params", {})
+                self._logger.debug(f"Channel: '{channel_name}'")
+                self._logger.debug(f"Channel parameters: {channel_params}")
+                channel = driver.get_channel(channel_name)
+                if channel is None:
+                    raise Exception(f"Channel '{channel_name}' not found in driver '{driver_name}'")
+                self._logger.debug("Process channel")
+                result = driver.process_channel(channel_name, channel_params)
+                self._logger.debug(f"Result: {result}")
+
         finally:
             if driver is not None:
                 driver.close()
@@ -144,7 +153,7 @@ class ControllerDriverTest:
         self._logger.info("Test driver")
         try:
             settings = self._view.get_settings()
-            self._test_driver(settings)
+            self._test_driver(settings, event.GetId() == IdManager.ID_DRIVER_TEST_DRIVER_TEST)
         except Exception as e:
             self._logger.error(f"Error testing driver: {e}")
             ViewDialogs.show_message(self._view, f"Error testing driver: {e}",

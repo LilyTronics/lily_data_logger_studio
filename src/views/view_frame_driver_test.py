@@ -79,13 +79,18 @@ class ViewFrameDriverTest(wx.Frame):
         self._channel_grid.Add(wx.Panel(parent), (0, 0))
 
         btn_test = wx.Button(parent, IdManager.ID_DRIVER_TEST_TEST, "Test")
+        btn_driver_test = wx.Button(parent, IdManager.ID_DRIVER_TEST_DRIVER_TEST, "Driver test")
+
+        grid = wx.GridBagSizer(GuiSizes.GRID_SPACING, GuiSizes.GRID_SPACING)
+        grid.Add(btn_test, (0, 0))
+        grid.Add(btn_driver_test, (0, 1))
 
         box = wx.BoxSizer(wx.VERTICAL)
         box.Add(lbl_driver_settings, 0, wx.EXPAND)
         box.Add(self._driver_grid, 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
         box.Add(lbl_channel_settings, 0, wx.EXPAND)
         box.Add(self._channel_grid, 1, wx.EXPAND | wx.ALL, GuiSizes.BOX_SPACING)
-        box.Add(btn_test, 0)
+        box.Add(grid, 0)
 
         return box
 
