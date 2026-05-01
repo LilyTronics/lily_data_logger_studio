@@ -1,7 +1,7 @@
 Drivers
 -------
 
-When the application starts, it load the driver from the instrumens package.
+When the application starts, it load the drivers from the instruments package.
 Depending on the amount of drivers this can take some time.
 A progress window is shown when drivers are loaded.
 

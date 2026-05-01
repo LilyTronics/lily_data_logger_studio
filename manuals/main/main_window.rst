@@ -24,5 +24,15 @@ The log window can be resized by dragging the border between the log window and 
 The panels can be rearranged by moving the process panel and or the measurements panel.
 The graphs panel cannot be moved.
 All panels can be resized by dragging the borders between the panels.
+Below is a screenshot of an example of a custom layout:
+
+.. image:: images/main_window_layout.png
+   :align: center
+
+|
+
+The default layout can be restored with the following toolbar button:
+
+.. image:: images/restore_layout_button.png
 
 All changes in the main window are saved to the application settings file.
