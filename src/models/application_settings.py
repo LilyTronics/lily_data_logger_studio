@@ -106,13 +106,19 @@ class ApplicationSettings:
         return self._get_property("main_window", "tree_width", -1)
 
     def store_main_window_tree_width(self, width):
-        return self._store_property("main_window", "tree_width", width)
+        self._store_property("main_window", "tree_width", width)
 
     def get_main_window_log_height(self):
         return self._get_property("main_window", "log_height", -1)
 
     def store_main_window_log_height(self, height):
-        return self._store_property("main_window", "log_height", height)
+        self._store_property("main_window", "log_height", height)
+
+    def get_main_window_layout(self):
+        return self._get_property("main_window", "layout", None)
+
+    def store_main_window_layout(self, layout):
+        self._store_property("main_window", "layout", layout)
 
     ######################
     # Driver test window #

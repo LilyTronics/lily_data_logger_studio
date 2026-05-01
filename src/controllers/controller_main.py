@@ -48,13 +48,14 @@ class ControllerMain:
         self._controller_data_logger = ControllerDataLogger(self._view, self._configuration,
                                                             self._logger)
 
+        # This must be done after view is ready
         wx.CallAfter(self._view.update_configuration, self._configuration)
+        wx.CallAfter(self._view.set_layout, self._app_settings.get_main_window_layout())
+        wx.CallAfter(self._process_test_options, test_options)
 
         # Invloke loading drivers
         event = wx.PyCommandEvent(wx.EVT_TOOL.typeId, IdManager.ID_RELOAD_DRIVERS)
         wx.PostEvent(self._view.GetEventHandler(), event)
-
-        self._process_test_options(test_options)
 
     ###########
     # Private #
@@ -250,6 +251,7 @@ class ControllerMain:
             self._app_settings.store_main_window_size(*self._view.GetSize())
         self._app_settings.store_main_window_tree_width(self._view.get_tree_width())
         self._app_settings.store_main_window_log_height(self._view.get_log_height())
+        self._app_settings.store_main_window_layout(self._view.get_layout())
         event.Skip()
 
 

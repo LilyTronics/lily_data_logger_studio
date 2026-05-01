@@ -359,6 +359,13 @@ class ViewFrameMain(wx.Frame):
         if height > self._DEFAULT_LOG_HEIGHT:
             self._bot_win.SetDefaultSize((-1, height))
 
+    def get_layout(self):
+        return self._aui_manager.SavePerspective()
+
+    def set_layout(self, layout):
+        if layout is not None:
+            self._aui_manager.LoadPerspective(layout)
+
     def update_recent_configurations(self, filenames):
         for item in self._recent_configs.GetMenuItems():
             self._recent_configs.Unbind(wx.EVT_MENU, item, handler=self._select_config_handler)
