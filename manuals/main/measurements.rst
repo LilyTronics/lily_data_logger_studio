@@ -39,11 +39,6 @@ connect to the instrument and execute the measurement. The resutl will be shown 
 Once the measurement is saved, they will show in the list.
 The measurement can be updated by double clicking the measurment in the list.
 
-.. image:: images/measurements_edit.png
-   :align: center
-
-|
-
 When the Cancel button is pressed all changes are reverted.
 
 Measurements can only be deleted when they are not used in process steps or measurments.

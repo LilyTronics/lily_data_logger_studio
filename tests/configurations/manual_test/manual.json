@@ -28,5 +28,17 @@
     }
   ],
   "process": [],
-  "graphs": []
+  "graphs": [
+    {
+      "name": "Temperature",
+      "measurements": [
+        "e2da0124-6543-4c3f-8bfc-005e640b2689"
+      ],
+      "settings": {
+        "log_scale": false,
+        "min_scale": null,
+        "max_scale": null
+      }
+    }
+  ]
 }

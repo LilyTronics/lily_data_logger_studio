@@ -38,11 +38,6 @@ Information about the test results will be shown in the text box.
 Once the instrument is saved, they will show in the list.
 The instrument settings can be updated by double clicking the instrument in the list.
 
-.. image:: images/instruments_edit.png
-   :align: center
-
-|
-
 When the Cancel button is pressed all changes are reverted.
 
 Instruments can only be deleted when they are not used in process steps or measurments.
