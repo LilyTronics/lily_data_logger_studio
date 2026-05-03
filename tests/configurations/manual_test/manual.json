@@ -1,0 +1,32 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 60,
+    "mode": "fixed time"
+  },
+  "instruments": [
+    {
+      "id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+      "name": "Temperature chamber (sim)",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "e2da0124-6543-4c3f-8bfc-005e640b2689",
+      "name": "T chamber",
+      "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+      "channel_id": "gat",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {}
+    }
+  ],
+  "process": [],
+  "graphs": []
+}

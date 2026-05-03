@@ -12,3 +12,4 @@ Lily Data Logger Studio™
    drivers.rst
    configurations.rst
    instruments.rst
+   measurements.rst

@@ -2,6 +2,10 @@ Instruments
 -----------
 
 Instruments represent your physical instrument.
+
+This manual uses the build in simulators. This way you can try out all the steps from This
+manual without the actual need of real instruments.
+
 For managing the instruments, click the following toolbar button:
 
 .. image:: images/instruments_button.png
@@ -14,14 +18,14 @@ The following dialog appears:
 |
 
 To add an instrument, enter a name for the instrument, select a driver and enter the driver settings.
-Instrument names must be unique. Below is a screenshot for adding the Tektronix TDS220 oscilloscope:
+Instrument names must be unique. Below is a screenshot for adding the temperature chamber simulator:
 
-.. image:: images/instruments_add_tds220.png
+.. image:: images/instruments_add.png
    :align: center
 
 |
 
-The settings like port and baudrate depends on which settings are exposed by the driver.
+The settings like host and port depends on which settings are exposed by the driver.
 If settings are not exposed, default settings are used.
 
 If there is no driver for your instrument, you can create one.
