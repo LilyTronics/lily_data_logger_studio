@@ -13,3 +13,4 @@ Lily Data Logger Studio™
    configurations.rst
    instruments.rst
    measurements.rst
+   run_data_logger.rst
