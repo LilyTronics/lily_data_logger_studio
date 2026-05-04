@@ -2,10 +2,6 @@ Instruments
 -----------
 
 Instruments represent your physical instrument.
-
-This manual uses the build in simulators. This way you can try out all the steps from This
-manual without the actual need of real instruments.
-
 For managing the instruments, click the following toolbar button:
 
 .. image:: images/instruments_button.png

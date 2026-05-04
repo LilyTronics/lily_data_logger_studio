@@ -59,3 +59,7 @@ Nevertheless due to restrictions caused by the amount of measurements, the numbe
 PC performance, etc., a sample time of 1 second may not be feasable.
 Errors will be reported when samples are outside the sample interval. When those errors are
 reported try, to increase the sample interval.
+
+All configurations in this manual uses the build-in simulators.
+This way you can try out all the steps from This manual without the actual need of real
+instruments.
