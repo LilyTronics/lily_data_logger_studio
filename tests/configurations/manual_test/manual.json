@@ -2,7 +2,7 @@
   "settings": {
     "sample_time": 3,
     "end_time": 60,
-    "mode": "fixed time"
+    "mode": "process end"
   },
   "instruments": [
     {
@@ -27,7 +27,124 @@
       "params": {}
     }
   ],
-  "process": [],
+  "process": [
+    {
+      "name": "Turn on chamber",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 1,
+        "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+        "channel_id": "sps"
+      }
+    },
+    {
+      "name": "Set temperature -10",
+      "label": "start cycle",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": -10.0,
+        "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+        "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Wait for temperature -10",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "measurement",
+        "min_value": -10.5,
+        "max_value": -9.5,
+        "poll_interval": 2,
+        "timeout": 60,
+        "measurement_id": "e2da0124-6543-4c3f-8bfc-005e640b2689"
+      }
+    },
+    {
+      "name": "Hold temperature",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "time",
+        "wait_time": 300
+      }
+    },
+    {
+      "name": "Set temperature +50",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 50.0,
+        "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+        "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Wait for temperature +50",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "measurement",
+        "min_value": 49.5,
+        "max_value": 50.5,
+        "poll_interval": 2,
+        "timeout": 60,
+        "measurement_id": "e2da0124-6543-4c3f-8bfc-005e640b2689"
+      }
+    },
+    {
+      "name": "Hold temperature",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "time",
+        "wait_time": 300
+      }
+    },
+    {
+      "name": "Repeat cycle",
+      "label": "",
+      "type": "ProcessStepLoop",
+      "settings": {
+        "loop_from": "start cycle",
+        "count": 2
+      }
+    },
+    {
+      "name": "Set temperature +20",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 20.0,
+        "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+        "channel_id": "sts"
+      }
+    },
+    {
+      "name": "Wait for temperature +20",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "measurement",
+        "min_value": 19.5,
+        "max_value": 20.5,
+        "poll_interval": 2,
+        "timeout": 60,
+        "measurement_id": "e2da0124-6543-4c3f-8bfc-005e640b2689"
+      }
+    },
+    {
+      "name": "Turn off chamber",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "value": 0,
+        "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
+        "channel_id": "sps"
+      }
+    }
+  ],
   "graphs": [
     {
       "name": "Temperature",
@@ -36,8 +153,8 @@
       ],
       "settings": {
         "log_scale": false,
-        "min_scale": null,
-        "max_scale": null
+        "min_scale": -15.0,
+        "max_scale": 55.0
       }
     }
   ]

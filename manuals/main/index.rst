@@ -15,3 +15,4 @@ Lily Data Logger Studio™
    measurements.rst
    run_data_logger.rst
    graphs.rst
+   process.rst
