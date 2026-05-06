@@ -173,7 +173,7 @@ def create_deployment():
 
     _copy_driver_test(dist_path, app_path)
     _copy_drivers(app_path)
-    # _copy_manuals(app_path)
+    _copy_manuals(app_path)
     _create_zip_file(dist_path, app_path)
 
     print("\nBuild done")

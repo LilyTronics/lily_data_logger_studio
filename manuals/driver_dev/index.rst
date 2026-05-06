@@ -9,5 +9,4 @@ This manual will help you create your own driver for your instrument.
    :caption: Contents:
    :glob:
 
-   development/*
-   api/index
+   introduction.rst

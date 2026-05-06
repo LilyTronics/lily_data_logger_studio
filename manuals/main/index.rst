@@ -17,4 +17,5 @@ Lily Data Logger Studio™
    graphs.rst
    process.rst
    test_runs.rst
-   backup_and_restore.rst
+   backup_restore.rst
+   final_remarks.rst
