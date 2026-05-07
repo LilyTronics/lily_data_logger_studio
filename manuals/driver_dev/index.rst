@@ -1,5 +1,5 @@
-Lily Data Logger Studio Driver Development
-==========================================
+Lily Data Logger Studio™ Driver Development
+===========================================
 
 Lily Data Logger Studio relies on drivers to be able to communicate with different electronic instruments.
 It is impossible to create drivers for all the different instruments that are out there.
@@ -15,4 +15,6 @@ To create a driver the following knowledge is required:
    :caption: Contents:
    :glob:
 
+   development_environment.rst
+   driver_request.rst
    introduction.rst
