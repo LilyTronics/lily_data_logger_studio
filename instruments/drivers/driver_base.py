@@ -35,9 +35,10 @@ class DriverBase(ABC):
     #: Driver settings. Dictionary of setting that are required to configure the driver.
     driver_settings = None
     #: Channels. List of channel objects that represents the instrument's functionality.
-    # These are exposed in the application.
+    #: These are exposed in the application.
     channels = None
     #: Internal channels (optional). List of channel objects that are used internally by the driver.
+    #: These are not exposed in the application
     internal_channels = []
     #: Transport class (not an instance). Must be a subclass of TransportBase.
     transport = None
