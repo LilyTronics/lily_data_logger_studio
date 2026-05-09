@@ -18,3 +18,6 @@ To create a driver the following knowledge is required:
    development_environment.rst
    driver_request.rst
    introduction.rst
+   driver_architecture.rst
+
+   api/index.rst
