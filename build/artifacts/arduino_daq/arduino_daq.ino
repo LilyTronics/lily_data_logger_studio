@@ -12,7 +12,7 @@
  * Example:
  *
  *   Open serial port at 115200 baud.
- *      
+ *
  *   Read ID:
  *   TX: id\n
  *   RX: Arduino DAQ\n
@@ -65,14 +65,14 @@ void loop()
     if (Serial.available() > 0)
     {
         rx_data = Serial.readStringUntil(TERMINATION);
-        
+
         // ID string
         if (rx_data == "id")
         {
             Serial.print(BOARD_NAME);
             Serial.print(TERMINATION);
         }
-        
+
         // Analog channel
         else if (rx_data.startsWith("ra"))
         {
@@ -95,7 +95,7 @@ void loop()
                 Serial.print(TERMINATION);
             }
         }
-        
+
         // Digital write
         else if (rx_data.startsWith("wd"))
         {
