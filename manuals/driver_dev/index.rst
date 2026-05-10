@@ -22,7 +22,8 @@ in the `issue tracker`_ on github.
    driver_request.rst
    introduction.rst
    driver_architecture.rst
-
+   naming_convention.rst
+   create_driver.rst
    api/index.rst
 
 .. _issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
