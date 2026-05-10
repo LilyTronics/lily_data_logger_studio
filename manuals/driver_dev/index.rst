@@ -10,6 +10,9 @@ To create a driver the following knowledge is required:
 * Python programming
 * Documentation about the protocol and the commands of the electronic instrument.
 
+This manual may not be complete and not covering all possibilities for creating a driver.
+It at least will get you started. In case of any issues, feel free to submit an issue
+in the `issue tracker`_ on github.
 
 .. toctree::
    :caption: Contents:
@@ -21,3 +24,5 @@ To create a driver the following knowledge is required:
    driver_architecture.rst
 
    api/index.rst
+
+.. _issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
