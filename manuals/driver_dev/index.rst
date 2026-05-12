@@ -24,6 +24,7 @@ in the `issue tracker`_ on github.
    driver_architecture.rst
    naming_convention.rst
    create_driver.rst
+   subclassing.rst
    libraries.rst
    api/index.rst
 

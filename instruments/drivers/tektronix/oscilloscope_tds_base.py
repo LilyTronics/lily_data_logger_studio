@@ -38,16 +38,6 @@ class TektronixOscilloscopeTdsBase:
         ]),
     ]
 
-    internal_channels = [
-        DriverChannel("dim", "set disable measurement", str, None, False, [
-            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
-        ]),
-        DriverChannel("sou", "set measurement source", str, None, False, [
-            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
-        ]),
-        DriverChannel("typ", "set measurement type", str, None, False)
-    ]
-
     transport = TransportSerial
     protocol = ProtocolAscii
 
@@ -57,6 +47,16 @@ class TektronixOscilloscopeTdsBase:
     protocol_settings = {
         "end_of_line": b"\n"
     }
+
+    internal_channels = [
+        DriverChannel("dim", "set disable measurement", str, None, False, [
+            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
+        ]),
+        DriverChannel("sou", "set measurement source", str, None, False, [
+            DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
+        ]),
+        DriverChannel("typ", "set measurement type", str, None, False)
+    ]
 
     # It takes about this time before a measurment is ready
     MEASUREMENT_DELAY = 1.2
