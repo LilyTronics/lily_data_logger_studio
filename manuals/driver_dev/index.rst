@@ -26,6 +26,6 @@ in the `issue tracker`_ on github.
    create_driver.rst
    subclassing.rst
    libraries.rst
-   api/index.rst
+   classes/index.rst
 
 .. _issue tracker: https://github.com/LilyTronics/lily_data_logger_studio/issues
