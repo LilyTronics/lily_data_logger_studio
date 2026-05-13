@@ -24,7 +24,8 @@ Parse packet
     :pyobject: ProtocolAscii.parse_packet
     :dedent:
 
-The parse packet method takes the raw data as input and removes the end of line character from it.
+The parse packet method takes the received data as input and removes the end of line character
+from it.
 
 Validate response
 ^^^^^^^^^^^^^^^^^
@@ -33,4 +34,5 @@ Validate response
     :pyobject: ProtocolAscii.validate_response
     :dedent:
 
-A packet is valid if it ends with the end of line character defined in the protocol settings.
+A received packet is valid if it ends with the end of line character defined in the protocol
+settings.
