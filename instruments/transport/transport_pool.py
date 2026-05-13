@@ -17,11 +17,23 @@ class TransportPool:
 
     @classmethod
     def create_transport(cls, transport_class, settings, debug):
-        tp = transport_class(settings, debug)
-        tp_id = tp.get_id()
-        if tp_id not in cls._TRANSPORTS:
-            cls._TRANSPORTS[tp_id] = tp
-        return cls._TRANSPORTS[tp_id]
+        """
+        Create the transport layer and adds it to the pool.
+        """
+        transport = transport_class(settings, debug)
+        transport_id = transport.get_id()
+        if transport_id not in cls._TRANSPORTS:
+            cls._TRANSPORTS[transport_id] = transport
+        return cls._TRANSPORTS[transport_id]
+
+    @classmethod
+    def clear(cls):
+        """
+        Close and clear all the transports.
+        """
+        for _, transport in cls._TRANSPORTS.items():
+            transport.close()
+        cls._TRANSPORTS.clear()
 
 
 if __name__ == "__main__":
@@ -45,3 +57,4 @@ if __name__ == "__main__":
     assert tp4 is tp5, "Transport must be the same"
     tp6 = TransportPool.create_transport(TransportUdp, {"host": "127.0.0.1", "port": 1234}, "")
     assert tp5 is not tp6, "Transport must be different"
+    TransportPool.clear()
