@@ -1,5 +1,5 @@
 Introduction
-============
+------------
 
 In this manual we will show you how to make a driver for communicating with an Arduino.
 The driver already exist, but we will use it for our show case.

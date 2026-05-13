@@ -1,5 +1,5 @@
 Driver channel class
-====================
+--------------------
 
 A driver channel represents a single operation to communicate with an instrument.
 
