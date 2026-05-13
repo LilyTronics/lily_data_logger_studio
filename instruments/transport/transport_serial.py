@@ -11,6 +11,9 @@ class TransportSerial(TransportBase):
 
     serial = serial.Serial()
 
+    def get_id(self):
+        return f"serial_{self.transport_settings.get("port", None)}"
+
     def is_connection_ready(self):
         try:
             return self.serial.is_open

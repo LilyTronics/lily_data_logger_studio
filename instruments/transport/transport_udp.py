@@ -14,6 +14,10 @@ class TransportUdp(TransportBase):
     _BUFFER_SIZE = 1500
     _DEFAULT_PORT = 50000
 
+    def get_id(self):
+        ip = socket.gethostbyname(self.transport_settings.get("host", None))
+        return f"udp_{ip}_{self.transport_settings.get("port", None)}"
+
     def is_connection_ready(self):
         try:
             address = self.socket.getpeername()

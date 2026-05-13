@@ -12,7 +12,10 @@ class TransportTcp(TransportBase):
     socket = None
 
     _BUFFER_SIZE = 1500
-    _DEFAULT_PORT = 50000
+
+    def get_id(self):
+        ip = socket.gethostbyname(self.transport_settings.get("host", None))
+        return f"tcp_{ip}_{self.transport_settings.get("port", None)}"
 
     def is_connection_ready(self):
         try:
@@ -24,7 +27,7 @@ class TransportTcp(TransportBase):
 
     def connect(self):
         host = self.transport_settings.get("host", "")
-        port = self.transport_settings.get("port", self._DEFAULT_PORT)
+        port = self.transport_settings.get("port", None)
         self.log_debug(f"Connect to: {host}:{port}")
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect((host, port))

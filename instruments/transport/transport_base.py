@@ -67,6 +67,10 @@ class TransportBase(ABC):
     #############
 
     @abstractmethod
+    def get_id(self):
+        pass
+
+    @abstractmethod
     def is_connection_ready(self):
         pass
 

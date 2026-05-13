@@ -13,6 +13,7 @@ from instruments.drivers.driver_channel import DriverChannel
 from instruments.drivers.driver_setting import DriverSetting
 from instruments.protocol.protocol_base import ProtocolBase
 from instruments.transport.transport_base import TransportBase
+from instruments.transport.transport_pool import TransportPool
 
 
 class DriverBase(ABC):
@@ -54,7 +55,11 @@ class DriverBase(ABC):
         self.user_settings = settings
         # Debug: D/P/T: Driver, Protocol, Transport (e.g.: "DT": driver and transport)
         self.debug = debug
-        self.transport = self.transport(self.transport_settings | self.user_settings, self.debug)
+        self.transport = TransportPool.create_transport(
+            self.transport,
+            self.transport_settings | self.user_settings,
+            self.debug
+        )
         self.protocol = self.protocol(self.transport, self.protocol_settings | self.user_settings,
                                       self.debug)
         self.init_driver()

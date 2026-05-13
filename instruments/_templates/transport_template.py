@@ -7,6 +7,8 @@ from instruments.transport.transport_base import TransportBase
 
 class TransportTemplate(TransportBase):
 
+    def get_id(self):
+        return "transport_template"
 
     def is_connection_ready(self):
         try:
