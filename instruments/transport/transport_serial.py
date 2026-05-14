@@ -8,19 +8,31 @@ from instruments.transport.transport_base import TransportBase
 
 
 class TransportSerial(TransportBase):
+    """
+    Transport layer for serial port.
+    """
 
     serial = serial.Serial()
 
     def get_id(self):
+        """
+        The ID is defined bby the port.
+        """
         return f"serial_{self.transport_settings.get("port", None)}"
 
     def is_connection_ready(self):
+        """
+        Check if the serial port is open.
+        """
         try:
             return self.serial.is_open
         except:
             return False
 
     def connect(self):
+        """
+        Open the serial port.
+        """
         self.serial.port = self.transport_settings.get("port", None)
         self.serial.baudrate = self.transport_settings.get("baudrate", 9600)
         self.serial.bytesize = self.transport_settings.get("bytesize", serial.EIGHTBITS)
@@ -31,15 +43,24 @@ class TransportSerial(TransportBase):
         self.serial.dtr = self.transport_settings.get("dtr", self.serial.dtr)
 
     def send(self, data):
+        """
+        Send data.
+        """
         self.serial.write(data)
 
     def receive(self):
+        """
+        Check for available data and return all data.
+        """
         data = b""
         if self.serial.in_waiting > 0:
             return self.serial.read_all()
         return data
 
     def close(self):
+        """
+        Close the serial port.
+        """
         if self.serial.is_open:
             self.serial.close()
 
