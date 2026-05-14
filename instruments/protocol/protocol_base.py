@@ -59,7 +59,8 @@ class ProtocolBase(ABC):
             self.log_debug(f"Process command: {command}")
             data = self.build_packet(command)
             self.log_debug(f"Command data: {data}")
-            response =  self.transport.transceive(channel, data, self.validate_response)
+            response =  self.transport.transceive(data, channel.expect_response,
+                                                  self.validate_response)
             if channel.expect_response:
                 self.log_debug(f"Response data: {response}")
                 response = self.parse_packet(response)
