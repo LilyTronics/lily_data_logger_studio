@@ -10,6 +10,15 @@ from typing import final
 
 
 class TransportBase(ABC):
+    """
+    Base class for all transport classes.
+
+    :param transport_settings:  Settings for the transport.
+    :param debug:               Debug value from driver.
+
+    The settings is a dictionary that contains the driver settings controlled by the user
+    and the fixed transport settings defined in the driver (see driver base class).
+    """
 
     _DEFAULT_TIMEOUT = 2
 
@@ -33,7 +42,14 @@ class TransportBase(ABC):
             print(f"({self.__class__.__name__})", message)
 
     @final
-    def transceive(self, channel, tx_packet, validate_response):
+    def transceive(self, tx_packet, expect_response, validate_response):
+        """
+        Send data and return the response (if any).
+
+        :param tx_packet            data to send.
+        :param expect_response      whether to expect a response.
+        :param validate_response    callback function for valifating the response.
+        """
         self.log_debug(f"Process packet: {tx_packet}")
         is_ready = self.is_connection_ready()
         self.log_debug(f"Connection ready: {is_ready}")
@@ -47,7 +63,7 @@ class TransportBase(ABC):
         self.log_debug(f"Send packet: {tx_packet}")
         self.send(tx_packet)
         response = None
-        if channel.expect_response:
+        if expect_response:
             response = b""
             self.log_debug("Expecting response, waiting for response")
             t = time.time() + self.transport_settings.get("timeout", self._DEFAULT_TIMEOUT)
@@ -68,28 +84,45 @@ class TransportBase(ABC):
 
     @abstractmethod
     def get_id(self):
-        pass
+        """
+        Returns the ID for the transport to use in the transport pool.
+        Must be overridden by the transport class.
+        """
 
     @abstractmethod
     def is_connection_ready(self):
-        pass
+        """
+        Retuns true if the transport is connected.
+        Must be overridden by the transport class.
+        """
 
     @abstractmethod
     def connect(self):
-        pass
+        """
+        Open the connection.
+        Must be overridden by the transport class.
+        """
 
     @abstractmethod
     def send(self, data):
-        pass
+        """
+        Send the data.
+        Must be overridden by the transport class.
+        """
 
     @abstractmethod
     def receive(self):
-        pass
+        """
+        Return the received data.
+        Must be overridden by the transport class.
+        """
 
     @abstractmethod
     def close(self):
-        pass
-
+        """
+        Close the connection.
+        Must be overridden by the transport class.
+        """
 
 if __name__ == "__main__":
 
