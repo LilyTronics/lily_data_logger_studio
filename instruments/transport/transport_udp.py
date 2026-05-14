@@ -1,5 +1,5 @@
 """
-Transport over IP/UDP.
+Transport over UDP.
 """
 
 import socket
@@ -8,6 +8,9 @@ from instruments.transport.transport_base import TransportBase
 
 
 class TransportUdp(TransportBase):
+    """
+    Transport layer for UDP connections.
+    """
 
     socket = None
 
@@ -15,10 +18,17 @@ class TransportUdp(TransportBase):
     _DEFAULT_PORT = 50000
 
     def get_id(self):
+        """
+        The ID is defined by the IP address and port number.
+        In case host names are used, they are converted to the IP address.
+        """
         ip = socket.gethostbyname(self.transport_settings.get("host", None))
         return f"udp_{ip}_{self.transport_settings.get("port", None)}"
 
     def is_connection_ready(self):
+        """
+        Check if a connection is active.
+        """
         try:
             address = self.socket.getpeername()
             self.log_debug(f"Connected to: {address[0]}:{address[1]}")
@@ -27,6 +37,9 @@ class TransportUdp(TransportBase):
             return False
 
     def connect(self):
+        """
+        Connect to the host.
+        """
         host = self.transport_settings.get("host", "")
         port = self.transport_settings.get("port", self._DEFAULT_PORT)
         self.log_debug(f"Connect to: {host}:{port}")
@@ -36,9 +49,15 @@ class TransportUdp(TransportBase):
         self.socket.settimeout(0.001)
 
     def send(self, data):
+        """
+        Send data.
+        """
         self.socket.send(data)
 
     def receive(self):
+        """
+        Check for data and return the data.
+        """
         data = b""
         try:
             data = self.socket.recv(self._BUFFER_SIZE)
@@ -47,6 +66,9 @@ class TransportUdp(TransportBase):
         return data
 
     def close(self):
+        """
+        Close the socket.
+        """
         if self.socket is not None:
             self.socket.close()
 
