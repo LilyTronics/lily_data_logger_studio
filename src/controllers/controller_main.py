@@ -156,6 +156,10 @@ class ControllerMain:
         self._app_settings.store_recent_configuration(filename)
         self._view.update_recent_configurations(self._app_settings.get_recent_configurations())
 
+    def _clear_test_runs(self):
+        TestRuns.clear()
+        self._view.update_test_runs(TestRuns.get_test_runs())
+
     ##################
     # Event handlers #
     ##################
@@ -198,6 +202,7 @@ class ControllerMain:
         self._check_to_save_configuration()
         ControllerConfiguration.new(self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
+        self._clear_test_runs()
         event.Skip()
 
     def _on_open_config(self, event):
@@ -205,6 +210,7 @@ class ControllerMain:
         ControllerConfiguration.load(self._view, self._configuration, self._logger)
         self._view.update_configuration(self._configuration)
         self._update_recent_configurations(self._configuration.get_filename())
+        self._clear_test_runs()
         event.Skip()
 
     def _on_save_config(self, event):
