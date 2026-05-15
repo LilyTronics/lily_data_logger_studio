@@ -20,7 +20,7 @@
       "id": "b47e8a9e-c5a1-4d97-8fb1-1a5bf2c87c19",
       "name": "Tamb",
       "instrument_id": "d2e8acdf-286d-415f-84f8-6be5f1673b57",
-      "channel_id": "gat",
+      "channel_id": "get_act_temp",
       "unit": "\u00b0C",
       "gain": 1.0,
       "offset": 0.0,
@@ -35,7 +35,7 @@
       "settings": {
         "value": 80.0,
         "instrument_id": "d2e8acdf-286d-415f-84f8-6be5f1673b57",
-        "channel_id": "sts"
+        "channel_id": "set_temp_set"
       }
     },
     {

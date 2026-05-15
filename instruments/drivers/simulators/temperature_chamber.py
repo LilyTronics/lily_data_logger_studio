@@ -22,12 +22,12 @@ class TemperatureChamber(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", None, str),
-        DriverChannel("gat", "get actual temperature", None, float),
-        DriverChannel("gts", "get temperature setpoint", None, float),
-        DriverChannel("sts", "set temperature setpoint", float, str),
-        DriverChannel("gps", "get power state", None, int),
-        DriverChannel("sps", "set power state", int, None, False)
+        DriverChannel("get_id", "get instrument ID", None, str),
+        DriverChannel("get_act_temp", "get actual temperature", None, float),
+        DriverChannel("get_temp_set", "get temperature setpoint", None, float),
+        DriverChannel("set_temp_set", "set temperature setpoint", float, str),
+        DriverChannel("get_pwr_state", "get power state", None, int),
+        DriverChannel("set_pwr_state", "set power state", int, None, False)
     ]
 
     transport = TransportUdp
@@ -49,19 +49,19 @@ class TemperatureChamber(DriverBase):
             value = channel.value_type(value)
 
         match channel.channel_id:
-            case "gid":
+            case "get_id":
                 return b"id?"
-            case "gat":
+            case "get_act_temp":
                 return b"temp?"
-            case "gts":
+            case "get_temp_set":
                 return b"tset?"
-            case "sts":
+            case "set_temp_set":
                 if value is None:
                     raise ValueError("Invalid value")
                 return f"temp={value:.1f}".encode("utf-8")
-            case "gps":
+            case "get_pwr_state":
                 return b"pwr?"
-            case "sps":
+            case "set_pwr_state":
                 if value is None:
                     raise ValueError("Invalid value")
                 return f"pwr={value}".encode("utf-8")
@@ -79,7 +79,7 @@ class TemperatureChamber(DriverBase):
                          f"driver {self.get_class_name()}")
 
     def test_driver(self):
-        response = self.process_channel("gid")
+        response = self.process_channel("get_id")
         if response.lower() != "simulatortemperaturechamber":
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 

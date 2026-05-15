@@ -21,20 +21,20 @@ class TektronixOscilloscopeTdsBase:
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", None, str),
-        DriverChannel("mfr", "get frequency", None, float, True, [
+        DriverChannel("get_id", "get instrument ID", None, str),
+        DriverChannel("get_meas_freq", "get frequency", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("mpd", "get period time", None, float, True, [
+        DriverChannel("get_meas_per", "get period time", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("mmn", "get mean voltage", None, float, True, [
+        DriverChannel("get_meas_mean", "get mean voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("mpp", "get peak-peak voltage", None, float, True, [
+        DriverChannel("get_meas_pk_pk", "get peak-peak voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("mrm", "get RMS per cycle voltage", None, float, True, [
+        DriverChannel("get_meas_rms", "get RMS per cycle voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
     ]
@@ -50,13 +50,13 @@ class TektronixOscilloscopeTdsBase:
     }
 
     internal_channels = [
-        DriverChannel("dim", "set disable measurement", str, None, False, [
+        DriverChannel("set_dis_meas", "set disable measurement", str, None, False, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("sou", "set measurement source", str, None, False, [
+        DriverChannel("set_meas_src", "set measurement source", str, None, False, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
         ]),
-        DriverChannel("typ", "set measurement type", str, None, False)
+        DriverChannel("set_meas_type", "set measurement type", str, None, False)
     ]
 
     # It takes about this time before a measurment is ready
@@ -64,51 +64,51 @@ class TektronixOscilloscopeTdsBase:
 
     def init_driver(self):
         for channel in range(1, 5):
-            self.process_channel("dim", {                           # pylint: disable=no-member
+            self.process_channel("set_dis_meas", {                           # pylint: disable=no-member
                 "channel": channel,
                 "value": b"none"
             })
 
     def setup_channel(self, params):
-        self.process_channel("sou", params)                         # pylint: disable=no-member
-        self.process_channel("typ", params)                         # pylint: disable=no-member
+        self.process_channel("set_meas_src", params)                         # pylint: disable=no-member
+        self.process_channel("set_meas_type", params)                         # pylint: disable=no-member
         time.sleep(self.MEASUREMENT_DELAY)
 
     def build_command(self, channel, params):
         match channel.channel_id:
-            case "gid":
+            case "get_id":
                 return b"id?"
-            case "dim":
+            case "set_dis_meas":
                 return b"measu:meas%d:typ %s" % (params["channel"], params["value"])
-            case "sou":
+            case "set_meas_src":
                 return b"measu:meas1:sou ch%d" % params["channel"]
-            case "typ":
+            case "set_meas_type":
                 return b"measu:meas1:typ %s" % params["value"]
-            case "mfr":
+            case "get_meas_freq":
                 # Setup channel before measurement
                 params["value"] = b"freq"
                 self.setup_channel(params)
                 # Do measurement
                 return b"measu:meas1:val?"
-            case "mpd":
+            case "get_meas_per":
                 # Setup channel before measurement
                 params["value"] = b"peri"
                 self.setup_channel(params)
                 # Do measurement
                 return b"measu:meas1:val?"
-            case "mmn":
+            case "get_meas_mean":
                 # Setup channel before measurement
                 params["value"] = b"mean"
                 self.setup_channel(params)
                 # Do measurement
                 return b"measu:meas1:val?"
-            case "mpp":
+            case "get_meas_pk_pk":
                 # Setup channel before measurement
                 params["value"] = b"pk2"
                 self.setup_channel(params)
                 # Do measurement
                 return b"measu:meas1:val?"
-            case "mrm":
+            case "get_meas_rms":
                 # Setup channel before measurement
                 params["value"] = b"crm"
                 self.setup_channel(params)
@@ -128,7 +128,7 @@ class TektronixOscilloscopeTdsBase:
                          f"driver {self.get_class_name()}")         # pylint: disable=no-member
 
     def test_driver(self):
-        response = self.process_channel("gid")                      # pylint: disable=no-member
+        response = self.process_channel("get_id")                      # pylint: disable=no-member
         if not response.startswith("ID TEK/TDS"):
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
@@ -153,8 +153,13 @@ if __name__ == "__main__":
 
     for ch in range(1, 3):
         print(f"Test CH{ch}:")
-        print(f"CH {ch} frequency        :", driver.process_channel("mfr", {"channel": ch}))
-        print(f"CH {ch} period time      :", driver.process_channel("mpd", {"channel": ch}))
-        print(f"CH {ch} mean voltage     :", driver.process_channel("mmn", {"channel": ch}))
-        print(f"CH {ch} peak-peak voltage:", driver.process_channel("mpp", {"channel": ch}))
-        print(f"CH {ch} RMS voltage      :", driver.process_channel("mrm", {"channel": ch}))
+        print(f"CH {ch} frequency        :", driver.process_channel("get_meas_freq",
+                                                                    {"channel": ch}))
+        print(f"CH {ch} period time      :", driver.process_channel("get_meas_per",
+                                                                    {"channel": ch}))
+        print(f"CH {ch} mean voltage     :", driver.process_channel("get_meas_mean",
+                                                                    {"channel": ch}))
+        print(f"CH {ch} peak-peak voltage:", driver.process_channel("get_meas_pk_pk",
+                                                                    {"channel": ch}))
+        print(f"CH {ch} RMS voltage      :", driver.process_channel("get_meas_rms",
+                                                                    {"channel": ch}))

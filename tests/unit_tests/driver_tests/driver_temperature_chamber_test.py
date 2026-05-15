@@ -37,46 +37,46 @@ class DriverTemperatureChamberTest(TestSuite):
 
     def test_get_id(self):
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gid")
+        response = self.driver.process_channel("get_id")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != "SimulatorTemperatureChamber", "The ID is not correct")
 
     def test_get_actual_temperature(self):
         self.log.debug("Get actual temperature")
-        response = self.driver.process_channel("gat")
+        response = self.driver.process_channel("get_act_temp")
         self.log.debug(f"Response: {response}")
         self.fail_if(not isinstance(response, float), "The response is not a float")
 
     def test_temperature_setpoint(self):
         self.log.debug("Get temperature setpoint")
-        set_point = self.driver.process_channel("gts")
+        set_point = self.driver.process_channel("get_temp_set")
         self.log.debug(f"Response: {set_point}")
         self.fail_if(not isinstance(set_point, float), "The response is not a float")
         set_point += 5
-        response = self.driver.process_channel("sts", {"value": set_point})
+        response = self.driver.process_channel("set_temp_set", {"value": set_point})
         self.log.debug(f"Response: {response}")
         self.fail_if(response != "ok", "The response is not 'ok'")
-        response = self.driver.process_channel("gts")
+        response = self.driver.process_channel("get_temp_set")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != set_point, "The setpoint was not updated correctly")
 
     def test_power_state(self):
         self.log.debug("Get power state")
-        state = self.driver.process_channel("gps")
+        state = self.driver.process_channel("get_pwr_state")
         self.log.debug(f"Response: {state}")
         self.fail_if(not isinstance(state, int), "The response is not an int")
         state = 1 - state
-        response = self.driver.process_channel("sps", {"value": state})
+        response = self.driver.process_channel("set_pwr_state", {"value": state})
         self.log.debug(f"Response: {response}")
         self.fail_if(response is not None, "The response is not None")
-        response = self.driver.process_channel("gps")
+        response = self.driver.process_channel("get_pwr_state")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != state, "The power state was not updated correctly")
 
     def test_get_id_async(self):
         self.async_response[0] = False
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gid", callback=self._callback,
+        response = self.driver.process_channel("get_id", callback=self._callback,
                                                callback_params=str)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
@@ -85,7 +85,7 @@ class DriverTemperatureChamberTest(TestSuite):
     def test_get_temperature_async(self):
         self.async_response[0] = False
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gat", callback=self._callback,
+        response = self.driver.process_channel("get_act_temp", callback=self._callback,
                                                callback_params=float)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):

@@ -20,7 +20,7 @@
       "id": "e2da0124-6543-4c3f-8bfc-005e640b2689",
       "name": "T chamber",
       "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-      "channel_id": "gat",
+      "channel_id": "get_act_temp",
       "unit": "\u00b0C",
       "gain": 1.0,
       "offset": 0.0,
@@ -35,7 +35,7 @@
       "settings": {
         "value": 1,
         "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-        "channel_id": "sps"
+        "channel_id": "set_pwr_state"
       }
     },
     {
@@ -45,7 +45,7 @@
       "settings": {
         "value": -10.0,
         "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-        "channel_id": "sts"
+        "channel_id": "set_temp_set"
       }
     },
     {
@@ -77,7 +77,7 @@
       "settings": {
         "value": 50.0,
         "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-        "channel_id": "sts"
+        "channel_id": "set_temp_set"
       }
     },
     {
@@ -118,7 +118,7 @@
       "settings": {
         "value": 20.0,
         "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-        "channel_id": "sts"
+        "channel_id": "set_temp_set"
       }
     },
     {
@@ -141,7 +141,7 @@
       "settings": {
         "value": 0,
         "instrument_id": "e23b80c4-fe9c-4e7e-9564-12118b02a4f3",
-        "channel_id": "sps"
+        "channel_id": "set_pwr_state"
       }
     }
   ],

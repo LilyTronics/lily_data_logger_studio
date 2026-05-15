@@ -25,7 +25,7 @@ class VoltcraftVC506(DriverBase):
     ]
 
     channels = [
-        DriverChannel("meas", "get measurement", None, float),
+        DriverChannel("get_meas", "get measurement", None, float),
     ]
 
     transport = TransportSerial
@@ -53,7 +53,7 @@ class VoltcraftVC506(DriverBase):
         return channel.response_type(re.search(rb'[-+]?\d*\.?\d+', response).group())
 
     def test_driver(self):
-        response = self.process_channel("meas")
+        response = self.process_channel("get_meas")
         if not isinstance(response, float):
             raise Exception(f"Invalid response: {response}")
 

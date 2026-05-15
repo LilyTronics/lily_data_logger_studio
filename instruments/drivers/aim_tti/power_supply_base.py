@@ -22,32 +22,32 @@ class AimTtiPowerSupplyBase:
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", None, str),
-        DriverChannel("gav", "get actual output voltage", None, float, True, [
+        DriverChannel("get_id", "get instrument ID", None, str),
+        DriverChannel("get_act_volt", "get actual output voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("gac", "get actual output current", None, float, True, [
+        DriverChannel("get_act_cur", "get actual output current", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("gsv", "get output set voltage", None, float, True, [
+        DriverChannel("get_set_volt", "get output set voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("gsc", "get output set current", None, float, True, [
+        DriverChannel("get_set_cur", "get output set current", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("sov", "set output voltage", float, str, False, [
+        DriverChannel("set_out_volt", "set output voltage", float, str, False, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("soc", "set output current", float, str, False, [
+        DriverChannel("set_out_cur", "set output current", float, str, False, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("gos", "get output state", None, int, True, [
+        DriverChannel("get_out_state", "get output state", None, int, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("sos", "set output state", int, str, False, [
+        DriverChannel("set_out_state", "set output state", int, str, False, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("sas", "set all output state", int, str, False),
+        DriverChannel("set_all_state", "set all output state", int, str, False),
     ]
 
     transport = TransportSerial
@@ -62,25 +62,25 @@ class AimTtiPowerSupplyBase:
 
     def build_command(self, channel, params):
         match channel.channel_id:
-            case "gid":
+            case "get_id":
                 return b"*IDN?"
-            case "gav":
+            case "get_act_volt":
                 return b"V%dO?" % params["channel"]
-            case "gac":
+            case "get_act_cur":
                 return b"I%dO?" % params["channel"]
-            case "gsv":
+            case "get_set_volt":
                 return b"V%d?" % params["channel"]
-            case "gsc":
+            case "get_set_cur":
                 return b"I%d?" % params["channel"]
-            case "sov":
+            case "set_out_volt":
                 return b"V%d %f" % (params["channel"], params["value"])
-            case "soc":
+            case "set_out_cur":
                 return b"I%d %f" % (params["channel"], params["value"])
-            case "gos":
+            case "get_out_state":
                 return b"OP%d?" % params["channel"]
-            case "sos":
+            case "set_out_state":
                 return b"OP%d %d" % (params["channel"], params["value"])
-            case "sas":
+            case "set_all_state":
                 return b"OPALL %d" % params["value"]
 
         raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
@@ -97,7 +97,7 @@ class AimTtiPowerSupplyBase:
                          f"driver {self.get_class_name()}")         # pylint: disable=no-member
 
     def test_driver(self):
-        response = self.process_channel("gid")                      # pylint: disable=no-member
+        response = self.process_channel("get_id")                   # pylint: disable=no-member
         if not response.startswith("THURLBY THANDAR"):
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
@@ -125,28 +125,31 @@ if __name__ == "__main__":
     driver.test_driver()
 
     for ch in range(1, 3):
-        voltage = driver.process_channel("gsv", {"channel": ch})
-        current = driver.process_channel("gsc", {"channel": ch})
+        voltage = driver.process_channel("get_set_volt", {"channel": ch})
+        current = driver.process_channel("get_set_cur", {"channel": ch})
         print(f"CH{ch} voltage set point:", voltage)
         print(f"CH{ch} current set point:", current)
         voltage -= 0.1
         current -= 0.1
-        driver.process_channel("sov", {"channel": ch, "value": voltage})
-        driver.process_channel("soc", {"channel": ch, "value": current})
-        print(f"CH{ch} voltage set point:", driver.process_channel("gsv", {"channel": ch}))
-        print(f"CH{ch} current set point:", driver.process_channel("gsc", {"channel": ch}))
-        print(f"CH{ch} actual voltage   :", driver.process_channel("gav", {"channel": ch}))
-        print(f"CH{ch} actual current   :", driver.process_channel("gac", {"channel": ch}))
-        print(f"CH{ch} output state     :", driver.process_channel("gos", {"channel": ch}))
-        driver.process_channel("sos", {"channel": ch, "value": 1})
-        print(f"CH{ch} output state     :", driver.process_channel("gos", {"channel": ch}))
+        driver.process_channel("set_out_volt", {"channel": ch, "value": voltage})
+        driver.process_channel("set_out_cur", {"channel": ch, "value": current})
+        print(f"CH{ch} voltage set point:", driver.process_channel("get_set_volt", {"channel": ch}))
+        print(f"CH{ch} current set point:", driver.process_channel("get_set_cur", {"channel": ch}))
+        print(f"CH{ch} actual voltage   :", driver.process_channel("get_act_volt", {"channel": ch}))
+        print(f"CH{ch} actual current   :", driver.process_channel("get_act_cur", {"channel": ch}))
+        print(f"CH{ch} output state     :", driver.process_channel("get_out_state",
+                                                                   {"channel": ch}))
+        driver.process_channel("set_out_state", {"channel": ch, "value": 1})
+        print(f"CH{ch} output state     :", driver.process_channel("get_out_state",
+                                                                   {"channel": ch}))
         time.sleep(0.5)
-        print(f"CH{ch} actual voltage   :", driver.process_channel("gav", {"channel": ch}))
-        print(f"CH{ch} actual current   :", driver.process_channel("gac", {"channel": ch}))
+        print(f"CH{ch} actual voltage   :", driver.process_channel("get_act_volt", {"channel": ch}))
+        print(f"CH{ch} actual current   :", driver.process_channel("get_act_cur", {"channel": ch}))
 
-    driver.process_channel("sas", {"value": 0})
+    driver.process_channel("set_all_state", {"value": 0})
     time.sleep(0.5)
     for ch in range(1, 3):
-        print(f"CH{ch} output state     :", driver.process_channel("gos", {"channel": ch}))
-        print(f"CH{ch} actual voltage   :", driver.process_channel("gav", {"channel": ch}))
-        print(f"CH{ch} actual current   :", driver.process_channel("gac", {"channel": ch}))
+        print(f"CH{ch} output state     :", driver.process_channel("get_out_state",
+                                                                   {"channel": ch}))
+        print(f"CH{ch} actual voltage   :", driver.process_channel("get_act_volt", {"channel": ch}))
+        print(f"CH{ch} actual current   :", driver.process_channel("get_act_cur", {"channel": ch}))

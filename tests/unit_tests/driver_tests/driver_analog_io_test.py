@@ -38,14 +38,14 @@ class DriverAnalogIoTest(TestSuite):
 
     def test_get_id(self):
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gid")
+        response = self.driver.process_channel("get_id")
         self.log.debug(f"Response: {response}")
         self.fail_if(response != "SimulatorMultiChannelAnalogIo", "The ID is not correct")
 
     def test_get_id_async(self):
         self.async_response[0] = False
         self.log.debug("Get ID")
-        response = self.driver.process_channel("gid", callback=self._callback,
+        response = self.driver.process_channel("get_id", callback=self._callback,
                                                callback_params=str)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
@@ -56,7 +56,7 @@ class DriverAnalogIoTest(TestSuite):
             "channel": 1,
             "value": 7
         }
-        response = self.driver.process_channel("so", params)
+        response = self.driver.process_channel("set_out", params)
         self.log.debug(f"Response: {response}")
         self.fail_if(response != "ok", "Invalid response")
 
@@ -64,7 +64,7 @@ class DriverAnalogIoTest(TestSuite):
         params = {
             "channel": 1
         }
-        response = self.driver.process_channel("gi", params)
+        response = self.driver.process_channel("get_inp", params)
         self.log.debug(f"Response: {response}")
         self.fail_if(not isinstance(response, float), "Invalid response")
 

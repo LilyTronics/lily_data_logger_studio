@@ -28,7 +28,7 @@ class DriverTemplate(DriverBase):
     ]
 
     channels = [
-        DriverChannel("channel_id", "get instrument ID", None, str),
+        DriverChannel("get_id", "get instrument ID", None, str),
     ]
 
     transport = TransportTemplate
@@ -52,7 +52,7 @@ class DriverTemplate(DriverBase):
         return response
 
     def test_driver(self):
-        response = self.process_channel("channel_id")
+        response = self.process_channel("get_id")
         # Evaluate reposense and raise an exception if the response is not as expected
         print(response)
 

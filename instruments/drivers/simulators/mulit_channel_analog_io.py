@@ -22,11 +22,11 @@ class MultiChannelAnalogIo(DriverBase):
     ]
 
     channels = [
-        DriverChannel("gid", "get instrument ID", None, str),
-        DriverChannel("so", "set output", float, str, True, [
+        DriverChannel("get_id", "get instrument ID", None, str),
+        DriverChannel("set_out", "set output", float, str, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ]),
-        DriverChannel("gi", "get input", None, float, True, [
+        DriverChannel("get_inp", "get input", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT)
         ])
     ]
@@ -49,13 +49,13 @@ class MultiChannelAnalogIo(DriverBase):
         ch = params.get("channel", None)
 
         match channel.channel_id:
-            case "gid":
+            case "get_id":
                 return b"id?"
-            case "so":
+            case "set_out":
                 if None in (channel, value):
                     raise ValueError(f"Wrong values for channel and or value: {ch}, {value}")
                 return b"so,%d,%f" % (ch, value)
-            case "gi":
+            case "get_inp":
                 if channel is None:
                     raise ValueError(f"Wrong value for channel: {ch}")
                 return b"gi,%d" % ch
@@ -73,7 +73,7 @@ class MultiChannelAnalogIo(DriverBase):
                          f"driver {self.get_class_name()}")
 
     def test_driver(self):
-        response = self.process_channel("gid")
+        response = self.process_channel("get_id")
         if response.lower() != "simulatormultichannelanalogio":
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
