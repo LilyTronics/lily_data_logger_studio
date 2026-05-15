@@ -6,8 +6,10 @@ import os
 import shutil
 import subprocess
 
+from manuals.instruments.generate_content import generate
 
-def build_manual(src_name, doc_name):
+
+def _build_manual(src_name, doc_name):
 
     print(f"*** Build documentation {doc_name} ***")
     manual_dir = os.path.abspath(os.path.dirname(__file__))
@@ -44,6 +46,9 @@ def build_manual(src_name, doc_name):
     return False
 
 def build_manuals():
+    print("*** Generate content ***")
+    generate()
+
     print("*** Build manuals ***")
 
     manual_dir = os.path.abspath(os.path.dirname(__file__))
@@ -51,8 +56,9 @@ def build_manuals():
     shutil.rmtree(build_dir, True)
 
     results = [
-        build_manual("main", "Lily Data Logger Studio"),
-        build_manual("driver_dev", "Driver development"),
+        _build_manual("main", "Lily Data Logger Studio"),
+        _build_manual("instruments", "Supported instruments"),
+        _build_manual("driver_dev", "Driver development"),
     ]
     print(f"Build results: {results}")
     return False not in results

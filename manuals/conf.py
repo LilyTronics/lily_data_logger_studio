@@ -27,7 +27,6 @@ source_path = os.path.abspath(os.path.join(
     'instruments'
 ))
 sys.path.insert(0, source_path)
-print(sys.path)
 
 project = AppData.APP_NAME
 copyright = f"{date.today().year} {AppData.COMPANY}"

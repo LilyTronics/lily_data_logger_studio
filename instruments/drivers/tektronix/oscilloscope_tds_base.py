@@ -13,6 +13,7 @@ from instruments.transport.transport_serial import TransportSerial
 class TektronixOscilloscopeTdsBase:
 
     manufacturer = "Tektronix"
+    model = "Oscilloscope TDS series base class"
 
     driver_settings = [
         DriverSetting("port", str, "", DriverSetting.CTRL_TEXT),

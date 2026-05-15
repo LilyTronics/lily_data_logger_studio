@@ -14,6 +14,7 @@ class AimTtiPowerSupplyBase:
 
     # Generate a valid ID using the driver_id.py script
     manufacturer = "Aim-TTi"
+    model = "Power supply base class"
 
     # The only settings that is required is the port.
     driver_settings = [

@@ -15,7 +15,7 @@ class ArduinoDaq(DriverBase):
     id = "c7a393e0-8838-4e58-8170-4bd96bf3ef00"
     manufacturer = "Arduino"
     model = "DAQ"
-    description = "Basic DAQ using the arduino"
+    description = "Basic DAQ using an Arduino board"
 
     transport = TransportSerial
     protocol = ProtocolAscii
