@@ -25,7 +25,6 @@ def _clean_output_folder(output_folder):
     else:
         os.makedirs(output_folder)
 
-
 def _create_version_file(version_file, artifacts_path, app_name, exe_name):
     print("Create version file . . .")
     version_template = os.path.join(artifacts_path, "version.template")
@@ -106,6 +105,13 @@ def _copy_manuals(app_path):
     os.makedirs(output_folder, exist_ok=True)
     shutil.copytree(source_folder, output_folder, dirs_exist_ok=True)
 
+def _copy_arduino_daq_firmware(build_path, app_path):
+    print("Copy Arduino DAQ firmware . . .")
+    source_folder = os.path.join(build_path, "arduino_daq")
+    output_folder = os.path.join(app_path, "arduino_daq")
+    os.makedirs(output_folder, exist_ok=True)
+    shutil.copytree(source_folder, app_path, dirs_exist_ok=True)
+
 def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")
     print(platform.system())
@@ -160,8 +166,8 @@ def _build_executable(output_folder, dist_path, app_id, app_name, exe_name):
     ])
 
 def create_deployment():
-
-    output_path = os.path.join(os.path.dirname(__file__), "build_output")
+    build_path = os.path.dirname(__file__)
+    output_path = os.path.join(build_path, "build_output")
     dist_path = os.path.join(output_path, "dist")
     app_path = os.path.join(dist_path, AppData.EXE_NAME)
 
@@ -174,6 +180,7 @@ def create_deployment():
     _copy_driver_test(dist_path, app_path)
     _copy_drivers(app_path)
     _copy_manuals(app_path)
+    _copy_arduino_daq_firmware(build_path, app_path)
     _create_zip_file(dist_path, app_path)
 
     print("\nBuild done")
