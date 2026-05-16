@@ -12,7 +12,7 @@ from src.simulators.simulator_settings import SimulatorSettings
 
 class MultiChannelAnalogIo(SimulatorBase):
 
-    NAME = "SimulatorMultiChannelAnalogIo"
+    NAME = "Simulator Multi Channel Analog IO"
 
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = b"\n"

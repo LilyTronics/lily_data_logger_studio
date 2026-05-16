@@ -74,7 +74,7 @@ class MultiChannelAnalogIo(DriverBase):
 
     def test_driver(self):
         response = self.process_channel("get_id")
-        if response.lower() != "simulatormultichannelanalogio":
+        if response != "Simulator Multi Channel Analog IO":
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
 
