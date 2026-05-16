@@ -36,7 +36,7 @@ class TektronixOscilloscopeTdsBase:
         ]),
         DriverChannel("get_meas_rms", "get RMS per cycle voltage", None, float, True, [
             DriverSetting("channel", int, 1, DriverSetting.CTRL_TEXT),
-        ]),
+        ])
     ]
 
     transport = TransportSerial
