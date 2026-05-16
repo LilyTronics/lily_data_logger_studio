@@ -2,8 +2,6 @@
 Driver for multimeter Voltcraft VC506.
 """
 
-import re
-
 from instruments.drivers.driver_base import DriverBase
 from instruments.drivers.driver_channel import DriverChannel
 from instruments.drivers.driver_setting import DriverSetting
@@ -50,7 +48,7 @@ class VoltcraftVC506(DriverBase):
         return b""
 
     def parse_response(self, channel, response):
-        return channel.response_type(re.search(rb'[-+]?\d*\.?\d+', response).group())
+        return self.extract_number(response)
 
     def test_driver(self):
         response = self.process_channel("get_meas")

@@ -2,8 +2,6 @@
 Base class for Aim-TTi power supplies.
 """
 
-import re
-
 from instruments.drivers.driver_channel import DriverChannel
 from instruments.drivers.driver_setting import DriverSetting
 from instruments.protocol.protocol_ascii import ProtocolAscii
@@ -84,20 +82,20 @@ class AimTtiPowerSupplyBase:
                 return b"OPALL %d" % params["value"]
 
         raise ValueError(f"Channel '{channel.channel_id}' is not implemented in "
-                         f"driver {self.get_class_name()}")         # pylint: disable=no-member
+                         f"driver {self.get_class_name()}")             # pylint: disable=no-member
 
     def parse_response(self, channel, response):
         if channel.response_type is str:
             return response.decode("utf-8")
         if channel.response_type in [float, int]:
             response = response.split(b" ")[-1]
-            return channel.response_type(re.search(rb"[-+]?\d*\.?\d+", response).group())
+            return channel.response_type(self.extract_number(response)) # pylint: disable=no-member
 
         raise ValueError(f"Value type '{channel.response_type}' is not implemented in "
-                         f"driver {self.get_class_name()}")         # pylint: disable=no-member
+                         f"driver {self.get_class_name()}")             # pylint: disable=no-member
 
     def test_driver(self):
-        response = self.process_channel("get_id")                   # pylint: disable=no-member
+        response = self.process_channel("get_id")                       # pylint: disable=no-member
         if not response.startswith("THURLBY THANDAR"):
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
