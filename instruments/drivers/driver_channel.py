@@ -54,7 +54,8 @@ class DriverChannel:
             raise TypeError("(Channel) Channel name must be a string")
         if name == "":
             raise ValueError("(Channel) Channel name cannot be empty")
-        if channel_id != "custom_command" and (not (name.startswith("get ") or name.startswith("set "))):
+        if channel_id != "custom_command" and (
+            not (name.startswith("get ") or name.startswith("set "))):
             raise ValueError(
                 "(Channel) Channel name must start with 'get ' or 'set '"
             )
@@ -78,7 +79,7 @@ class DriverChannel:
         self.value_type = value_type
         self.response_type = response_type
         self.expect_response = expect_response
-        self.direction = self.DIR_INPUT if name.startswith("get ") else self.DIR_OUTPUT
+        self.direction = self.DIR_OUTPUT if name.startswith("set ") else self.DIR_INPUT
 
 
 if __name__ == "__main__":

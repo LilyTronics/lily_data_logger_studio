@@ -3,6 +3,7 @@ Base class for all driver classes.
 """
 
 import inspect
+import re
 import uuid
 
 from abc import ABC
@@ -50,6 +51,9 @@ class DriverBase(ABC):
     #: Protocol settings. Dictionary of settings that are required to configure the protocol.
     protocol_settings = {}
     is_simulator = False
+    #: Regular expression for extracting the nummeric part from instrument responses
+    number_re = re.compile(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?", re.VERBOSE)
+
 
     def __init__(self, settings, debug=""):
         self.user_settings = settings
@@ -155,8 +159,8 @@ class DriverBase(ABC):
         cls.channels.append(
             DriverChannel("custom_command", "custom command", None, None, False, [
                 DriverSetting("command", str, "", DriverSetting.CTRL_TEXT),
-                DriverSetting("return value", str, "", DriverSetting.CTRL_CMB,
-                              {"items": ["None", "string", "float", "int"]})
+                DriverSetting("response type", str, "none", DriverSetting.CTRL_CMB,
+                              {"items": ["none", "string", "float", "int"]})
             ])
         )
 
@@ -176,10 +180,31 @@ class DriverBase(ABC):
         matches = [x for x in self.internal_channels if x.channel_id == query]
         return None if len(matches) != 1 else matches[0]
 
+    def _build_command(self, channel, params):
+        if channel.channel_id == "custom_command":
+            self.log_debug(f"Sending custom command: {params}")
+            channel.response_type = params["response type"]
+            channel.expect_response = channel.response_type != "none"
+            return params["command"].encode("utf-8")
+        return self.build_command(channel, params)
+
+    def _parse_response(self, channel, response):
+        self.log_debug(f"Parse response for custom command: {channel.response_type}")
+        if channel.response_type == "string":
+            return response.decode("utf-8")
+        if channel.response_type == "float":
+            response = float(self.extract_number(response))
+        if channel.response_type == "int":
+            response = int(self.extract_number(response))
+        return response
+
     def _process_response(self, channel, response):
         if channel.expect_response:
             self.log_debug(f"Channel response: {response}")
-            response = self.parse_response(channel, response)
+            if channel.channel_id == "custom_command":
+                response = self._parse_response(channel, response)
+            else:
+                response = self.parse_response(channel, response)
             self.log_debug(f"Channel return value: {response}")
         else:
             self.log_debug(f"No channel response expected ({response})")
@@ -244,6 +269,15 @@ class DriverBase(ABC):
         return None if len(matches) != 1 else matches[0]
 
     @final
+    def extract_number(self, response):
+        """
+        Extract numbers from the rsponse
+        """
+        s = response.decode("utf-8")
+        m = self.number_re.search(s)
+        return m.group(0) if m else None
+
+    @final
     def process_channel(self, channel_query, params=None,
                         callback=None, callback_params=None) -> any:
         """
@@ -281,7 +315,7 @@ class DriverBase(ABC):
                 f"(Driver) Channel '{channel_query}' not found in driver {self.get_class_name()}"
             )
         self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
-        command = self.build_command(channel, params)
+        command = self._build_command(channel, params)
         if not isinstance(command, bytes):
             raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")

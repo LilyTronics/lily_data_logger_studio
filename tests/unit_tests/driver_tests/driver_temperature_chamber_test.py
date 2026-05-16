@@ -39,7 +39,7 @@ class DriverTemperatureChamberTest(TestSuite):
         self.log.debug("Get ID")
         response = self.driver.process_channel("get_id")
         self.log.debug(f"Response: {response}")
-        self.fail_if(response != "SimulatorTemperatureChamber", "The ID is not correct")
+        self.fail_if(response != "Simulator Temperature Chamber", "The ID is not correct")
 
     def test_get_actual_temperature(self):
         self.log.debug("Get actual temperature")
@@ -90,6 +90,39 @@ class DriverTemperatureChamberTest(TestSuite):
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
             self._fail("No async response received")
+
+    def test_custom_command_string(self):
+        custom_command = {"command": "id?", "response type": "string"}
+        self.log.debug("Process custom command")
+        response = self.driver.process_channel("custom_command", custom_command)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(not isinstance(response, str),
+                     f"Response type string expected, got: {type(response)}")
+        self.fail_if(response != "Simulator Temperature Chamber", "Invalid response")
+
+    def test_custom_command_float(self):
+        custom_command = {"command": "temp?", "response type": "float"}
+        self.log.debug("Process custom command")
+        response = self.driver.process_channel("custom_command", custom_command)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(not isinstance(response, float),
+                     f"Response type float expected, got: {type(response)}")
+
+    def test_custom_command_int(self):
+        custom_command = {"command": "pwr?", "response type": "int"}
+        self.log.debug("Process custom command")
+        response = self.driver.process_channel("custom_command", custom_command)
+        self.log.debug(f"Response: {response}")
+        self.fail_if(not isinstance(response, int),
+                     f"Response type int expected, got: {type(response)}")
+
+    def test_custom_command_none(self):
+        custom_command = {"command": "pwr=0", "response type": "none"}
+        self.log.debug("Process custom command")
+        response = self.driver.process_channel("custom_command", custom_command)
+        self.log.debug("Response: {response}")
+        self.fail_if(response is not None,
+                     f"Response None expected, got: {type(response)}")
 
 
 if __name__ == "__main__":
