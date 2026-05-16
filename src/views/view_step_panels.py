@@ -76,7 +76,7 @@ class ViewStepPanelSetOutput(ViewStepPanel):
         if "channels" in settings:
             self._channels = settings["channels"]
             channel_names = [x.name for x in self._channels]
-            self._cmb_channels.SetItems(sorted(channel_names))
+            self._cmb_channels.SetItems(channel_names)
             self._driver_class = settings.get("driver_class", self._driver_class)
         if "selected_instrument" in settings:
             if settings["selected_instrument"] in self._cmb_instruments.GetItems():

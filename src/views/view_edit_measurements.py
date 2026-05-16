@@ -180,7 +180,7 @@ class ViewEditMeasurements(wx.Dialog):
 
     def update_channels(self, channels):
         names = [x.name for x in channels]
-        self._cmb_channels.SetItems(sorted(names))
+        self._cmb_channels.SetItems(names)
         self._channels = channels
         self.Layout()
 
