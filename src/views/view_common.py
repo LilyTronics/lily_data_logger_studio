@@ -18,7 +18,14 @@ def create_settings_grid(settings, grid, parent, controls_dict):
                 lbl = wx.StaticText(parent, wx.ID_ANY, f"{setting.name}:")
                 ctrl_class = getattr(wx, setting.gui_control)
                 ctrl = ctrl_class(parent, wx.ID_ANY, size=GuiSizes.WIDTH_MEDIUM)
-                ctrl.SetValue("" if setting.default_value is None else str(setting.default_value))
+                if setting.gui_control == "ComboBox":
+                    ctrl.SetItems(setting.gui_params.get("items", []))
+                    if str(setting.default_value) in ctrl.GetItems():
+                        ctrl.SetValue(str(setting.default_value))
+                else:
+                    ctrl.SetValue(
+                        "" if setting.default_value is None else str(setting.default_value)
+                    )
                 grid.Add(lbl, (i, 0), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                 grid.Add(ctrl, (i, 1), wx.DefaultSpan, wx.ALIGN_CENTER_VERTICAL)
                 controls_dict[setting.name] = (ctrl, setting.type)

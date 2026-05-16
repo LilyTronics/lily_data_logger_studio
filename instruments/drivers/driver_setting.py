@@ -15,6 +15,11 @@ class DriverSetting:
     The name is displayed in the GUI and is used as key for the settings dictionary.
     The default value is used to intialize the contol in the GUI.
     The GUI control type must be a wxPython GUI control type.
+
+    Supported controls:
+    TextCtrl: text box, default value is added to the text box
+    ComboBox: drop down box, list items must be in gui_params["items"]
+              selected value is the default value
     """
 
     CTRL_TEXT = "TextCtrl"
