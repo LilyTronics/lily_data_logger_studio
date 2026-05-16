@@ -80,7 +80,7 @@ class DriverTemperatureChamberTest(TestSuite):
                                                callback_params=str)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
-            self._fail("No async response received")
+            self.fail("No async response received")
 
     def test_get_temperature_async(self):
         self.async_response[0] = False
@@ -89,7 +89,7 @@ class DriverTemperatureChamberTest(TestSuite):
                                                callback_params=float)
         self.fail_if(response is not None, f"No response expected, got: {response}")
         if not self.wait_for(self.async_response, True, 2, 0.1):
-            self._fail("No async response received")
+            self.fail("No async response received")
 
     def test_custom_command_string(self):
         custom_command = {"command": "id?", "response type": "string"}
@@ -120,9 +120,20 @@ class DriverTemperatureChamberTest(TestSuite):
         custom_command = {"command": "pwr=0", "response type": "none"}
         self.log.debug("Process custom command")
         response = self.driver.process_channel("custom_command", custom_command)
-        self.log.debug("Response: {response}")
+        self.log.debug(f"Response: {response}")
         self.fail_if(response is not None,
                      f"Response None expected, got: {type(response)}")
+
+    def test_custom_command_async(self):
+        self.async_response[0] = False
+        custom_command = {"command": "temp?", "response type": "float"}
+        self.log.debug("Process custom command")
+        response = self.driver.process_channel("custom_command", custom_command,
+                                               callback=self._callback,
+                                               callback_params=float)
+        self.fail_if(response is not None, f"No response expected, got: {response}")
+        if not self.wait_for(self.async_response, True, 2, 0.1):
+            self._fail("No async response received")
 
 
 if __name__ == "__main__":

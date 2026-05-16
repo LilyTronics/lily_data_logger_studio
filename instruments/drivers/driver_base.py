@@ -187,31 +187,31 @@ class DriverBase(ABC):
             return params["command"].encode("utf-8")
         return self.build_command(channel, params)
 
-    def _parse_response(self, channel, response):
-        self.log_debug(f"Parse response for custom command: {channel.response_type}")
-        if channel.response_type == "string":
+    def _parse_response(self, channel_params, response):
+        self.log_debug(f"Parse response for custom command: {response} {channel_params}")
+        response_type = channel_params.get("response type", "none")
+        if response_type == "string":
             return response.decode("utf-8")
-        if channel.response_type == "float":
+        if response_type == "float":
             response = float(self.extract_number(response))
-        if channel.response_type == "int":
+        if response_type == "int":
             response = int(self.extract_number(response))
         return response
 
-    def _process_response(self, channel, response):
-        if channel.expect_response:
+    def _process_response(self, channel, channel_params, response):
+        if channel.channel_id == "custom_command":
+            response = self._parse_response(channel_params, response)
+        elif channel.expect_response:
             self.log_debug(f"Channel response: {response}")
-            if channel.channel_id == "custom_command":
-                response = self._parse_response(channel, response)
-            else:
-                response = self.parse_response(channel, response)
+            response = self.parse_response(channel, response)
             self.log_debug(f"Channel return value: {response}")
         else:
             self.log_debug(f"No channel response expected ({response})")
         return response
 
-    def _process_callback(self, response, params):
-        response = self._process_response(params["channel"], response)
-        params["callback"](response, params["callback_params"])
+    def _process_callback(self, response, channel_params, callback_params):
+        response = self._process_response(callback_params["channel"], channel_params, response)
+        callback_params["callback"](response, callback_params["callback_params"])
 
     ##########
     # Public #
@@ -325,11 +325,12 @@ class DriverBase(ABC):
                 "channel": channel
             }
             callback = self._process_callback
-        response = self.protocol.process_command(channel, command, callback, callback_params)
+        response = self.protocol.process_command(channel, channel_params, command, callback,
+                                                 callback_params)
         if callable(callback):
             # The callback is present
             return None
-        return self._process_response(channel, response)
+        return self._process_response(channel, channel_params, response)
 
     @final
     def close(self) -> None:

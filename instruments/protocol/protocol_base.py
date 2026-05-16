@@ -48,20 +48,23 @@ class ProtocolBase(ABC):
         while not self._stop_event.is_set():
             try:
                 data = self._queue.get(True, 0.001)
-                response = self._process_command(data["channel"], data["command"])
-                data["callback"](response, data["callback_params"])
+                response = self._process_command(data["channel"], data["channel_params"],
+                                                 data["command"])
+                data["callback"](response, data["channel_params"], data["callback_params"])
             except queue.Empty:
                 pass
         self.log_debug("Queue processor stopped")
 
-    def _process_command(self, channel, command):
+    def _process_command(self, channel, channel_params, command):
         with self._lock:
             self.log_debug(f"Process command: {command}")
             data = self.build_packet(command)
             self.log_debug(f"Command data: {data}")
-            response =  self.transport.transceive(data, channel.expect_response,
+            expect_response = (channel.expect_response or
+                               channel_params.get("response type", "none") != "none")
+            response =  self.transport.transceive(data, expect_response,
                                                   self.validate_response)
-            if channel.expect_response:
+            if expect_response:
                 self.log_debug(f"Response data: {response}")
                 response = self.parse_packet(response)
             else:
@@ -78,12 +81,13 @@ class ProtocolBase(ABC):
             print(f"({self.__class__.__name__})", message)
 
     @final
-    def process_command(self, channel, command, callback, callback_params):
+    def process_command(self, channel, channel_params, command, callback, callback_params):
         """
         Process a command by either adding it to the queue (if a callback is provided) or
         processing it immediately (if no callback is provided).
 
         :param channel:         DriverChannel instance to use for communication.
+        :param channel_params:  Dictionary with parameters for the channel (optional).
         :param command:         Command to process.
         :param callback:        Callback function to call with the response (if any).
         :param callback_params: Parameters to pass to the callback function.
@@ -95,13 +99,14 @@ class ProtocolBase(ABC):
             self.log_debug("Add data to queue")
             self._queue.put({
                 "channel": channel,
+                "channel_params": channel_params,
                 "command": command,
                 "callback": callback,
                 "callback_params": callback_params
             })
             return None
         # No callback, process immediately
-        return self._process_command(channel, command)
+        return self._process_command(channel, channel_params, command)
 
     @final
     def close(self):
