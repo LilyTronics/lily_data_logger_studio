@@ -184,8 +184,6 @@ class DriverBase(ABC):
     def _build_command(self, channel, params):
         if channel.channel_id == "custom_command":
             self.log_debug(f"Sending custom command: {params}")
-            channel.response_type = params["response type"]
-            channel.expect_response = channel.response_type != "none"
             return params["command"].encode("utf-8")
         return self.build_command(channel, params)
 
@@ -279,13 +277,13 @@ class DriverBase(ABC):
         return m.group(0) if m else None
 
     @final
-    def process_channel(self, channel_query, params=None,
+    def process_channel(self, channel_query, channel_params=None,
                         callback=None, callback_params=None) -> any:
         """
         Process a channel by ID or by name (prio is ID).
 
         :param channel_query:       Channel ID or name.
-        :param params:              Dictionary with parameters for the channel (optional).
+        :param channel_params:      Dictionary with parameters for the channel (optional).
         :param callback:            Callback function for asynchronous processing (optional).
         :param callback_params:     Parameters for the callback function (optional).
 
@@ -305,7 +303,7 @@ class DriverBase(ABC):
         The callback function must have the following signature:
         :code:`function_name(response, params)`
         """
-        params = {} if params is None else params
+        channel_params = {} if channel_params is None else channel_params
         self.log_debug(f"Get channel for query: '{channel_query}'")
         channel = self.get_channel(channel_query)
         if channel is None:
@@ -316,7 +314,7 @@ class DriverBase(ABC):
                 f"(Driver) Channel '{channel_query}' not found in driver {self.get_class_name()}"
             )
         self.log_debug(f"Process channel: {channel.channel_id} - {channel.name}")
-        command = self._build_command(channel, params)
+        command = self._build_command(channel, channel_params)
         if not isinstance(command, bytes):
             raise TypeError("(Driver) Command must be of type bytes")
         self.log_debug(f"Channel command: {command}")
