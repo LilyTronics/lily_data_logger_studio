@@ -150,8 +150,15 @@ class DriverBase(ABC):
             raise TypeError(
                 f"(Driver) Protocol must be a subclass of ProtocolBase in driver {cls.__name__}"
             )
-
         cls.name = f"{cls.manufacturer} {cls.model}"
+        # Add custom command channels
+        cls.channels.append(
+            DriverChannel("custom_command", "custom command", None, None, False, [
+                DriverSetting("command", str, "", DriverSetting.CTRL_TEXT),
+                DriverSetting("return value", str, "", DriverSetting.CTRL_CMB,
+                              {"items": ["None", "string", "float", "int"]})
+            ])
+        )
 
     ###########
     # Private #

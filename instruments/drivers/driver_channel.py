@@ -54,7 +54,7 @@ class DriverChannel:
             raise TypeError("(Channel) Channel name must be a string")
         if name == "":
             raise ValueError("(Channel) Channel name cannot be empty")
-        if not (name.startswith("get ") or name.startswith("set ")):
+        if channel_id != "custom_command" and (not (name.startswith("get ") or name.startswith("set "))):
             raise ValueError(
                 "(Channel) Channel name must start with 'get ' or 'set '"
             )

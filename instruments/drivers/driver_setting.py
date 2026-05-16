@@ -10,6 +10,7 @@ class DriverSetting:
     :param setting_type:    Type of the setting (str, int, float).
     :param default_value:   Default value of the setting.
     :param gui_control:     GUI control type for the setting.
+    :param gui_params:      Parameters for the GUI control (depending on control).
 
     The name is displayed in the GUI and is used as key for the settings dictionary.
     The default value is used to intialize the contol in the GUI.
@@ -17,11 +18,12 @@ class DriverSetting:
     """
 
     CTRL_TEXT = "TextCtrl"
+    CTRL_CMB = "ComboBox"
 
     _VALID_TYPES = [str, int, float]
-    _VALID_CONTROLS = [CTRL_TEXT]
+    _VALID_CONTROLS = [CTRL_TEXT, CTRL_CMB]
 
-    def __init__(self, name, setting_type, default_value, gui_control):
+    def __init__(self, name, setting_type, default_value, gui_control, gui_params=None):
         if setting_type not in self._VALID_TYPES:
             raise ValueError(
                 f"(Settings) Setting type {setting_type} for '{name}' is not supported"
@@ -39,7 +41,7 @@ class DriverSetting:
         self.type = setting_type
         self.default_value = default_value
         self.gui_control = gui_control
-
+        self.gui_params = gui_params
 
 if __name__ == "__main__":
 
