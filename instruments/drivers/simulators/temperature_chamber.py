@@ -80,7 +80,7 @@ class TemperatureChamber(DriverBase):
 
     def test_driver(self):
         response = self.process_channel("get_id")
-        if response.lower() != "simulatortemperaturechamber":
+        if response != "Simulator Temperature Chamber":
             raise AssertionError(f"Driver test failed: unexpected instrument ID ({response})")
 
 

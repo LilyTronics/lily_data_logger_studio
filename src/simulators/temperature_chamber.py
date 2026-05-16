@@ -10,7 +10,7 @@ from src.simulators.simulator_settings import SimulatorSettings
 
 class TemperatureChamber(SimulatorBase):
 
-    NAME = "SimulatorTemperatureChamber"
+    NAME = "Simulator Temperature Chamber"
 
     _RX_BUFFER_SIZE = 1500
     _TERMINATOR = b"\n"
