@@ -4,7 +4,7 @@ Driver settings object.
 
 class DriverSetting:
     """
-    Driver setting.
+    Driver setting class.
 
     :param name:            Name of the setting.
     :param setting_type:    Type of the setting (str, int, float).
@@ -17,9 +17,11 @@ class DriverSetting:
     The GUI control type must be a wxPython GUI control type.
 
     Supported controls:
-    TextCtrl: text box, default value is added to the text box
-    ComboBox: drop down box, list items must be in gui_params["items"]
-              selected value is the default value
+
+    * TextCtrl: Text box, default value is added to the text box.
+    * ComboBox: Drop down box, list items must be in gui_params["items"].
+      The selected value is the default value.
+
     """
 
     CTRL_TEXT = "TextCtrl"
