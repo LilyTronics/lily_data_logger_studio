@@ -111,6 +111,7 @@ class ControllerMain:
         if test_options.load_test_configuration:
             self._logger.debug("Test option: load test configuration")
             self._configuration.load(AppData.TEST_CONFIGURATION)
+            self._view.update_configuration(self._configuration)
 
         if test_options.show_edit_settings:
             self._logger.debug("Test option: show edit settings")

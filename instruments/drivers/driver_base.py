@@ -172,7 +172,8 @@ class DriverBase(ABC):
     def _get_channels(cls, direction):
         channels = []
         if cls.channels is not None:
-            channels = [x for x in cls.channels if x.direction == direction]
+            channels = [x for x in cls.channels if
+                        x.direction == direction or x.channel_id == "custom_command"]
         return channels
 
     def _get_internal_channel(self, query):

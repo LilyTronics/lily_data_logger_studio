@@ -40,9 +40,10 @@ class ViewStepPanelSetOutput(ViewStepPanel):
         if len(channel) > 0:
             params = deepcopy(channel[0].parameters)
             setting_class = self._driver_class.get_driver_setting_class()
-            params.append(setting_class(
-                "value", channel[0].value_type, None, setting_class.CTRL_TEXT
-            ))
+            if channel[0].channel_id != "custom_command":
+                params.append(setting_class(
+                    "value", channel[0].value_type, None, setting_class.CTRL_TEXT
+                ))
             create_settings_grid(params, self._params_grid, self, self._params_controls)
             self.Layout()
 
