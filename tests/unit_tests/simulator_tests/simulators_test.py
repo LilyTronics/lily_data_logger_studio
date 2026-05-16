@@ -11,7 +11,7 @@ from tests.lib.test_suite import TestSuite
 
 class SimulatorsTest(TestSuite):
 
-    _THREADS_TO_CHECK = ["SimulatorMultiChannelAnalogIo", "SimulatorTemperatureChamber"]
+    _THREADS_TO_CHECK = ["Simulator Multi Channel Analog IO", "Simulator Temperature Chamber"]
 
     def _get_running_simulators(self):
         return [x.name for x in threading.enumerate() if x.name in self._THREADS_TO_CHECK]

@@ -37,7 +37,8 @@ class SimulatorTemperatureChamberTest(TestSuite):
                                 SimulatorSettings.TemperatureChamber["port"])
         sim_id = self.client.send_command(b"id?")
         self.log.debug(f"ID: {sim_id}")
-        self.fail_if(sim_id != b"SimulatorTemperatureChamber", f"Unexpected simulator ID: {sim_id}")
+        self.fail_if(sim_id != b"Simulator Temperature Chamber",
+                     f"Unexpected simulator ID: {sim_id}")
 
     def test_temperature_chamber(self):
         temp = float(self.client.send_command(b"temp?"))

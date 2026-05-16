@@ -32,7 +32,7 @@ class SimulatorAnalogIoTest(TestSuite):
                                 SimulatorSettings.AnalogIo["port"])
         sim_id = self.client.send_command(b"id?")
         self.log.debug(f"ID: {sim_id}")
-        self.fail_if(sim_id != b"SimulatorMultiChannelAnalogIo",
+        self.fail_if(sim_id != b"Simulator Multi Channel Analog IO",
                      f"Unexpected simulator ID: {sim_id}")
 
     def test_set_output(self):
