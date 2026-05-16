@@ -1,0 +1,71 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 60,
+    "mode": "process end"
+  },
+  "instruments": [
+    {
+      "id": "8e4de053-ccfc-45df-8949-30cf0359afee",
+      "name": "Temperature Chamber",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "5c8745a8-5a78-40c3-9408-568f02d025e3",
+      "name": "T amb",
+      "instrument_id": "8e4de053-ccfc-45df-8949-30cf0359afee",
+      "channel_id": "custom_command",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {
+        "command": "temp?",
+        "response type": "float"
+      }
+    }
+  ],
+  "process": [
+    {
+      "name": "Power on chamber",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "command": "pwr=1",
+        "response type": "none",
+        "instrument_id": "8e4de053-ccfc-45df-8949-30cf0359afee",
+        "channel_id": "custom_command"
+      }
+    },
+    {
+      "name": "Set temperature",
+      "label": "",
+      "type": "ProcessStepSetOutput",
+      "settings": {
+        "command": "temp=30",
+        "response type": "string",
+        "instrument_id": "8e4de053-ccfc-45df-8949-30cf0359afee",
+        "channel_id": "custom_command"
+      }
+    },
+    {
+      "name": "Wait for temperature",
+      "label": "",
+      "type": "ProcessStepWait",
+      "settings": {
+        "wait_for": "measurement",
+        "min_value": 29.9,
+        "max_value": 30.1,
+        "poll_interval": 2,
+        "timeout": 60,
+        "measurement_id": "5c8745a8-5a78-40c3-9408-568f02d025e3"
+      }
+    }
+  ],
+  "graphs": []
+}
