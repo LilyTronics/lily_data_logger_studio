@@ -23,11 +23,9 @@ class ControllerDriverTest:
 
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
-        self._logger.debug("Start driver test controller")
         self._app_settings = ApplicationSettings()
         self._driver_class = None
 
-        self._logger.debug("Load driver test view")
         self._view = ViewFrameDriverTest(title, AppData.DRIVER_TEST_LOG_FILE)
 
         value = self._app_settings.get_driver_test_window_position()
@@ -50,7 +48,6 @@ class ControllerDriverTest:
         self._view.Bind(wx.EVT_BUTTON, self._on_test_driver,
                         id=IdManager.ID_DRIVER_TEST_DRIVER_TEST)
 
-        self._logger.debug("Show driver test view")
         self._view.Show()
 
         self._controller_drivers = ControllerDrivers(self._view, self._logger,
@@ -105,7 +102,6 @@ class ControllerDriverTest:
     ##################
 
     def _on_reload_drivers(self, event):
-        self._logger.debug("Load drivers")
         self._controller_drivers.load()
         self._view.update_drivers(Drivers.get_drivers())
         self._view.update_channels([])

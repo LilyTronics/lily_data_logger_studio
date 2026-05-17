@@ -11,14 +11,11 @@ from src.views.view_dialogs import ViewDialogs
 class ControllerEditSettings:
 
     def __init__(self, parent_view, configuration, logger):
-        logger.info("Edit settings")
         settings = configuration.get_settings()
-        logger.debug(f"Current settings: {settings}")
         dlg = ViewEditSettings(parent_view, settings)
         if dlg.ShowModal() == wx.ID_OK:
             try:
                 settings = dlg.get_settings()
-                logger.debug(f"New settings: {settings}")
                 configuration.update_settings(settings)
             except Exception as e:
                 logger.error(f"Error updating settings: {e}")

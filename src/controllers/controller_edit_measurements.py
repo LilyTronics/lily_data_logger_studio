@@ -18,7 +18,6 @@ class ControllerEditMeasurements:
     def __init__(self, parent_view, logger, configuration):
         self._logger = logger
         self._configuration = configuration
-        self._logger.info("Edit measurements")
         self._selected_id = None
         instrument_names = [x["name"] for x in self._configuration.get_instruments()]
 
@@ -162,7 +161,6 @@ class ControllerEditMeasurements:
     def _on_save(self, event):
         try:
             measurement = self._get_measurement_from_view()
-            self._logger.debug(f"Save instrument: {measurement}")
             if self._selected_id is None:
                 self._configuration.add_measurement(measurement["name"],
                     measurement["instrument_id"],measurement["channel_id"], measurement["unit"],

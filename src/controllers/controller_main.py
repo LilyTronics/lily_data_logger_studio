@@ -30,15 +30,12 @@ class ControllerMain:
 
     def __init__(self, title, logger, test_options=TestOptions):
         self._logger = logger
-        self._logger.debug("Start main controller")
         self._app_settings = ApplicationSettings()
         self._configuration = Configuration()
 
-        self._logger.debug("Load main view")
         self._view = ViewFrameMain(title, AppData.APP_LOG_FILE, is_valid_display_session,
                                    self._on_select_config)
         self._prepare_view()
-        self._logger.debug("Show main view")
         self._view.Show()
 
         self._check_display_session()
@@ -225,7 +222,6 @@ class ControllerMain:
         if item:
             try:
                 filename = item.GetItemLabelText()
-                self._logger.info(f"Load configuration from: {filename}")
                 self._configuration.load(filename)
                 self._view.update_configuration(self._configuration)
                 self._update_recent_configurations(filename)
@@ -251,7 +247,6 @@ class ControllerMain:
 
     def _on_view_close(self, event):
         self._check_to_save_configuration()
-        self._logger.debug("Close main view")
         self._app_settings.store_main_window_maximized(self._view.IsMaximized())
         if not self._view.IsMaximized():
             self._app_settings.store_main_window_position(*self._view.GetPosition())

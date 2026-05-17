@@ -17,7 +17,6 @@ class ControllerEditProcess:
     def __init__(self, parent_view, logger, configuration):
         self._logger = logger
         self._configuration = configuration
-        self._logger.info("Edit process")
         self._selected_index = None
 
         self._dlg = ViewEditProcess(parent_view)
@@ -229,7 +228,6 @@ class ControllerEditProcess:
     def _on_save(self, event):
         try:
             step = self._get_process_step_from_view()
-            self._logger.debug(f"Save step: {step}")
             if self._selected_index is None:
                 position = step["insert"]
                 del step["insert"]

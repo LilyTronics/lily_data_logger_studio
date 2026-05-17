@@ -41,6 +41,7 @@ class ControllerDrivers:
 
     def load(self):
         dlg_title = "Load drivers"
+        self._logger.debug("Load drivers")
         if not self._suppress_loading_drivers:
             self._view_progress = ViewDialogProgress(self._parent_view, dlg_title, frame_width=500)
         try:

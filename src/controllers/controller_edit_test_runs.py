@@ -16,7 +16,6 @@ class ControllerEditTestRuns:
     def __init__(self, parent_view, logger):
         self._parent_view = parent_view
         self._logger = logger
-        self._logger.info("Edit test runs")
         self._selected_id = None
 
         self._dlg = ViewEditTestRuns(self._parent_view)

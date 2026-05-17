@@ -15,7 +15,6 @@ class ControllerEditGraphs:
     def __init__(self, parent_view, logger, configuration):
         self._logger = logger
         self._configuration = configuration
-        self._logger.info("Edit graphs")
         self._selected_index = None
 
         self._dlg = ViewEditGraphs(parent_view)
@@ -95,7 +94,6 @@ class ControllerEditGraphs:
     def _on_save(self, event):
         try:
             graph = self._get_graph_from_view()
-            self._logger.debug(f"Save graph: {graph}")
             if self._selected_index is None:
                 self._configuration.add_graph(graph["name"], graph["measurements"],
                                               graph["settings"])

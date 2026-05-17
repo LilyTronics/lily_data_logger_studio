@@ -18,7 +18,6 @@ class ControllerEditInstruments:
     def __init__(self, parent_view, logger, configuration):
         self._logger = logger
         self._configuration = configuration
-        self._logger.info("Edit instruments")
         driver_names = [x.name for x in Drivers.get_drivers()]
         self._selected_id = None
 
@@ -155,7 +154,6 @@ class ControllerEditInstruments:
     def _on_save(self, event):
         try:
             instrument = self._get_instrument_from_view()
-            self._logger.debug(f"Save instrument: {instrument}")
             if self._selected_id is None:
                 self._configuration.add_instrument(instrument["name"], instrument["driver_id"],
                                                    instrument["settings"])
