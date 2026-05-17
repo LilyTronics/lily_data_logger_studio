@@ -15,6 +15,7 @@ Log data from electronic instruments and control electronic instruments.
 ✅ Import measurement data from: SQLite and JSON \
 ✅ Backup and restore of your configuration and measurements \
 ✅ Python development environment for creating drivers for your instruments \
+✅ User manual and driver development manual included \
 ✅ Tested on Windows and Ubuntu (probably can run on others).
 
 Check the releases for the latest release: [releases](https://github.com/LilyTronics/lily_data_logger_studio/releases)
@@ -23,11 +24,9 @@ Check the releases for the latest release: [releases](https://github.com/LilyTro
 
 ## Road map
 
-Release candidate version 1.0.RC1 is there.
+Latest release: V1.0.
 
-Not yet included:
-
-* User manuals for the application and driver development
+No roadmap items planned.
 
 Issues or feature requests can be submitted in the issue tracker: [issues](https://github.com/LilyTronics/lily_data_logger_studio/issues)
 
@@ -36,9 +35,7 @@ Issues or feature requests can be submitted in the issue tracker: [issues](https
 If you find the Lily Data Logger Studio usefull and want to support it you can support in the following ways:
 * Sponsor us, so we can spend more time on maintaining this software (https://github.com/sponsors/LilyTronics)
 * Write instrument drivers. With more drivers the software becomes more usefull.
-* If you cannot write instrument drivers yourself, we can do it for you.
-  * We need access to the instrument (remote connection to a PC that is connected with the instrument).
-  * You can send the instrument to us for borrowing and we can create a driver, then we send it back.
+  * If you cannot write instrument drivers yourself, we can do it for you.
 * Promote this software using your social channels.
 
 ## Installation
