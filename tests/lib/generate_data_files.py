@@ -41,7 +41,7 @@ if __name__ == "__main__":
     config.load(os.path.join(AppData.TEST_CONFIGURATION))
 
     start_time = int(time.time())
-    for n in (1000, 5000, 10000, 20000):
+    for n in (100, 1000, 5000, 10000, 20000):
         start = time.time()
         print(f"Generate data file with {n} samples")
         start_time = create_data_file(config, start_time, n)
