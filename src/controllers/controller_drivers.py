@@ -11,8 +11,8 @@ from src.views.view_dialog_progress import ViewDialogProgress
 
 class ControllerDrivers:
 
-    _step_delay = 500
-    _item_delay = 100
+    _step_delay = 300
+    _item_delay = 50
 
     def __init__(self, parent_view, logger, suppress_loading_drivers):
         self._parent_view = parent_view

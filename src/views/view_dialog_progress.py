@@ -34,7 +34,8 @@ class ViewDialogProgress(wx.Dialog):
         self.Destroy()
 
     def update(self, value, message):
-        self._gauge.SetValue(value)
+        if 0 <= value <= self._gauge.GetRange():
+            self._gauge.SetValue(value)
         self._lbl_message.SetLabel(message)
         wx.Yield()
 
