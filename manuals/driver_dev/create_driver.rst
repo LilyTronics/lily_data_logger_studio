@@ -123,7 +123,7 @@ This finishes the driver for the Arduino. Now to test the driver we simply start
 
 In the driver test applucation, select the Arduino driver and a channel to test. In this case we test
 reading an analog channel. We enter the correct port number (this will be different on your system)
-and teh channel parameter (3). This reads analog input A3. The result is presented in the text box
+and the channel parameter (3). This reads analog input A3. The result is presented in the text box
 at the botoom. The analog input reads: 2.151 (volt). Of course the value depends on what is connected
 to that input. We connected a resistor network to create a specific voltage. Of course anything can
 be connected as long as the voltage is within 0 to 5V (the range of the analog input).

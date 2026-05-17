@@ -13,10 +13,12 @@ This software has the following features:
 | ✅ Export measurement data to: SQLite, JSON, CSV and TSV.
 | ✅ Import measurement data from: SQLite and JSON.
 | ✅ Backup and restore of your configuration and measurements.
+| ✅ Python development environment for creating drivers for your instruments.
+| ✅ User manual and driver development manual included.
 
 The software is completely open source. The software is available on `github`_.
 The software is developed and published by LilyTronics. See `LilyTronics data logger studio`_
 for more information.
 
 .. _github: https://github.com/LilyTronics/lily_data_logger_studio
-.. _LilyTronics data logger studio: https://lilytronics.nl/data-logger-studio
+.. _LilyTronics data logger studio: https://lilytronics.nl/lily-data-logger-studio
