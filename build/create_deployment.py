@@ -110,7 +110,7 @@ def _copy_arduino_daq_firmware(build_path, app_path):
     source_folder = os.path.join(build_path, "arduino_daq")
     output_folder = os.path.join(app_path, "arduino_daq")
     os.makedirs(output_folder, exist_ok=True)
-    shutil.copytree(source_folder, app_path, dirs_exist_ok=True)
+    shutil.copytree(source_folder, output_folder, dirs_exist_ok=True)
 
 def _create_zip_file(dist_path, app_path):
     print("Create ZIP file for distribution . . .")
