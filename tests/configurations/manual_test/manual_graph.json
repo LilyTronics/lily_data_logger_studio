@@ -1,0 +1,44 @@
+{
+  "settings": {
+    "sample_time": 3,
+    "end_time": 60,
+    "mode": "fixed time"
+  },
+  "instruments": [
+    {
+      "id": "4f4d894b-a4ef-40aa-8c3a-1eff52c79a93",
+      "name": "Temperature chamber (sim)",
+      "driver_id": "e5662459-c10d-4616-aa97-978024a825d0",
+      "settings": {
+        "host": "localhost",
+        "port": 51000
+      }
+    }
+  ],
+  "measurements": [
+    {
+      "id": "84e38664-9b21-41f9-a4b5-de75e733e8c8",
+      "name": "T chamber",
+      "instrument_id": "4f4d894b-a4ef-40aa-8c3a-1eff52c79a93",
+      "channel_id": "get_act_temp",
+      "unit": "\u00b0C",
+      "gain": 1.0,
+      "offset": 0.0,
+      "params": {}
+    }
+  ],
+  "process": [],
+  "graphs": [
+    {
+      "name": "Temperature",
+      "measurements": [
+        "84e38664-9b21-41f9-a4b5-de75e733e8c8"
+      ],
+      "settings": {
+        "log_scale": false,
+        "min_scale": null,
+        "max_scale": null
+      }
+    }
+  ]
+}
