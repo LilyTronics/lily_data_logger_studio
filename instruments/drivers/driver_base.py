@@ -185,6 +185,10 @@ class DriverBase(ABC):
         if channel.channel_id == "custom_command":
             self.log_debug(f"Sending custom command: {params}")
             return params["command"].encode("utf-8")
+        for key in params:
+            # If a param is a string, convert to bytes
+            if isinstance(params[key], str):
+                params[key] = params[key].encode("utf8")
         return self.build_command(channel, params)
 
     def _parse_response(self, channel_params, response):
