@@ -1,0 +1,18 @@
+{
+	"Product developments": {
+		"name": "Lily Data Logger Studio",
+		"icon": "folder.png",
+		"items": [
+			{
+				"name": "Project folder",
+				"icon": "folder.png",
+				"command": "C:\\Workspace\\git_projects\\lily_data_logger_studio"
+			},
+			{
+				"name": "Code",
+				"icon": "code.png",
+				"command": "C:\\Workspace\\git_projects\\lily_data_logger_studio\\lily_data_logger_studio.code-workspace"
+			}
+		]
+	}
+}
